@@ -3,16 +3,15 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace InfoFenix.Core.Entities {
-
     public class DocumentEntity {
 
         #region Public Properties
 
         [Required]
         public int DocumentID { get; set; }
-        
+
         public int DocumentDirectoryID { get; set; }
-        
+
         [Required]
         [StringLength(6)]
         public string FullPath { get; set; }
@@ -20,7 +19,7 @@ namespace InfoFenix.Core.Entities {
         public string FileName {
             get { return FullPath != null ? Path.GetFileName(FullPath) : string.Empty; }
         }
-        
+
         [Required]
         public DateTime LastWriteTime { get; set; }
 

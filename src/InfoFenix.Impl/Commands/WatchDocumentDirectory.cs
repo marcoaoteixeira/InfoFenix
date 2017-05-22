@@ -2,23 +2,25 @@
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.IO;
 
-namespace InfoFenix.Impl.Commands {
+namespace InfoFenix.Core.Commands {
     public class WatchDocumentDirectoryCommand : ICommand {
+
         #region Public Properties
 
         public int DocumentDirectoryID { get; set; }
 
         public string DirectoryPath { get; set; }
 
-        #endregion
+        #endregion Public Properties
     }
 
     public class WatchDocumentDirectoryCommandHandler : ICommandHandler<WatchDocumentDirectoryCommand> {
+
         #region Private Read-Only Fields
 
         private readonly IDirectoryWatcherManager _manager;
 
-        #endregion
+        #endregion Private Read-Only Fields
 
         #region Public Constructors
 
@@ -28,12 +30,14 @@ namespace InfoFenix.Impl.Commands {
             _manager = manager;
         }
 
-        #endregion
+        #endregion Public Constructors
 
         #region ICommandHandler<WatchDocumentDirectoryCommand> Members
+
         public void Handle(WatchDocumentDirectoryCommand command) {
             _manager.StartWatch(command.DirectoryPath);
         }
-        #endregion
+
+        #endregion ICommandHandler<WatchDocumentDirectoryCommand> Members
     }
 }

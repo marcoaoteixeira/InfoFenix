@@ -2,7 +2,6 @@
 using Lucene.Net.Util;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Default implementation of <see cref="ISearchBit"/>.
     /// </summary>

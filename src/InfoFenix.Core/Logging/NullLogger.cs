@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// A null object pattern implementation of <see cref="ILogger"/>.
     /// </summary>
@@ -11,7 +10,7 @@ namespace InfoFenix.Core.Logging {
 
         private static readonly ILogger CurrentInstance = new NullLogger();
 
-        #endregion
+        #endregion Private Static Fields
 
         #region Public Static Properties
 
@@ -22,7 +21,7 @@ namespace InfoFenix.Core.Logging {
             get { return CurrentInstance; }
         }
 
-        #endregion
+        #endregion Public Static Properties
 
         #region ILogger Members
 
@@ -34,6 +33,6 @@ namespace InfoFenix.Core.Logging {
         /// <inheritdoc />
         public void Log(LogLevel level, Exception exception, string format, params object[] args) { }
 
-        #endregion
+        #endregion ILogger Members
     }
 }

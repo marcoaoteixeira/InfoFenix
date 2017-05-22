@@ -3,7 +3,6 @@ using System.Data;
 using System.Linq;
 
 namespace InfoFenix.Core.Data {
-
     /// <summary>
     /// Extension methods for <see cref="IDatabase"/>
     /// </summary>

@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.IO {
-
     public sealed class NullDirectoryWatcherManager : IDirectoryWatcherManager {
 
         #region Public Static Read-Only Fields
@@ -21,7 +20,6 @@
         }
 
         public void StopWatch(string path) {
-
         }
 
         #endregion IDirectoryWatcherManager Members

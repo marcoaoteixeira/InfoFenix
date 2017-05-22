@@ -8,7 +8,6 @@ using Lucene.Net.Search;
 using LuceneDirectory = Lucene.Net.Store.Directory;
 
 namespace InfoFenix.Core.Search {
-
     public class Index : IIndex, IDisposable {
 
         #region Private Read-Only Fields

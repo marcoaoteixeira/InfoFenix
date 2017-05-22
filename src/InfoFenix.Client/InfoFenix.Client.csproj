@@ -85,6 +85,12 @@
     <Compile Include="Views\DocumentDirectoryForm.Designer.cs">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\IndexDocumentDirectoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\IndexDocumentDirectoryForm.Designer.cs">
+      <DependentUpon>IndexDocumentDirectoryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\ManageDocumentDirectoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +134,9 @@
     <EmbeddedResource Include="Views\DocumentDirectoryForm.resx">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\IndexDocumentDirectoryForm.resx">
+      <DependentUpon>IndexDocumentDirectoryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\ManageDocumentDirectoryForm.resx">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -156,13 +165,6 @@
       <Project>{2ec3195b-9cca-41b5-8797-f1c051456fb6}</Project>
       <Name>InfoFenix.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\InfoFenix.Impl\InfoFenix.Impl.csproj">
-      <Project>{f8777e56-3d9a-4887-b7b7-32c8dc0561ee}</Project>
-      <Name>InfoFenix.Impl</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\add-folder_64x64.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\copy_128x128.png" />
@@ -237,25 +239,22 @@
     <None Include="Resources\delete-folder_64x64.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\edit-folder_64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\add-folder_32x32.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\file-doc_blue_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\file-doc_gray_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\file-docx_blue_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\file-docx_gray_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\folder_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\word-document-doc_blue_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\word-document-doc_gray_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\word-document-docx_blue_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\word-document-docx_gray_32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

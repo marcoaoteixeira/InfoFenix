@@ -4,7 +4,6 @@ using Lucene.Net.Documents;
 using Lucene.Net.Index;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Default implementation of <see cref="IDocumentIndex"/>.
     /// </summary>

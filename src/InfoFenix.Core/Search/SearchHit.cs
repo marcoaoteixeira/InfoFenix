@@ -2,7 +2,6 @@
 using Lucene.Net.Documents;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Default implementation of <see cref="ISearchHit"/>.
     /// </summary>

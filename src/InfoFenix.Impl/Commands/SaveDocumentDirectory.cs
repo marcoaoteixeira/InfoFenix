@@ -4,10 +4,11 @@ using InfoFenix.Core;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
-using SQL = InfoFenix.Impl.Resources.Resources;
+using SQL = InfoFenix.Core.Resources.Resources;
 
-namespace InfoFenix.Impl.Commands {
+namespace InfoFenix.Core.Commands {
     public class SaveDocumentDirectoryCommand : ICommand {
+
         #region Public Properties
 
         public int DocumentDirectoryID { get; set; }
@@ -22,15 +23,16 @@ namespace InfoFenix.Impl.Commands {
 
         public bool Index { get; set; }
 
-        #endregion
+        #endregion Public Properties
     }
 
     public class SaveDocumentDirectoryCommandHandler : ICommandHandler<SaveDocumentDirectoryCommand> {
+
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
 
-        #endregion
+        #endregion Private Read-Only Fields
 
         #region Public Constructors
 
@@ -40,9 +42,10 @@ namespace InfoFenix.Impl.Commands {
             _database = database;
         }
 
-        #endregion
+        #endregion Public Constructors
 
         #region ICommandHandler<SaveDocumentDirectoryCommand> Members
+
         public void Handle(SaveDocumentDirectoryCommand command) {
             var output = _database.ExecuteScalar(SQL.SaveDocumentDirectory, parameters: new[] {
                 Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DocumentDirectoryID), command.DocumentDirectoryID, DbType.Int32),
@@ -53,7 +56,8 @@ namespace InfoFenix.Impl.Commands {
                 Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), command.Index == true ? 1 : 0, DbType.Int32)
             });
             if (command.DocumentDirectoryID <= 0) { command.DocumentDirectoryID = Convert.ToInt32(output); }
-        } 
-        #endregion
+        }
+
+        #endregion ICommandHandler<SaveDocumentDirectoryCommand> Members
     }
 }

@@ -4,7 +4,6 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace InfoFenix.Core {
-
     public static class AppSettingsManager {
 
         #region Public Static Read-Only Fields
@@ -73,7 +72,7 @@ namespace InfoFenix.Core {
         #endregion Public Events
 
         #region Private Fields
-        
+
         private bool _useRemoteSearchDatabase = false;
         private string _applicationDataDirectoryPath = Common.DefaultAppDataDirectoryPath;
         private int _lastOfficeWordProcessID = int.MaxValue;

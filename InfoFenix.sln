@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoFenix.Core", "src\InfoFenix.Core\InfoFenix.Core.csproj", "{2EC3195B-9CCA-41B5-8797-F1C051456FB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoFenix.Client", "src\InfoFenix.Client\InfoFenix.Client.csproj", "{90AEE0CB-C472-4CD8-A53B-02375360FD4B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoFenix.Impl", "src\InfoFenix.Impl\InfoFenix.Impl.csproj", "{F8777E56-3D9A-4887-B7B7-32C8DC0561EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{90AEE0CB-C472-4CD8-A53B-02375360FD4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90AEE0CB-C472-4CD8-A53B-02375360FD4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90AEE0CB-C472-4CD8-A53B-02375360FD4B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8777E56-3D9A-4887-B7B7-32C8DC0561EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8777E56-3D9A-4887-B7B7-32C8DC0561EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8777E56-3D9A-4887-B7B7-32C8DC0561EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8777E56-3D9A-4887-B7B7-32C8DC0561EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

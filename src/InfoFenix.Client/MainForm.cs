@@ -5,6 +5,7 @@ using InfoFenix.Client.Views;
 using InfoFenix.Core;
 
 namespace InfoFenix.Client {
+
     public partial class MainForm : Form {
         private readonly IFormManager _formManager;
 

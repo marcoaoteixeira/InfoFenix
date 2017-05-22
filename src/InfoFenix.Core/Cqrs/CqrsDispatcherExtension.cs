@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 namespace InfoFenix.Core.Cqrs {
-
     public static class CqrsDispatcherExtension {
 
         #region Public Static Methods

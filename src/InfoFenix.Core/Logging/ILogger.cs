@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// Defines the log interface.
     /// </summary>
@@ -25,6 +24,6 @@ namespace InfoFenix.Core.Logging {
         /// <param name="args">The arguments for the string format pattern.</param>
         void Log(LogLevel level, Exception exception, string format, params object[] args);
 
-        #endregion
+        #endregion Methods
     }
 }

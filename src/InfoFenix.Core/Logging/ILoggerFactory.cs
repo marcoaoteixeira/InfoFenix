@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// Defines the factory for <see cref="ILogger"/> implementation instances.
     /// </summary>
@@ -17,6 +16,6 @@ namespace InfoFenix.Core.Logging {
         /// <returns>An instance of <see cref="ILogger"/> implementation.</returns>
         ILogger CreateLogger(Type type);
 
-        #endregion
+        #endregion Methods
     }
 }

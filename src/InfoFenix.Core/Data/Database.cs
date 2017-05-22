@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Linq;
 
 namespace InfoFenix.Core.Data {
-
     /// <summary>
     /// Default implementation of <see cref="IDatabase"/>.
     /// </summary>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace InfoFenix.Core.Data {
-
     /// <summary>
     /// Defines methods/properties/events to implement a database accessor to work with ADO.Net
     /// </summary>

@@ -1,7 +1,6 @@
 ﻿using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Core.IO {
-
     public sealed class DirectoryWatcherFactory : IDirectoryWatcherFactory {
 
         #region Private Read-Only Fields

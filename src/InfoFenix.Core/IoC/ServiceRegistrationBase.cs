@@ -3,7 +3,6 @@ using System.Reflection;
 using Autofac;
 
 namespace InfoFenix.Core.IoC {
-
     public abstract class ServiceRegistrationBase : IServiceRegistration {
 
         #region Protected Properties

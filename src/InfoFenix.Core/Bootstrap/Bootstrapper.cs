@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace InfoFenix.Core.Bootstrap {
-
     public sealed class Bootstrapper : IBootstrapper {
 
         #region Private Read-Only Fields

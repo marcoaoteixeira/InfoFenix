@@ -2,12 +2,12 @@
 using System.Reflection;
 
 namespace InfoFenix.Core.PubSub {
-
     /// <summary>
     /// Default implementation of <see cref="ISubscription{TMessage}"/>.
     /// </summary>
     /// <typeparam name="TMessage">Type of the message.</typeparam>
     public sealed class Subscription<TMessage> : ISubscription<TMessage>, IDisposable {
+
         #region Private Read-Only Fields
 
         private readonly MethodInfo _methodInfo;
@@ -15,13 +15,13 @@ namespace InfoFenix.Core.PubSub {
         private readonly WeakReference _targetObject;
         private readonly bool _isStatic;
 
-        #endregion
+        #endregion Private Read-Only Fields
 
         #region Private Fields
 
         private bool _disposed;
 
-        #endregion
+        #endregion Private Fields
 
         #region Public Constructors
 
@@ -40,7 +40,7 @@ namespace InfoFenix.Core.PubSub {
             _isStatic = handler.Target == null;
         }
 
-        #endregion
+        #endregion Public Constructors
 
         #region Destructor
 
@@ -51,7 +51,7 @@ namespace InfoFenix.Core.PubSub {
             Dispose(disposing: false);
         }
 
-        #endregion
+        #endregion Destructor
 
         #region Private Methods
 
@@ -64,7 +64,7 @@ namespace InfoFenix.Core.PubSub {
             _disposed = true;
         }
 
-        #endregion
+        #endregion Private Methods
 
         #region ISubscription Members
 
@@ -91,6 +91,6 @@ namespace InfoFenix.Core.PubSub {
             GC.SuppressFinalize(this);
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

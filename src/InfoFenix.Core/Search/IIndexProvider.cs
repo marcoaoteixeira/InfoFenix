@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Defines methods for an index provider.
     /// </summary>

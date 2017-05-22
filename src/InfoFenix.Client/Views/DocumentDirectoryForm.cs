@@ -4,43 +4,44 @@ using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Core;
 using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.Infrastructure;
 using InfoFenix.Core.Entities;
-using InfoFenix.Impl.Commands;
+using InfoFenix.Core.Infrastructure;
+using InfoFenix.Core.Commands;
 
 namespace InfoFenix.Client.Views {
+
     public partial class DocumentDirectoryForm : Form {
+
         #region Private Read-Only Fields
 
         private readonly ICqrsDispatcher _cqrsDispatcher;
+        private readonly IFormManager _formManager;
 
-        #endregion
+        #endregion Private Read-Only Fields
 
         #region Public Properties
 
-        public DocumentDirectoryEntity ViewModel {
-            get { return Tag as DocumentDirectoryEntity; }
-            set { Tag = value; }
-        }   
+        public DocumentDirectoryEntity ViewModel { get; set; }
 
-        #endregion
+        #endregion Public Properties
 
         #region Public Constructors
-        public DocumentDirectoryForm(ICqrsDispatcher cqrsDispatcher) {
+
+        public DocumentDirectoryForm(ICqrsDispatcher cqrsDispatcher, IFormManager formManager) {
             Prevent.ParameterNull(cqrsDispatcher, nameof(cqrsDispatcher));
+            Prevent.ParameterNull(formManager, nameof(formManager));
 
             _cqrsDispatcher = cqrsDispatcher;
+            _formManager = formManager;
 
             InitializeComponent();
         }
-        #endregion
+
+        #endregion Public Constructors
 
         #region Private Methods
 
-        private void SetViewModel() {
-            if (ViewModel == null) {
-                ViewModel = new DocumentDirectoryEntity();
-            }
+        private void UpdateViewModel() {
             ViewModel.Label = documentDirectoryLabelTextBox.Text;
             ViewModel.DirectoryPath = documentDirectoryPathTextBox.Text;
             ViewModel.Code = ViewModel.Code ?? Guid.NewGuid().ToString("N");
@@ -50,15 +51,12 @@ namespace InfoFenix.Client.Views {
 
         private bool ValidateViewModel() {
             var errors = Validator.Validate(ViewModel);
-
             if (errors.IsValid) { return true; }
-
             MessageBox.Show(errors.First().Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
             return false;
         }
 
-        private void SaveViewModel() {
+        private void SaveDocumentDirectory() {
             _cqrsDispatcher.Command(new SaveDocumentDirectoryCommand {
                 DocumentDirectoryID = ViewModel.DocumentDirectoryID,
                 Label = ViewModel.Label,
@@ -69,6 +67,13 @@ namespace InfoFenix.Client.Views {
             });
         }
 
+        private void SaveDocumentDirectoryDocuments() {
+            _cqrsDispatcher.Command(new SaveDocumentDirectoryDocumentsCommand {
+                DocumentDirectoryID = ViewModel.DocumentDirectoryID,
+                DocumentDirectoryDirectoryPath = ViewModel.DirectoryPath
+            });
+        }
+
         private void SelectDocumentDirectoryPath() {
             var path = DialogHelper.OpenFolderBrowserDialog("Selecionar o diretório de documentos");
             if (!string.IsNullOrWhiteSpace(path)) {
@@ -76,9 +81,23 @@ namespace InfoFenix.Client.Views {
             }
         }
 
-        #endregion
+        private void IndexDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
+            using (var form = _formManager.Get<IndexDocumentDirectoryForm>(mdi: null, multipleInstance: false)) {
+                form.SetViewModel(documentDirectory);
+                form.ShowDialog();
+            }
+        }
+
+        private void WatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
+            _cqrsDispatcher.Command(new WatchDocumentDirectoryCommand {
+                DirectoryPath = documentDirectory.DirectoryPath
+            });
+        }
+
+        #endregion Private Methods
 
         #region Event Handlers
+
         private void selectDocumentDirectoryPathButton_Click(object sender, EventArgs e) {
             var button = sender as Button;
             if (button == null) { return; }
@@ -90,16 +109,18 @@ namespace InfoFenix.Client.Views {
             var button = sender as Button;
             if (button == null) { return; }
 
-            SetViewModel();
+            UpdateViewModel();
             if (!ValidateViewModel()) { return; }
-            SaveViewModel();
 
-            if (ViewModel.Watch) { }
-            if (ViewModel.Index) { }
+            SaveDocumentDirectory();
+            SaveDocumentDirectoryDocuments();
+            
+            if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
+            if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
 
             DialogResult = DialogResult.OK;
         }
 
-        #endregion
+        #endregion Event Handlers
     }
 }

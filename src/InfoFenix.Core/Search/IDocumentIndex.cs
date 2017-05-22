@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Defines methods for a document index.
     /// </summary>
@@ -14,7 +13,7 @@ namespace InfoFenix.Core.Search {
         /// </summary>
         bool IsDirty { get; }
 
-        #endregion
+        #endregion Properties
 
         #region Methods
 
@@ -82,6 +81,6 @@ namespace InfoFenix.Core.Search {
         /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
         IDocumentIndex RemoveHtmlTags();
 
-        #endregion
+        #endregion Methods
     }
 }

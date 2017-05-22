@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Cqrs {
-
     public sealed class NullDispatcher : ICqrsDispatcher {
 
         #region Public Static Read-Only Fields

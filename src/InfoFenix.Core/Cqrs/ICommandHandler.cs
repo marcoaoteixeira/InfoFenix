@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Cqrs {
-
     public interface ICommandHandler<in TCommand> where TCommand : ICommand {
 
         #region Methods

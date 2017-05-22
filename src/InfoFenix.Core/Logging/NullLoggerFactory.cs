@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// A null object pattern implementation of <see cref="ILoggerFactory"/>.
     /// </summary>
@@ -14,6 +13,6 @@ namespace InfoFenix.Core.Logging {
             return NullLogger.Instance;
         }
 
-        #endregion
+        #endregion ILoggerFactory Members
     }
 }

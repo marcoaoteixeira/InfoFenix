@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.PubSub {
-
     public sealed class NullPublisherSubscriber : IPublisherSubscriber {
 
         #region Public Static Read-Only Fields

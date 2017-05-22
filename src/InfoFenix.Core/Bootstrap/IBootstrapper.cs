@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Bootstrap {
-
     public interface IBootstrapper {
 
         #region Methods

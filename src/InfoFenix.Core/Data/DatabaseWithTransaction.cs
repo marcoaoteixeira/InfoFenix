@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace InfoFenix.Core.Data {
-
     internal class DatabaseWithTransaction : IDatabase, IDisposable {
 
         #region Private Fields
@@ -27,7 +26,7 @@ namespace InfoFenix.Core.Data {
             _transaction = _decorator.Connection.BeginTransaction(IsolationLevel.ReadUncommitted);
         }
 
-        #endregion Public Constructors
+        #endregion Internal Constructors
 
         #region Destructor
 
@@ -46,9 +45,7 @@ namespace InfoFenix.Core.Data {
             if (_disposed) { return; }
             if (disposing) {
                 if (_transaction != null) {
-                    try { _transaction.Commit(); }
-                    catch { _transaction.Rollback(); }
-                    finally { _transaction.Dispose(); }
+                    try { _transaction.Commit(); } catch { _transaction.Rollback(); } finally { _transaction.Dispose(); }
                 }
             }
 

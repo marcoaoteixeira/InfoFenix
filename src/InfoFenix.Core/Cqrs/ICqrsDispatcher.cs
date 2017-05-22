@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Cqrs {
-
     public interface ICqrsDispatcher {
 
         #region Methods

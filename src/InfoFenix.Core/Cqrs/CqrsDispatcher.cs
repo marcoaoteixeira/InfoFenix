@@ -1,7 +1,6 @@
 ﻿using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Core.Cqrs {
-
     public sealed class CqrsDispatcher : ICqrsDispatcher {
 
         #region Private Read-Only Fields

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 
 namespace InfoFenix.Core {
-
     public static class StreamExtension {
 
         #region Public Static Methods

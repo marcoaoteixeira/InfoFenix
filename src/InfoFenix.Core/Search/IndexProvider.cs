@@ -4,7 +4,6 @@ using System.IO;
 using Lucene.Net.Util;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Default implementation of <see cref="IIndexProvider"/>
     /// </summary>

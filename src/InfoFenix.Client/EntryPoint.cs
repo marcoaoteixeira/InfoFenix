@@ -4,10 +4,11 @@ using InfoFenix.Client.Code;
 using InfoFenix.Core;
 using InfoFenix.Core.Bootstrap;
 using InfoFenix.Core.IoC;
-using InfoFenix.Impl.IoC;
 
 namespace InfoFenix.Client {
+
     internal static class EntryPoint {
+
         #region Private Static Fields
 
         private static ICompositionRoot _compositionRoot;
@@ -20,7 +21,7 @@ namespace InfoFenix.Client {
             get { return _compositionRoot.Resolver.Resolve<CancellationTokenIssuer>(); }
         }
 
-        #endregion
+        #endregion Private Static Properties
 
         #region Private Static Methods
 
@@ -39,7 +40,6 @@ namespace InfoFenix.Client {
             Application.Run(_compositionRoot.Resolver.Resolve<MainForm>());
         }
 
-
         private static void ConfigureCompositionRoot() {
             var appSettings = AppSettingsManager.Get();
             var supportAssemblies = new[] {
@@ -47,22 +47,22 @@ namespace InfoFenix.Client {
                 typeof(Prevent).Assembly
             };
             var defaultServiceRegistrations = new IServiceRegistration[] {
-                //new AppSettingsServiceRegistration(),
+                new AppSettingsServiceRegistration(),
                 new ClientServiceRegistration(supportAssemblies),
                 new BootstrapServiceRegistration(supportAssemblies),
                 new DataServiceRegistration(),
                 new CqrsServiceRegistration(supportAssemblies),
-                //new PubSubServiceRegistration(),
+                new PubSubServiceRegistration(),
                 //new SearchServiceRegistration(),
                 //new LoggingServiceRegistration()
             };
             var useRemoteSearchDatabaseServiceRegistrations = new IServiceRegistration[] {
                 //new NullIOServiceRegistration(),
-                //new NullOfficeServiceRegistration()
+                new NullOfficeServiceRegistration()
             };
             var autonomousModeServiceRegistrations = new IServiceRegistration[] {
                 //new IOServiceRegistration(),
-                //new OfficeServiceRegistration()
+                new OfficeServiceRegistration()
             };
             _compositionRoot = new CompositionRoot();
             _compositionRoot.Compose(defaultServiceRegistrations);
@@ -81,6 +81,6 @@ namespace InfoFenix.Client {
             _compositionRoot = null;
         }
 
-        #endregion
+        #endregion Private Static Methods
     }
 }

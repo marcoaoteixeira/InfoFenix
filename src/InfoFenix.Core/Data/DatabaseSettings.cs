@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Data {
-
     public class DatabaseSettings {
 
         #region Public Properties

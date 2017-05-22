@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Lucene Search Settings.
     /// </summary>

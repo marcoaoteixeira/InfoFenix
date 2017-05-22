@@ -1,7 +1,6 @@
 ﻿using System.Data;
 
 namespace InfoFenix.Core.Data {
-
     /// <summary>
     /// Represents a command parameter.
     /// </summary>

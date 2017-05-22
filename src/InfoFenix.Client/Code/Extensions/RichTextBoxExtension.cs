@@ -15,7 +15,7 @@ namespace InfoFenix.Client.Code {
             var selectionStart = source.SelectionStart;
             var startIndex = 0;
             var index = 0;
-            
+
             while ((index = source.Text.IndexOf(text, startIndex, StringComparison.InvariantCultureIgnoreCase)) != -1) {
                 source.Select(index, text.Length);
                 source.SelectionBackColor = color;

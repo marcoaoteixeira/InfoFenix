@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.IoC {
-
     public interface ICompositionRoot {
 
         #region Properties

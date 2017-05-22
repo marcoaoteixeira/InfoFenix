@@ -27,6 +27,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManageDocumentDirectoryForm));
             this.documentDirectorySplitContainer = new System.Windows.Forms.SplitContainer();
             this.directoryTreeView = new System.Windows.Forms.TreeView();
+            this.directoryActionPanel = new System.Windows.Forms.Panel();
+            this.addDirectoryButton = new System.Windows.Forms.Button();
+            this.documentDirectoryListView = new System.Windows.Forms.ListView();
+            this.directoryInformationLabel = new System.Windows.Forms.Label();
+            this.filterListViewPanel = new System.Windows.Forms.Panel();
+            this.filterListViewTextBox = new System.Windows.Forms.TextBox();
+            this.filterListViewLabel = new System.Windows.Forms.Label();
             this.directoryTreeViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indexDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -35,9 +42,6 @@
             this.stopWatchDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.secondDirectoryToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.removeDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.directoryActionPanel = new System.Windows.Forms.Panel();
-            this.addDirectoryButton = new System.Windows.Forms.Button();
-            this.documentDirectoryListView = new System.Windows.Forms.ListView();
             this.documentDirectoryListViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.indexDocumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstDocumentToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -52,8 +56,9 @@
             this.documentDirectorySplitContainer.Panel1.SuspendLayout();
             this.documentDirectorySplitContainer.Panel2.SuspendLayout();
             this.documentDirectorySplitContainer.SuspendLayout();
-            this.directoryTreeViewContextMenuStrip.SuspendLayout();
             this.directoryActionPanel.SuspendLayout();
+            this.filterListViewPanel.SuspendLayout();
+            this.directoryTreeViewContextMenuStrip.SuspendLayout();
             this.documentDirectoryListViewContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,6 +98,8 @@
             // 
             this.documentDirectorySplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.documentDirectorySplitContainer.Panel2.Controls.Add(this.documentDirectoryListView);
+            this.documentDirectorySplitContainer.Panel2.Controls.Add(this.directoryInformationLabel);
+            this.documentDirectorySplitContainer.Panel2.Controls.Add(this.filterListViewPanel);
             this.documentDirectorySplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(10);
             this.documentDirectorySplitContainer.Size = new System.Drawing.Size(784, 381);
             this.documentDirectorySplitContainer.SplitterDistance = 270;
@@ -100,7 +107,6 @@
             // 
             // directoryTreeView
             // 
-            this.directoryTreeView.ContextMenuStrip = this.directoryTreeViewContextMenuStrip;
             this.directoryTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.directoryTreeView.Location = new System.Drawing.Point(10, 68);
             this.directoryTreeView.Name = "directoryTreeView";
@@ -108,6 +114,86 @@
             this.directoryTreeView.TabIndex = 1;
             this.directoryTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.directoryTreeView_NodeMouseClick);
             this.directoryTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.directoryTreeView_MouseUp);
+            // 
+            // directoryActionPanel
+            // 
+            this.directoryActionPanel.Controls.Add(this.addDirectoryButton);
+            this.directoryActionPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.directoryActionPanel.Location = new System.Drawing.Point(10, 10);
+            this.directoryActionPanel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
+            this.directoryActionPanel.Name = "directoryActionPanel";
+            this.directoryActionPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
+            this.directoryActionPanel.Size = new System.Drawing.Size(250, 58);
+            this.directoryActionPanel.TabIndex = 0;
+            // 
+            // addDirectoryButton
+            // 
+            this.addDirectoryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.addDirectoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.addDirectoryButton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.addDirectoryButton.Image = global::InfoFenix.Client.Properties.Resources.add_folder_32x32;
+            this.addDirectoryButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.addDirectoryButton.Location = new System.Drawing.Point(0, 0);
+            this.addDirectoryButton.Margin = new System.Windows.Forms.Padding(3, 3, 13, 3);
+            this.addDirectoryButton.Name = "addDirectoryButton";
+            this.addDirectoryButton.Padding = new System.Windows.Forms.Padding(10);
+            this.addDirectoryButton.Size = new System.Drawing.Size(250, 48);
+            this.addDirectoryButton.TabIndex = 0;
+            this.addDirectoryButton.Text = "Adicionar diretório";
+            this.manageDocumentDirectoryToolTip.SetToolTip(this.addDirectoryButton, "Adicionar diretório de documentos");
+            this.addDirectoryButton.UseVisualStyleBackColor = true;
+            this.addDirectoryButton.Click += new System.EventHandler(this.addDirectoryButton_Click);
+            // 
+            // documentDirectoryListView
+            // 
+            this.documentDirectoryListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentDirectoryListView.Location = new System.Drawing.Point(10, 68);
+            this.documentDirectoryListView.Name = "documentDirectoryListView";
+            this.documentDirectoryListView.Size = new System.Drawing.Size(490, 271);
+            this.documentDirectoryListView.TabIndex = 0;
+            this.documentDirectoryListView.UseCompatibleStateImageBehavior = false;
+            this.documentDirectoryListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.documentDirectoryListView_MouseDown);
+            // 
+            // directoryInformationLabel
+            // 
+            this.directoryInformationLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.directoryInformationLabel.Location = new System.Drawing.Point(10, 339);
+            this.directoryInformationLabel.Name = "directoryInformationLabel";
+            this.directoryInformationLabel.Padding = new System.Windows.Forms.Padding(5);
+            this.directoryInformationLabel.Size = new System.Drawing.Size(490, 32);
+            this.directoryInformationLabel.TabIndex = 2;
+            this.directoryInformationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // filterListViewPanel
+            // 
+            this.filterListViewPanel.Controls.Add(this.filterListViewTextBox);
+            this.filterListViewPanel.Controls.Add(this.filterListViewLabel);
+            this.filterListViewPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.filterListViewPanel.Location = new System.Drawing.Point(10, 10);
+            this.filterListViewPanel.Name = "filterListViewPanel";
+            this.filterListViewPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
+            this.filterListViewPanel.Size = new System.Drawing.Size(490, 58);
+            this.filterListViewPanel.TabIndex = 1;
+            // 
+            // filterListViewTextBox
+            // 
+            this.filterListViewTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.filterListViewTextBox.Location = new System.Drawing.Point(70, 12);
+            this.filterListViewTextBox.Name = "filterListViewTextBox";
+            this.filterListViewTextBox.Size = new System.Drawing.Size(410, 27);
+            this.filterListViewTextBox.TabIndex = 1;
+            this.filterListViewTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.filterListViewTextBox_KeyDown);
+            // 
+            // filterListViewLabel
+            // 
+            this.filterListViewLabel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.filterListViewLabel.Location = new System.Drawing.Point(0, 0);
+            this.filterListViewLabel.Name = "filterListViewLabel";
+            this.filterListViewLabel.Size = new System.Drawing.Size(64, 48);
+            this.filterListViewLabel.TabIndex = 0;
+            this.filterListViewLabel.Text = "Filtrar:";
+            this.filterListViewLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // directoryTreeViewContextMenuStrip
             // 
@@ -164,45 +250,6 @@
             this.removeDirectoryToolStripMenuItem.Text = "Remover";
             this.removeDirectoryToolStripMenuItem.Click += new System.EventHandler(this.removeDirectoryToolStripMenuItem_Click);
             // 
-            // directoryActionPanel
-            // 
-            this.directoryActionPanel.Controls.Add(this.addDirectoryButton);
-            this.directoryActionPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.directoryActionPanel.Location = new System.Drawing.Point(10, 10);
-            this.directoryActionPanel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
-            this.directoryActionPanel.Name = "directoryActionPanel";
-            this.directoryActionPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.directoryActionPanel.Size = new System.Drawing.Size(250, 58);
-            this.directoryActionPanel.TabIndex = 0;
-            // 
-            // addDirectoryButton
-            // 
-            this.addDirectoryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.addDirectoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.addDirectoryButton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.addDirectoryButton.Image = global::InfoFenix.Client.Properties.Resources.add_folder_32x32;
-            this.addDirectoryButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.addDirectoryButton.Location = new System.Drawing.Point(0, 0);
-            this.addDirectoryButton.Margin = new System.Windows.Forms.Padding(3, 3, 13, 3);
-            this.addDirectoryButton.Name = "addDirectoryButton";
-            this.addDirectoryButton.Padding = new System.Windows.Forms.Padding(10);
-            this.addDirectoryButton.Size = new System.Drawing.Size(250, 48);
-            this.addDirectoryButton.TabIndex = 0;
-            this.addDirectoryButton.Text = "Adicionar diretório";
-            this.manageDocumentDirectoryToolTip.SetToolTip(this.addDirectoryButton, "Adicionar diretório de documentos");
-            this.addDirectoryButton.UseVisualStyleBackColor = true;
-            this.addDirectoryButton.Click += new System.EventHandler(this.addDirectoryButton_Click);
-            // 
-            // documentDirectoryListView
-            // 
-            this.documentDirectoryListView.ContextMenuStrip = this.documentDirectoryListViewContextMenuStrip;
-            this.documentDirectoryListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.documentDirectoryListView.Location = new System.Drawing.Point(10, 10);
-            this.documentDirectoryListView.Name = "documentDirectoryListView";
-            this.documentDirectoryListView.Size = new System.Drawing.Size(490, 361);
-            this.documentDirectoryListView.TabIndex = 0;
-            this.documentDirectoryListView.UseCompatibleStateImageBehavior = false;
-            // 
             // documentDirectoryListViewContextMenuStrip
             // 
             this.documentDirectoryListViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -233,10 +280,11 @@
             // 
             this.manageDocumentDirectoryImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("manageDocumentDirectoryImageList.ImageStream")));
             this.manageDocumentDirectoryImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(0, "file-doc_gray_32x32.png");
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(1, "file-doc_blue_32x32.png");
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(2, "file-docx_gray_32x32.png");
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(3, "file-docx_blue_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(0, "folder_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(1, "word-document-doc_blue_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(2, "word-document-doc_gray_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(3, "word-document-docx_blue_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(4, "word-document-docx_gray_32x32.png");
             // 
             // ManageDocumentDirectoryForm
             // 
@@ -259,8 +307,10 @@
             this.documentDirectorySplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.documentDirectorySplitContainer)).EndInit();
             this.documentDirectorySplitContainer.ResumeLayout(false);
-            this.directoryTreeViewContextMenuStrip.ResumeLayout(false);
             this.directoryActionPanel.ResumeLayout(false);
+            this.filterListViewPanel.ResumeLayout(false);
+            this.filterListViewPanel.PerformLayout();
+            this.directoryTreeViewContextMenuStrip.ResumeLayout(false);
             this.documentDirectoryListViewContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -287,5 +337,9 @@
         private System.Windows.Forms.ToolStripSeparator secondDirectoryToolStripSeparator;
         private System.Windows.Forms.ToolTip manageDocumentDirectoryToolTip;
         private System.Windows.Forms.ImageList manageDocumentDirectoryImageList;
+        private System.Windows.Forms.Panel filterListViewPanel;
+        private System.Windows.Forms.TextBox filterListViewTextBox;
+        private System.Windows.Forms.Label filterListViewLabel;
+        private System.Windows.Forms.Label directoryInformationLabel;
     }
 }

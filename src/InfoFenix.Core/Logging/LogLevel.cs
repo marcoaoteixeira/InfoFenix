@@ -1,13 +1,11 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// Log level flags.
     /// </summary>
     [Flags]
     public enum LogLevel {
-
         /// <summary>
         /// Disabled
         /// </summary>

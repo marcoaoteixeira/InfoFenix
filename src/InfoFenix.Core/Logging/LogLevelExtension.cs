@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// Extension methods for <see cref="LogLevel"/>
     /// </summary>
@@ -17,6 +16,6 @@
             return (source & flags) == flags;
         }
 
-        #endregion
+        #endregion Public Static Methods
     }
 }

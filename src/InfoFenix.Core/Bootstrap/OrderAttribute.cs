@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Bootstrap {
-
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class OrderAttribute : Attribute {
 

@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core {
-
     public static class EventHandlerExtension {
 
         #region Public Static Methods

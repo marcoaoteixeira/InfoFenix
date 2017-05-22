@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.IoC {
-
     public static class ResolverExtension {
 
         #region Public Static Methods

@@ -5,7 +5,6 @@ using WordApplication = Microsoft.Office.Interop.Word.Application;
 using WordDocument = Microsoft.Office.Interop.Word.Document;
 
 namespace InfoFenix.Core.Office {
-
     public class MicrosoftWordApplication : IMicrosoftWordApplication, IDisposable {
 
         #region Private Constants

@@ -1,7 +1,6 @@
 ﻿using Lucene.Net.Analysis;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Defines methods to a Lucene analyzer provider.
     /// </summary>

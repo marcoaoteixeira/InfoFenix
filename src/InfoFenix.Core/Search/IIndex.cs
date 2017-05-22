@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Search {
-
     public interface IIndex {
 
         #region Properties

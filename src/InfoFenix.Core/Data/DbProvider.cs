@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Data.SQLite;
 
 namespace InfoFenix.Core.Data {
-
     /// <summary>
     /// Default implementation of <see cref="IDbProvider"/>
     /// </summary>

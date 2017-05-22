@@ -4,7 +4,6 @@ using log4net;
 using log4net.Core;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// log4net implementation of <see cref="ILogger"/>
     /// </summary>
@@ -14,13 +13,13 @@ namespace InfoFenix.Core.Logging {
 
         private static readonly Level AuditLevel = new Level(2000000000, "AUDIT");
 
-        #endregion
+        #endregion Private Static Read-Only Fields
 
         #region Private Read-Only Fields
 
         private readonly ILog _log;
 
-        #endregion
+        #endregion Private Read-Only Fields
 
         #region Public Constructors
 
@@ -34,7 +33,7 @@ namespace InfoFenix.Core.Logging {
             _log = log;
         }
 
-        #endregion
+        #endregion Public Constructors
 
         #region Private Methods
 
@@ -94,7 +93,7 @@ namespace InfoFenix.Core.Logging {
             }
         }
 
-        #endregion
+        #endregion Private Methods
 
         #region ILogger Members
 
@@ -129,6 +128,6 @@ namespace InfoFenix.Core.Logging {
             if (args != null) { LogFormat(level, format, args); } else { Log(level, exception, format); }
         }
 
-        #endregion
+        #endregion ILogger Members
     }
 }

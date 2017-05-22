@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Defines methods for a Lucene analyzer selector.
     /// </summary>
@@ -14,6 +13,6 @@
         /// <returns>An instance of <see cref="AnalyzerSelectorResult"/>.</returns>
         AnalyzerSelectorResult GetLuceneAnalyzer(string indexName);
 
-        #endregion
+        #endregion Methods
     }
 }

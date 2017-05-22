@@ -2,7 +2,6 @@
 using Autofac;
 
 namespace InfoFenix.Core.IoC {
-
     public sealed class Resolver : IResolver {
 
         #region Private Read-Only Fields

@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 namespace InfoFenix.Core {
-
     /// <summary>
     /// Extension methods for <see cref="IEnumerable"/> and <see cref="IEnumerable{T}"/>.
     /// </summary>

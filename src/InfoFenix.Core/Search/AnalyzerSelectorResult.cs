@@ -1,7 +1,6 @@
 ﻿using Lucene.Net.Analysis;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Represents a Lucene analyzer selector result.
     /// </summary>

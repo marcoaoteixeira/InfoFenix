@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace InfoFenix.Core.Entities {
-
     public class DocumentDirectoryEntity {
 
         #region Public Properties

@@ -3,7 +3,6 @@ using Microsoft.Office.Interop.Word;
 using WordDocument = Microsoft.Office.Interop.Word.Document;
 
 namespace InfoFenix.Core.Office {
-
     public class MicrosoftWordDocument : IMicrosoftWordDocument {
 
         #region Private Read-Only Fields

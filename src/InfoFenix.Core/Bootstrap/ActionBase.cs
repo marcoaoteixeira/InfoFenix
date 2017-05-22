@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Bootstrap {
-
     public abstract class ActionBase : IAction {
 
         #region IAction Members

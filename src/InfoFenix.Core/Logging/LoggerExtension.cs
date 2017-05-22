@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// <see cref="ILogger"/> extension methods.
     /// </summary>
@@ -51,7 +50,7 @@ namespace InfoFenix.Core.Logging {
             FilteredLog(source, LogLevel.Debug, exception, format, args);
         }
 
-        #endregion
+        #endregion Debug Log Methods
 
         #region Information Log Methods
 
@@ -95,7 +94,7 @@ namespace InfoFenix.Core.Logging {
             FilteredLog(source, LogLevel.Information, exception, format, args);
         }
 
-        #endregion
+        #endregion Information Log Methods
 
         #region Warning Log Methods
 
@@ -139,7 +138,7 @@ namespace InfoFenix.Core.Logging {
             FilteredLog(source, LogLevel.Warning, exception, format, args);
         }
 
-        #endregion
+        #endregion Warning Log Methods
 
         #region Error Log Methods
 
@@ -183,7 +182,7 @@ namespace InfoFenix.Core.Logging {
             FilteredLog(source, LogLevel.Error, exception, format, args);
         }
 
-        #endregion
+        #endregion Error Log Methods
 
         #region Fatal Log Methods
 
@@ -227,9 +226,9 @@ namespace InfoFenix.Core.Logging {
             FilteredLog(source, LogLevel.Fatal, exception, format, args);
         }
 
-        #endregion
+        #endregion Fatal Log Methods
 
-        #endregion
+        #endregion Public Static Methods
 
         #region Private Static Methods
 
@@ -239,6 +238,6 @@ namespace InfoFenix.Core.Logging {
             }
         }
 
-        #endregion
+        #endregion Private Static Methods
     }
 }

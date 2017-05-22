@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.PubSub {
-
     /// <summary>
     /// Defines methods to implement a topic based publisher/subscriber.
     /// </summary>

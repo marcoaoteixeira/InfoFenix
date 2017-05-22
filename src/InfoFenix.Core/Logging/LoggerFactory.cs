@@ -4,7 +4,6 @@ using log4net;
 using log4net.Config;
 
 namespace InfoFenix.Core.Logging {
-
     /// <summary>
     /// log4net implementation of <see cref="ILoggerFactory"/>
     /// </summary>
@@ -17,7 +16,7 @@ namespace InfoFenix.Core.Logging {
         /// </summary>
         public const string DefaultConfigFileName = "log4net.config";
 
-        #endregion
+        #endregion Public Constants Fields
 
         #region Private Static Fields
 
@@ -26,7 +25,7 @@ namespace InfoFenix.Core.Logging {
         // one configuration file.
         private static bool _configureAndWatchReady;
 
-        #endregion
+        #endregion Private Static Fields
 
         #region Public Constructors
 
@@ -46,7 +45,7 @@ namespace InfoFenix.Core.Logging {
             _configureAndWatchReady = true;
         }
 
-        #endregion
+        #endregion Public Constructors
 
         #region Private Static Methods
 
@@ -56,7 +55,7 @@ namespace InfoFenix.Core.Logging {
                 : new FileInfo(configFilePath));
         }
 
-        #endregion
+        #endregion Private Static Methods
 
         #region ILoggerFactory Members
 
@@ -65,6 +64,6 @@ namespace InfoFenix.Core.Logging {
             return new Logger(LogManager.GetLogger(type));
         }
 
-        #endregion
+        #endregion ILoggerFactory Members
     }
 }

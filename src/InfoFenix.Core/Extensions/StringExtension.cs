@@ -3,7 +3,6 @@ using System.Net;
 using System.Text;
 
 namespace InfoFenix.Core {
-
     public static class StringExtension {
 
         #region Public Static Methods
@@ -71,7 +70,7 @@ namespace InfoFenix.Core {
 
             return Encoding.UTF8.GetBytes(source);
         }
-        
+
         #endregion Public Static Methods
     }
 }

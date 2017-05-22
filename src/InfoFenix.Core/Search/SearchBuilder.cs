@@ -12,14 +12,13 @@ using Lucene.Net.Util;
 using LuceneDirectory = Lucene.Net.Store.Directory;
 
 namespace InfoFenix.Core.Search {
-
     /// <summary>
     /// Default implementation of <see cref="ISearchBuilder"/>.
     /// </summary>
     public class SearchBuilder : ISearchBuilder {
 
         #region Private Constants
-        
+
         private const double EPSILON = 0.001;
         private const int MAX_RESULTS = short.MaxValue;
 
@@ -34,7 +33,7 @@ namespace InfoFenix.Core.Search {
         #endregion Private Read-Only Fields
 
         #region Private Fields
-        
+
         private Analyzer _analyzer;
         private int _count;
         private int _skip;
@@ -91,7 +90,7 @@ namespace InfoFenix.Core.Search {
             if (string.IsNullOrEmpty(text)) {
                 return result;
             }
-            
+
             using (var stringReader = new StringReader(text)) {
                 using (var tokenStream = analyzer.TokenStream(field, stringReader)) {
                     tokenStream.Reset();
@@ -124,7 +123,7 @@ namespace InfoFenix.Core.Search {
 
         private void CreatePendingClause() {
             if (_query == null) { return; }
-            
+
             // comparing floating-point numbers using an epsilon value
             if (Math.Abs(_boost - 0) > EPSILON) {
                 _query.Boost = _boost;
@@ -423,8 +422,7 @@ namespace InfoFenix.Core.Search {
 
             using (var reader = DirectoryReader.Open(_directory)) {
                 IndexSearcher searcher;
-                try { searcher = new IndexSearcher(reader); }
-                catch { return Enumerable.Empty<ISearchHit>(); /* index might not exist if it has been rebuilt */ }
+                try { searcher = new IndexSearcher(reader); } catch { return Enumerable.Empty<ISearchHit>(); /* index might not exist if it has been rebuilt */ }
 
                 var sort = !string.IsNullOrEmpty(_sort)
                     ? new Sort(new SortField(_sort, _comparer, _sortDescending))
@@ -445,7 +443,7 @@ namespace InfoFenix.Core.Search {
                     .ToList();
 
                 return results;
-            }   
+            }
         }
 
         /// <inheritdoc />
@@ -455,7 +453,7 @@ namespace InfoFenix.Core.Search {
             using (var reader = DirectoryReader.Open(_directory)) {
                 var searcher = new IndexSearcher(reader);
                 var hits = searcher.Search(query, 1);
-                
+
                 return hits.ScoreDocs.Length > 0
                     ? new SearchHit(searcher.Doc(hits.ScoreDocs[0].Doc), hits.ScoreDocs[0].Score)
                     : null;
@@ -468,8 +466,7 @@ namespace InfoFenix.Core.Search {
 
             using (var reader = DirectoryReader.Open(_directory)) {
                 IndexSearcher searcher;
-                try { searcher = new IndexSearcher(reader); }
-                catch { return null; /* index might not exist if it has been rebuilt */ }
+                try { searcher = new IndexSearcher(reader); } catch { return null; /* index might not exist if it has been rebuilt */ }
 
                 var filter = new QueryWrapperFilter(query);
                 var context = (AtomicReaderContext)reader.Context;
@@ -486,8 +483,7 @@ namespace InfoFenix.Core.Search {
 
             using (var reader = DirectoryReader.Open(_directory)) {
                 IndexSearcher searcher;
-                try { searcher = new IndexSearcher(reader); }
-                catch { return 0; /* index might not exist if it has been rebuilt */ }
+                try { searcher = new IndexSearcher(reader); } catch { return 0; /* index might not exist if it has been rebuilt */ }
 
                 var hits = searcher.Search(query, short.MaxValue);
                 var length = hits.ScoreDocs.Length;

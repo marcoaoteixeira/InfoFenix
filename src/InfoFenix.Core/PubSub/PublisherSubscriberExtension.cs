@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 
 namespace InfoFenix.Core.PubSub {
-
     /// <summary>
     /// Extension methods for <see cref="IPublisherSubscriber"/>
     /// </summary>

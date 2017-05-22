@@ -1,9 +1,9 @@
-﻿using Autofac;
-using InfoFenix.Core.IoC;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using Autofac;
 using InfoFenix.Core;
+using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Client.Code {
 

@@ -4,20 +4,18 @@ using System.IO;
 using System.Linq;
 
 namespace InfoFenix.Core {
-
     public static class Common {
 
         #region Public Static Read-Only Fields
 
         public static readonly IList<int> WordProcesses = new List<int>();
 
-        public static readonly string DocumentIndexName = "DocumentIndex";
         public static readonly string ApplicationDirectoryPath = typeof(Common).Assembly.GetDirectoryPath();
         public static readonly string DefaultAppDataDirectoryPath = Path.Combine(ApplicationDirectoryPath, "App_Data");
         public static readonly string DatabaseFileName = "InformaNET.s3db";
         public static readonly string IndexStorageDirectoryName = "IndexStorage";
 
-        public static readonly string TagDocumentDirectoryLabel = "DocumentDirectoryLabel";
+        public static readonly string TagDocumentDirectoryCode = "DocumentDirectoryCode";
         public static readonly string TagContent = "Content";
 
         #endregion Public Static Read-Only Fields
@@ -44,7 +42,6 @@ namespace InfoFenix.Core {
                     return processes[idx].Id;
                 }
             }
-
             return int.MaxValue;
         }
 

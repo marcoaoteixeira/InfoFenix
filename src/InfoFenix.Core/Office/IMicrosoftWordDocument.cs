@@ -1,6 +1,6 @@
 ﻿namespace InfoFenix.Core.Office {
-
     public interface IMicrosoftWordDocument {
+
         #region Methods
 
         string ReadContent();

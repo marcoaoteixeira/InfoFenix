@@ -2,7 +2,6 @@
 using System.Data;
 
 namespace InfoFenix.Core.Data {
-
     /// <summary>
     /// Extension methods for <see cref="IDataReader"/>
     /// </summary>
@@ -15,7 +14,7 @@ namespace InfoFenix.Core.Data {
 
             if (source == null) { return fallback; }
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? Guid.Parse(value.ToString()) : fallback;
         }
@@ -25,7 +24,7 @@ namespace InfoFenix.Core.Data {
 
             if (source == null) { return fallback; }
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? value.ToString() : fallback;
         }
@@ -35,7 +34,7 @@ namespace InfoFenix.Core.Data {
 
             if (source == null) { return fallback; }
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? Convert.ToInt32(value) : fallback;
         }
@@ -45,7 +44,7 @@ namespace InfoFenix.Core.Data {
 
             if (source == null) { return fallback; }
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? Convert.ToBoolean(value) : fallback;
         }
@@ -55,7 +54,7 @@ namespace InfoFenix.Core.Data {
 
             if (source == null) { return fallback; }
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? Convert.ToDateTime(value) : fallback;
         }
@@ -63,7 +62,7 @@ namespace InfoFenix.Core.Data {
         public static DateTime? GetDateTimeOrDefault(this IDataReader source, string fieldName) {
             Prevent.ParameterNullOrWhiteSpace(fieldName, nameof(fieldName));
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? Convert.ToDateTime(value) : new DateTime?();
         }
@@ -73,7 +72,7 @@ namespace InfoFenix.Core.Data {
 
             if (source == null) { return fallback; }
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? DateTimeOffset.Parse(value.ToString()) : fallback;
         }
@@ -81,7 +80,7 @@ namespace InfoFenix.Core.Data {
         public static DateTimeOffset? GetDateTimeOffsetOrDefault(this IDataReader source, string fieldName) {
             Prevent.ParameterNullOrWhiteSpace(fieldName, nameof(fieldName));
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? DateTimeOffset.Parse(value.ToString()) : new DateTimeOffset?();
         }
@@ -91,11 +90,20 @@ namespace InfoFenix.Core.Data {
 
             if (source == null) { return fallback; }
 
-            var value = source[fieldName];
+            var value = source.GetValue(fieldName);
 
             return (value != null && value != DBNull.Value) ? (byte[])value : fallback;
         }
 
         #endregion Public Static Methods
+
+        #region Private Read-Only Fields
+
+        private static object GetValue(this IDataReader reader, string fieldName) {
+            try { return reader[fieldName]; }
+            catch { return null; }
+        }
+
+        #endregion
     }
 }

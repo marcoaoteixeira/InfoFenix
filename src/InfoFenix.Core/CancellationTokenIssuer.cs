@@ -5,7 +5,6 @@ using System.Threading;
 using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Core {
-
     public class CancellationTokenIssuer : IDisposable {
 
         #region Private Read-Only Fields
@@ -48,16 +47,14 @@ namespace InfoFenix.Core {
         public void MarkAsComplete(string key) {
             CancellationTokenSource source;
             if (_cache.TryRemove(key, out source)) {
-                try { source.Dispose(); }
-                catch (Exception ex) { Log.Error(ex, ex.Message); }
+                try { source.Dispose(); } catch (Exception ex) { Log.Error(ex, ex.Message); }
             }
         }
 
         public void Cancel(string key) {
             CancellationTokenSource source;
             if (_cache.TryRemove(key, out source)) {
-                try { source.Cancel(); }
-                catch (Exception ex) { Log.Error(ex, ex.Message); }
+                try { source.Cancel(); } catch (Exception ex) { Log.Error(ex, ex.Message); }
             }
         }
 

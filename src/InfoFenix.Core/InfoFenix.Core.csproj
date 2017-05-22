@@ -77,11 +77,20 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Bootstrap\ActionBase.cs" />
+    <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
+    <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
+    <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
+    <Compile Include="Bootstrap\Actions\004_InitializeComponentsAction.cs" />
+    <Compile Include="Bootstrap\Actions\003_KillMicrosoftWordApplicationAction.cs" />
     <Compile Include="Bootstrap\Bootstrapper.cs" />
     <Compile Include="Bootstrap\IAction.cs" />
     <Compile Include="Bootstrap\IBootstrapper.cs" />
     <Compile Include="Bootstrap\OrderAttribute.cs" />
     <Compile Include="CancellationTokenIssuer.cs" />
+    <Compile Include="Commands\IndexDocumentDirectory.cs" />
+    <Compile Include="Commands\SaveDocumentDirectoryDocuments.cs" />
+    <Compile Include="Commands\SaveDocumentDirectory.cs" />
+    <Compile Include="Commands\WatchDocumentDirectory.cs" />
     <Compile Include="Data\Database.cs" />
     <Compile Include="Data\DatabaseExtension.cs" />
     <Compile Include="Data\DatabaseSettings.cs" />
@@ -100,6 +109,8 @@
     <Compile Include="Cqrs\IQuery.cs" />
     <Compile Include="Cqrs\IQueryHandler.cs" />
     <Compile Include="Cqrs\NullDispatcher.cs" />
+    <Compile Include="Entities\DocumentDirectoryEntity.cs" />
+    <Compile Include="Entities\DocumentEntity.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\EventHandlerExtension.cs" />
@@ -112,6 +123,17 @@
     <Compile Include="IoC\ICompositionRoot.cs" />
     <Compile Include="IoC\IResolver.cs" />
     <Compile Include="IoC\IServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\AppSettingsServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\BootstrapServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\CqrsServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\DataServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\IOServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\LoggingServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\NullIOServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\NullOfficeServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\OfficeServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\PubSubServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\SearchServiceRegistration.cs" />
     <Compile Include="IoC\Resolver.cs" />
     <Compile Include="IoC\ResolverExtension.cs" />
     <Compile Include="IoC\ServiceRegistrationBase.cs" />
@@ -154,6 +176,13 @@
     <Compile Include="PubSub\PublisherSubscriber.cs" />
     <Compile Include="PubSub\PublisherSubscriberExtension.cs" />
     <Compile Include="PubSub\Subscription.cs" />
+    <Compile Include="Queries\ListDocumentDirectories.cs" />
+    <Compile Include="Queries\ListDocumentsByDocumentDirectory.cs" />
+    <Compile Include="Resources\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Search\AnalyzerProvider.cs" />
     <Compile Include="Search\AnalyzerSelector.cs" />
     <Compile Include="Search\AnalyzerSelectorResult.cs" />
@@ -178,12 +207,26 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\SQLs\CreateSchema.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\ListDocumentDirectories.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\SaveDocumentDirectory.sql" />
+    <Content Include="Resources\SQLs\Document\ListDocumentsByDocumentDirectory.sql" />
+    <Content Include="Resources\SQLs\Document\RemoveDocument.sql" />
+    <Content Include="Resources\SQLs\Document\SetDocumentIndexed.sql" />
+    <Content Include="Resources\SQLs\Document\SaveDocument.sql" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.105.1\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.105.1\build\net451\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

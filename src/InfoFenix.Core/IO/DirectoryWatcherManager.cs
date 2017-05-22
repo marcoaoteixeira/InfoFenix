@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace InfoFenix.Core.IO {
-
     public sealed class DirectoryWatcherManager : IDirectoryWatcherManager, IDisposable {
 
         #region Private Static Ready-Only Fields

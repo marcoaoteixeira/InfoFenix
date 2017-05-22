@@ -2,6 +2,7 @@
 
 namespace InfoFenix.Core {
     public static class Prevent {
+
         #region Public Static Methods
 
         public static void ParameterNull(object parameterValue, string parameterName) {
@@ -20,10 +21,9 @@ namespace InfoFenix.Core {
             }
         }
 
-        #endregion
+        #endregion Public Static Methods
 
         #region Private Static Methods
-
 
         private static void CheckParameterName(string parameterName) {
             if (string.IsNullOrWhiteSpace(parameterName)) {
@@ -31,6 +31,6 @@ namespace InfoFenix.Core {
             }
         }
 
-        #endregion
+        #endregion Private Static Methods
     }
 }

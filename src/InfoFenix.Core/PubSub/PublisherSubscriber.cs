@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace InfoFenix.Core.PubSub {
-
     /// <summary>
     /// Default implementation of <see cref="IPublisherSubscriber"/>.
     /// </summary>
@@ -20,7 +19,7 @@ namespace InfoFenix.Core.PubSub {
 
         private readonly IDictionary<Type, IList> _subscriptions;
 
-        #endregion
+        #endregion Private Read-Only Fields
 
         #region Private Fields
 
@@ -34,7 +33,7 @@ namespace InfoFenix.Core.PubSub {
             _subscriptions = new Dictionary<Type, IList>();
         }
 
-        #endregion
+        #endregion Public Constructors
 
         #region Destructors
 
@@ -74,7 +73,7 @@ namespace InfoFenix.Core.PubSub {
         /// <inheritdoc />
         public ISubscription<TMessage> Subscribe<TMessage>(Action<TMessage> handler) {
             Prevent.ParameterNull(handler, nameof(handler));
-            
+
             var messageType = typeof(TMessage);
             var action = new Subscription<TMessage>(handler, this);
             lock (SyncLock) {

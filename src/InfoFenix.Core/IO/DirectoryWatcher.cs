@@ -3,7 +3,6 @@ using System.IO;
 using InfoFenix.Core.PubSub;
 
 namespace InfoFenix.Core.IO {
-
     public sealed class DirectoryWatcher : IDirectoryWatcher, IDisposable {
 
         #region Private Read-Only Fields

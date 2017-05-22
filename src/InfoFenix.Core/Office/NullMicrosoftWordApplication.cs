@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Office {
-
     public sealed class NullMicrosoftWordApplication : IMicrosoftWordApplication {
 
         #region Public Static Read-Only Fields

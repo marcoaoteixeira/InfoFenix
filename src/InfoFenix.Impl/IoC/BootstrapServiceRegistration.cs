@@ -4,8 +4,7 @@ using Autofac;
 using InfoFenix.Core.Bootstrap;
 using InfoFenix.Core.IoC;
 
-namespace InfoFenix.Impl.IoC {
-
+namespace InfoFenix.Core.IoC {
     public sealed class BootstrapServiceRegistration : ServiceRegistrationBase {
 
         #region Public Constructors

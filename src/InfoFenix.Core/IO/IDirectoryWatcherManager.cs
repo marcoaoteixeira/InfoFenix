@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.IO {
-
     public interface IDirectoryWatcherManager {
 
         #region Methods

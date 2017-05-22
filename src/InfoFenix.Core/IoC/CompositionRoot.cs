@@ -2,7 +2,6 @@
 using Autofac;
 
 namespace InfoFenix.Core.IoC {
-
     public class CompositionRoot : ICompositionRoot, IDisposable {
 
         #region Private Fields

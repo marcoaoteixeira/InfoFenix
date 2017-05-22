@@ -1,7 +1,6 @@
 ﻿using System;
 
 namespace InfoFenix.Core.PubSub {
-
     public sealed class NullSubscription<TMessage> : ISubscription<TMessage> {
 
         #region Public Static Read-Only Fields

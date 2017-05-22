@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace InfoFenix.Core.Infrastructure {
     public static class Validator {
+
         #region Public Static Methods
 
         public static ErrorCollection Validate(object obj) {
@@ -19,7 +20,7 @@ namespace InfoFenix.Core.Infrastructure {
             return result;
         }
 
-        #endregion
+        #endregion Public Static Methods
     }
 
     public class Error {
@@ -55,6 +56,6 @@ namespace InfoFenix.Core.Infrastructure {
             get { return Count == 0; }
         }
 
-        #endregion
+        #endregion Public Properties
     }
 }

@@ -1,5 +1,4 @@
 ﻿namespace InfoFenix.Core.Office {
-
     public interface IMicrosoftWordApplication {
 
         #region Methods

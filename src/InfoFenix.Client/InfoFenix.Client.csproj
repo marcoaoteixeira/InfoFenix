@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{90AEE0CB-C472-4CD8-A53B-02375360FD4B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>InfoFenix.Client</RootNamespace>
+    <AssemblyName>InfoFenix</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>InfoFenix.Client.EntryPoint</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\info-fenix_113x128.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.6.0\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\ClientServiceRegistration.cs" />
+    <Compile Include="Code\Extensions\RichTextBoxExtension.cs" />
+    <Compile Include="Code\FormManager.cs" />
+    <Compile Include="Code\DialogHelper.cs" />
+    <Compile Include="Code\IFormManager.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntryPoint.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SplashScreenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SplashScreenForm.Designer.cs">
+      <DependentUpon>SplashScreenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ConfigurationForm.Designer.cs">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocumentDirectoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\DocumentDirectoryForm.Designer.cs">
+      <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManageDocumentDirectoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ManageDocumentDirectoryForm.Designer.cs">
+      <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchDocumentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\SearchDocumentForm.Designer.cs">
+      <DependentUpon>SearchDocumentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchDocumentResultForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\SearchDocumentResultForm.Designer.cs">
+      <DependentUpon>SearchDocumentResultForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\LayoutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="SplashScreenForm.resx">
+      <DependentUpon>SplashScreenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ConfigurationForm.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\DocumentDirectoryForm.resx">
+      <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ManageDocumentDirectoryForm.resx">
+      <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SearchDocumentForm.resx">
+      <DependentUpon>SearchDocumentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\LayoutForm.resx">
+      <DependentUpon>LayoutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InfoFenix.Core\InfoFenix.Core.csproj">
+      <Project>{2ec3195b-9cca-41b5-8797-f1c051456fb6}</Project>
+      <Name>InfoFenix.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Impl\InfoFenix.Impl.csproj">
+      <Project>{f8777e56-3d9a-4887-b7b7-32c8dc0561ee}</Project>
+      <Name>InfoFenix.Impl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add-folder_64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy-64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_directory_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exit_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exit-64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fast-forward_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fast-forward-64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fast-rewind_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fast-rewind-64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward-64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\goto_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\goto-64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\index_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info-fenix_84x95.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rewind_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rewind-64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search_result_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\starting_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info-fenix_113x128.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete-folder_64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit-folder_64x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add-folder_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file-doc_blue_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file-doc_gray_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file-docx_blue_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file-docx_gray_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_32x32.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

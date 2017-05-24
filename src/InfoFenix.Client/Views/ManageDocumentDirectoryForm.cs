@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Views.Shared;
@@ -8,6 +9,8 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Entities;
 using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Queries;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace InfoFenix.Client.Views {
 
@@ -30,6 +33,16 @@ namespace InfoFenix.Client.Views {
         private readonly IPublisherSubscriber _pubSub;
 
         #endregion Private Read-Only Fields
+
+        #region Private Properties
+
+        private IEnumerable<DocumentEntity> _currentDocumentDirectoryItems;
+        private IEnumerable<DocumentEntity> CurrentDocumentDirectoryItems {
+            get { return _currentDocumentDirectoryItems ?? Enumerable.Empty<DocumentEntity>(); }
+            set { _currentDocumentDirectoryItems = value ?? Enumerable.Empty<DocumentEntity>(); }
+        }
+
+        #endregion
 
         #region Private Fields
 
@@ -55,6 +68,10 @@ namespace InfoFenix.Client.Views {
 
         #region Event Handlers
 
+        private void ManageDocumentDirectoryForm_Load(object sender, EventArgs e) {
+            Initialize();
+        }
+
         private void addDirectoryButton_Click(object sender, EventArgs e) {
             var button = sender as Button;
             if (button == null) { return; }
@@ -67,48 +84,6 @@ namespace InfoFenix.Client.Views {
             }
         }
 
-        #endregion Event Handlers
-
-        #region Private Methods
-
-        private void SubscribeForNotification() {
-            _directoryContentChangeNotificationSubscription = _pubSub.Subscribe<DirectoryContentChangeNotification>(DirectoryContentChangeHandler);
-        }
-
-        private void UnsubscribeFromNotification() {
-            _pubSub.Unsubscribe(_directoryContentChangeNotificationSubscription);
-        }
-
-        private void Initialize() {
-            documentDirectoryListView.StateImageList = manageDocumentDirectoryImageList;
-        }
-
-        private void DirectoryContentChangeHandler(DirectoryContentChangeNotification message) {
-        }
-
-        private void LoadDirectoryTreeView() {
-            var documentDirectories = _cqrsDispatcher.Query(new ListDocumentDirectoriesQuery());
-
-            foreach (var documentDirectory in documentDirectories) {
-                CreateTreeViewEntry(documentDirectory);
-            }
-        }
-
-        private void CreateTreeViewEntry(DocumentDirectoryEntity documentDirectory) {
-            directoryTreeView.Nodes.Add(new TreeNode {
-                Text = documentDirectory.Label,
-                Tag = documentDirectory
-            });
-        }
-
-        private void removeDirectoryToolStripMenuItem_Click(object sender, EventArgs e) {
-            var node = directoryTreeView.SelectedNode;
-
-            if (node == null) { return; }
-
-            MessageBox.Show(node.Text);
-        }
-
         private void directoryTreeView_MouseUp(object sender, MouseEventArgs e) {
             if (e.Button == MouseButtons.Right) {
                 directoryTreeView.SelectedNode = directoryTreeView.GetNodeAt(e.X, e.Y);
@@ -118,38 +93,30 @@ namespace InfoFenix.Client.Views {
             }
         }
 
-        private void FilterListView(string query) {
-            //documentDirectoryListView.Items.OfType<ListViewItem>().Each(_ => {
-            //    if (_.Text.IndexOf(query, StringComparison.InvariantCultureIgnoreCase) > 0) {
-                    
-            //    }
-            //});
-        }
-
-        #endregion Private Methods
-
         private void directoryTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
             var documentDirectory = e.Node.Tag as DocumentDirectoryEntity;
             if (documentDirectory == null) { return; }
 
-            var documents = _cqrsDispatcher.Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectory.DocumentDirectoryID });
-            foreach (var document in documents) {
+            CurrentDocumentDirectoryItems = _cqrsDispatcher.Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectory.DocumentDirectoryID });
+            foreach (var document in CurrentDocumentDirectoryItems) {
+                var text = Path.GetFileNameWithoutExtension(document.FileName);
                 documentDirectoryListView.Items.Add(new ListViewItem {
-                    Text = document.FileName,
+                    Text = text,
                     ImageIndex = GetImageListIndex(document),
+                    Name = text,
+                    Tag = document,
                     ToolTipText = document.Indexed ? "Indexado" : "Não indexado"
                 });
             }
+            directoryInformationLabel.Text = $"Total de documentos: {CurrentDocumentDirectoryItems.Count()}";
         }
 
-        private int GetImageListIndex(DocumentEntity document) {
-            return document.Indexed
-                ? document.FullPath.EndsWith(".docx", StringComparison.InvariantCultureIgnoreCase) ? WORD_DOCX_BLUE_ICON_INDEX : WORD_DOCX_GRAY_ICON_INDEX
-                : document.FullPath.EndsWith(".doc", StringComparison.InvariantCultureIgnoreCase) ? WORD_DOC_BLUE_ICON_INDEX : WORD_DOC_GRAY_ICON_INDEX;
-        }
+        private void removeDirectoryToolStripMenuItem_Click(object sender, EventArgs e) {
+            var node = directoryTreeView.SelectedNode;
 
-        private void ManageDocumentDirectoryForm_Load(object sender, EventArgs e) {
-            Initialize();
+            if (node == null) { return; }
+
+            MessageBox.Show(node.Text);
         }
 
         private void filterListViewTextBox_KeyDown(object sender, KeyEventArgs e) {
@@ -167,5 +134,64 @@ namespace InfoFenix.Client.Views {
                 }
             }
         }
+
+        private void closeButton_Click(object sender, EventArgs e) {
+            Close();
+        }
+
+        #endregion Event Handlers
+
+        #region Private Methods
+
+        private void Initialize() {
+            directoryTreeView.ImageList = manageDocumentDirectoryImageList;
+            documentDirectoryListView.LargeImageList = manageDocumentDirectoryImageList;
+            documentDirectoryListView.SmallImageList = manageDocumentDirectoryImageList;
+
+            LoadDirectoryTreeView();
+        }
+
+        private void SubscribeForNotification() {
+            _directoryContentChangeNotificationSubscription = _pubSub.Subscribe<DirectoryContentChangeNotification>(DirectoryContentChangeHandler);
+        }
+
+        private void UnsubscribeFromNotification() {
+            _pubSub.Unsubscribe(_directoryContentChangeNotificationSubscription);
+        }
+
+        private void DirectoryContentChangeHandler(DirectoryContentChangeNotification message) {
+        }
+
+        private void LoadDirectoryTreeView() {
+            var documentDirectories = _cqrsDispatcher.Query(new ListDocumentDirectoriesQuery());
+
+            foreach (var documentDirectory in documentDirectories) {
+                CreateTreeViewEntry(documentDirectory);
+            }
+        }
+
+        private void CreateTreeViewEntry(DocumentDirectoryEntity documentDirectory) {
+            directoryTreeView.Nodes.Add(new TreeNode {
+                Text = documentDirectory.Label,
+                Tag = documentDirectory,
+                ImageIndex = FOLDER_BLUE_ICON_INDEX
+            });
+        }
+
+        private void FilterListView(string query) {
+            //documentDirectoryListView.Items.OfType<ListViewItem>().Each(_ => {
+            //    if (_.Text.IndexOf(query, StringComparison.InvariantCultureIgnoreCase) > 0) {
+            //    }
+            //});
+        }
+
+        private int GetImageListIndex(DocumentEntity document) {
+            var extension = Path.GetExtension(document.FullPath).ToLower();
+            return document.Indexed
+                ? extension == "docx" ? WORD_DOCX_BLUE_ICON_INDEX : WORD_DOC_BLUE_ICON_INDEX
+                : extension == "doc" ? WORD_DOCX_GRAY_ICON_INDEX : WORD_DOC_GRAY_ICON_INDEX;
+        }
+
+        #endregion Private Methods
     }
 }

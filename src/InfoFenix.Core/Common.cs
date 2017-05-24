@@ -2,8 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace InfoFenix.Core {
+
     public static class Common {
 
         #region Public Static Read-Only Fields
@@ -26,6 +28,11 @@ namespace InfoFenix.Core {
             return Directory.GetFiles(path, "*.doc", SearchOption.AllDirectories).Where(_ => !Path.GetFileName(_).StartsWith("~")).ToArray();
         }
 
+        public static int ExtractCodeFromFilePath(string filePath) {
+            var match = Regex.Match(Path.GetFileNameWithoutExtension(filePath), "([0-9]{1,})");
+            return match.Captures.Count > 0 ? int.Parse(match.Captures[0].Value) : 0;
+        }
+
         public static FileInfo[] GetDocFilesInfo(string path) {
             return GetDocFiles(path).Select(_ => new FileInfo(_)).ToArray();
         }
@@ -46,5 +53,20 @@ namespace InfoFenix.Core {
         }
 
         #endregion Public Static Methods
+
+        #region Public Static Internal Classes
+
+        public static class DocumentIndex {
+
+            #region Public Static Read-Only Fields
+
+            public static readonly string Content = nameof(Content);
+            public static readonly string DocumentDirectoryCode = nameof(DocumentDirectoryCode);
+            public static readonly string DocumentCode = nameof(DocumentCode);
+
+            #endregion Public Static Read-Only Fields
+        }
+
+        #endregion Public Static Internal Classes
     }
 }

@@ -1,6 +1,6 @@
 ﻿INSERT OR REPLACE INTO [documents] (
     [document_id],
-    [document_directory_label],
+    [document_directory_id],
     [full_path],
     [last_write_time],
     [code],
@@ -8,7 +8,7 @@
     [payload]
 ) VALUES (
     @DocumentID,
-    @DocumentDirectoryLabel,
+    @DocumentDirectoryID,
     @FullPath,
     @LastWriteTime,
     @Code,

@@ -53,7 +53,7 @@ namespace InfoFenix.Client {
                 new DataServiceRegistration(),
                 new CqrsServiceRegistration(supportAssemblies),
                 new PubSubServiceRegistration(),
-                //new SearchServiceRegistration(),
+                new SearchServiceRegistration(),
                 //new LoggingServiceRegistration()
             };
             var useRemoteSearchDatabaseServiceRegistrations = new IServiceRegistration[] {

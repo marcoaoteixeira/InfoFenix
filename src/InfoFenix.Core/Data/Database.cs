@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Core.Data {
+
     /// <summary>
     /// Default implementation of <see cref="IDatabase"/>.
     /// </summary>
@@ -24,6 +26,17 @@ namespace InfoFenix.Core.Data {
         private bool _disposed;
 
         #endregion Private Fields
+
+        #region Public Properties
+
+        private ILogger _log;
+
+        public ILogger Log {
+            get { return _log ?? NullLogger.Instance; }
+            set { _log = value ?? NullLogger.Instance; }
+        }
+
+        #endregion Public Properties
 
         #region Public Constructors
 
@@ -64,24 +77,24 @@ namespace InfoFenix.Core.Data {
         }
 
         private DbConnection GetConnection() {
-            if (_connection == null) {
-                _connection = GetFactory().CreateConnection();
+            try {
+                if (_connection == null) {
+                    _connection = GetFactory().CreateConnection();
 
-                _connection.ConnectionString = _databaseSettings.ConnectionString;
-                _connection.Open();
-            }
+                    _connection.ConnectionString = _databaseSettings.ConnectionString;
+                    _connection.Open();
+                }
+            } catch (Exception ex) { Log.Error(ex, ex.Message); throw; }
 
             return _connection;
         }
 
         private DbParameter ConvertParameter(Parameter parameter) {
             var result = GetFactory().CreateParameter();
-
             result.ParameterName = (!parameter.Name.StartsWith("@") ? string.Concat("@", parameter.Name) : parameter.Name);
             result.DbType = parameter.Type;
             result.Direction = parameter.Direction;
-            result.Value = (parameter.Value != null ? parameter.Value : DBNull.Value);
-
+            result.Value = (parameter.Value ?? DBNull.Value);
             return result;
         }
 
@@ -115,25 +128,27 @@ namespace InfoFenix.Core.Data {
         }
 
         private object Execute(string commandText, CommandType commandType, Parameter[] parameters, bool scalar) {
-            using (var command = GetConnection().CreateCommand()) {
-                PrepareCommand(command, commandText, commandType, parameters);
+            try {
+                using (var command = GetConnection().CreateCommand()) {
+                    PrepareCommand(command, commandText, commandType, parameters);
 
-                var result = scalar
-                    ? command.ExecuteScalar()
-                    : command.ExecuteNonQuery();
+                    var result = scalar
+                        ? command.ExecuteScalar()
+                        : command.ExecuteNonQuery();
 
-                command.Parameters.OfType<DbParameter>()
-                    .Where(dbParameter => dbParameter.Direction != ParameterDirection.Input)
-                    .Each(dbParameter => {
-                        parameters
-                            .Single(parameter =>
-                                parameter.Name == dbParameter.ParameterName &&
-                                parameter.Direction == dbParameter.Direction)
-                            .Value = dbParameter.Value;
-                    });
+                    command.Parameters.OfType<DbParameter>()
+                        .Where(dbParameter => dbParameter.Direction != ParameterDirection.Input)
+                        .Each(dbParameter => {
+                            parameters
+                                .Single(parameter =>
+                                    parameter.Name == dbParameter.ParameterName &&
+                                    parameter.Direction == dbParameter.Direction)
+                                .Value = dbParameter.Value;
+                        });
 
-                return result;
-            }
+                    return result;
+                }
+            } catch (Exception ex) { Log.Error(ex, ex.Message); throw; }
         }
 
         #endregion Private Methods
@@ -159,7 +174,10 @@ namespace InfoFenix.Core.Data {
             using (var command = GetConnection().CreateCommand()) {
                 PrepareCommand(command, commandText, commandType, parameters);
 
-                using (var reader = command.ExecuteReader()) {
+                IDataReader reader;
+                try { reader = command.ExecuteReader(); }
+                catch (Exception ex) { Log.Error(ex, ex.Message); throw; }
+                using (reader) {
                     while (reader.Read()) {
                         yield return mapper(reader);
                     }

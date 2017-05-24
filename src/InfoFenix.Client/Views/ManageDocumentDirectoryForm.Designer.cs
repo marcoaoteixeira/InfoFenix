@@ -30,6 +30,7 @@
             this.directoryActionPanel = new System.Windows.Forms.Panel();
             this.addDirectoryButton = new System.Windows.Forms.Button();
             this.documentDirectoryListView = new System.Windows.Forms.ListView();
+            this.manageDocumentDirectoryImageList = new System.Windows.Forms.ImageList(this.components);
             this.directoryInformationLabel = new System.Windows.Forms.Label();
             this.filterListViewPanel = new System.Windows.Forms.Panel();
             this.filterListViewTextBox = new System.Windows.Forms.TextBox();
@@ -47,7 +48,6 @@
             this.firstDocumentToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.removeDocumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageDocumentDirectoryToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.manageDocumentDirectoryImageList = new System.Windows.Forms.ImageList(this.components);
             this.titlePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.contentPanel.SuspendLayout();
@@ -78,6 +78,10 @@
             // 
             this.contentPanel.Controls.Add(this.documentDirectorySplitContainer);
             this.contentPanel.Padding = new System.Windows.Forms.Padding(0);
+            // 
+            // closeButton
+            // 
+            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
             // documentDirectorySplitContainer
             // 
@@ -147,12 +151,23 @@
             // documentDirectoryListView
             // 
             this.documentDirectoryListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentDirectoryListView.LargeImageList = this.manageDocumentDirectoryImageList;
             this.documentDirectoryListView.Location = new System.Drawing.Point(10, 68);
             this.documentDirectoryListView.Name = "documentDirectoryListView";
             this.documentDirectoryListView.Size = new System.Drawing.Size(490, 271);
             this.documentDirectoryListView.TabIndex = 0;
             this.documentDirectoryListView.UseCompatibleStateImageBehavior = false;
             this.documentDirectoryListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.documentDirectoryListView_MouseDown);
+            // 
+            // manageDocumentDirectoryImageList
+            // 
+            this.manageDocumentDirectoryImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("manageDocumentDirectoryImageList.ImageStream")));
+            this.manageDocumentDirectoryImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(0, "folder_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(1, "word-document-doc_blue_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(2, "word-document-doc_gray_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(3, "word-document-docx_blue_32x32.png");
+            this.manageDocumentDirectoryImageList.Images.SetKeyName(4, "word-document-docx_gray_32x32.png");
             // 
             // directoryInformationLabel
             // 
@@ -275,16 +290,6 @@
             this.removeDocumentToolStripMenuItem.Name = "removeDocumentToolStripMenuItem";
             this.removeDocumentToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.removeDocumentToolStripMenuItem.Text = "Remover";
-            // 
-            // manageDocumentDirectoryImageList
-            // 
-            this.manageDocumentDirectoryImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("manageDocumentDirectoryImageList.ImageStream")));
-            this.manageDocumentDirectoryImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(0, "folder_32x32.png");
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(1, "word-document-doc_blue_32x32.png");
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(2, "word-document-doc_gray_32x32.png");
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(3, "word-document-docx_blue_32x32.png");
-            this.manageDocumentDirectoryImageList.Images.SetKeyName(4, "word-document-docx_gray_32x32.png");
             // 
             // ManageDocumentDirectoryForm
             // 

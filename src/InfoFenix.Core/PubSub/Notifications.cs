@@ -1,11 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfoFenix.Core.PubSub {
-    public sealed class DirectoryContentChangeNotification {
+
+    public abstract class NotificationBase {
+        #region Public Properties
+
+        public string Title { get; set; }
+        public string Message { get; set; }
+        public string Error { get; set; }
+
+        #endregion
+    }
+
+    public sealed class DirectoryContentChangeNotification : NotificationBase {
 
         #region Public Properties
 
@@ -29,38 +36,80 @@ namespace InfoFenix.Core.PubSub {
         #endregion Public Enums
     }
 
-    public sealed class StartingDocumentDirectoryIndexingNotification {
+    public sealed class StartingDocumentDirectoryIndexingNotification : NotificationBase {
+
         #region Public Properties
 
         public string FullPath { get; set; }
         public int TotalDocuments { get; set; }
 
-        #endregion
+        #endregion Public Properties
     }
 
-    public sealed class DocumentDirectoryIndexingCompleteNotification {
+    public sealed class DocumentDirectoryIndexingCompleteNotification : NotificationBase {
+
         #region Public Properties
 
         public string FullPath { get; set; }
         public int TotalDocuments { get; set; }
 
-        #endregion
+        #endregion Public Properties
     }
 
-    public sealed class StartingDocumentIndexingNotification {
+    public sealed class StartingDocumentIndexingNotification : NotificationBase {
+
         #region Public Properties
 
         public string FullPath { get; set; }
         public int TotalDocuments { get; set; }
 
-        #endregion
+        #endregion Public Properties
     }
 
-    public sealed class DocumentIndexingCompleteNotification {
+    public sealed class DocumentIndexingCompleteNotification : NotificationBase {
+
         #region Public Properties
 
         public string FullPath { get; set; }
 
-        #endregion
+        #endregion Public Properties
+    }
+
+    public sealed class DocumentsInDirectoryToSaveNotification : NotificationBase {
+
+        #region Public Properties
+
+        public string DocumentDirectoryLabel { get; set; }
+        public int TotalDocuments { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public sealed class DocumentSavedNotification : NotificationBase {
+
+        #region Public Properties
+
+        public string FullPath { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public sealed class DocumentsInDirectoryToRemoveNotification : NotificationBase {
+
+        #region Public Properties
+
+        public string DocumentDirectoryLabel { get; set; }
+        public int TotalDocuments { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public sealed class DocumentRemovedNotification : NotificationBase {
+
+        #region Public Properties
+
+        public string FullPath { get; set; }
+
+        #endregion Public Properties
     }
 }

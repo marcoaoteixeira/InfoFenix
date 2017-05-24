@@ -1,4 +1,3 @@
 ﻿UPDATE [documents] SET
-    [indexed] = @Indexed,
-    [payload] = @Payload
+    [indexed] = 1
 WHERE [document_id] = @DocumentID

@@ -3,7 +3,7 @@ using InfoFenix.Core.IO;
 
 namespace InfoFenix.Core.Commands {
 
-    public class WatchDocumentDirectoryCommand : ICommand {
+    public class StopWatchDocumentDirectoryCommand : ICommand {
 
         #region Public Properties
 
@@ -12,7 +12,7 @@ namespace InfoFenix.Core.Commands {
         #endregion Public Properties
     }
 
-    public class WatchDocumentDirectoryCommandHandler : ICommandHandler<WatchDocumentDirectoryCommand> {
+    public class StopWatchDocumentDirectoryCommandHandler : ICommandHandler<StopWatchDocumentDirectoryCommand> {
 
         #region Private Read-Only Fields
 
@@ -22,7 +22,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public WatchDocumentDirectoryCommandHandler(IDirectoryWatcherManager manager) {
+        public StopWatchDocumentDirectoryCommandHandler(IDirectoryWatcherManager manager) {
             Prevent.ParameterNull(manager, nameof(manager));
 
             _manager = manager;
@@ -30,12 +30,12 @@ namespace InfoFenix.Core.Commands {
 
         #endregion Public Constructors
 
-        #region ICommandHandler<WatchDocumentDirectoryCommand> Members
+        #region ICommandHandler<StopWatchDocumentDirectoryCommand> Members
 
-        public void Handle(WatchDocumentDirectoryCommand command) {
-            _manager.StartWatch(command.DirectoryPath);
+        public void Handle(StopWatchDocumentDirectoryCommand command) {
+            _manager.StopWatch(command.DirectoryPath);
         }
 
-        #endregion ICommandHandler<WatchDocumentDirectoryCommand> Members
+        #endregion ICommandHandler<StopWatchDocumentDirectoryCommand> Members
     }
 }

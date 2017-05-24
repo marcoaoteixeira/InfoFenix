@@ -1,6 +1,8 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace InfoFenix.Core.Data {
+
     /// <summary>
     /// Represents a command parameter.
     /// </summary>
@@ -74,6 +76,76 @@ namespace InfoFenix.Core.Data {
         /// <returns>An instance of <see cref="Parameter"/>.</returns>
         public static Parameter CreateReturnValueParameter(string name, object value, DbType type = DbType.String) {
             return new Parameter(name, value, type, ParameterDirection.ReturnValue);
+        }
+
+        public static object Parse<T>(T value) {
+            object result = null;
+            switch (System.Type.GetTypeCode(typeof(T))) {
+                case TypeCode.Object:
+                    result = value;
+                    break;
+
+                case TypeCode.Boolean:
+                    result = Convert.ToBoolean(value);
+                    break;
+
+                case TypeCode.Char:
+                    result = Convert.ToChar(value);
+                    break;
+
+                case TypeCode.SByte:
+                    result = Convert.ToSByte(value);
+                    break;
+
+                case TypeCode.Byte:
+                    result = Convert.ToByte(value);
+                    break;
+
+                case TypeCode.Int16:
+                    result = Convert.ToInt16(value);
+                    break;
+
+                case TypeCode.UInt16:
+                    result = Convert.ToUInt16(value);
+                    break;
+
+                case TypeCode.Int32:
+                    result = Convert.ToInt32(value);
+                    break;
+
+                case TypeCode.UInt32:
+                    result = Convert.ToUInt32(value);
+                    break;
+
+                case TypeCode.Int64:
+                    result = Convert.ToInt64(value);
+                    break;
+
+                case TypeCode.UInt64:
+                    result = Convert.ToUInt64(value);
+                    break;
+
+                case TypeCode.Single:
+                    result = Convert.ToSingle(value);
+                    break;
+
+                case TypeCode.Double:
+                    result = Convert.ToDouble(value);
+                    break;
+
+                case TypeCode.Decimal:
+                    result = Convert.ToDecimal(value);
+                    break;
+
+                case TypeCode.DateTime:
+                    result = Convert.ToDateTime(value);
+                    break;
+
+                case TypeCode.String:
+                    result = Convert.ToString(value);
+                    break;
+            }
+            return result != null ? result : DBNull.Value;
         }
 
         #endregion Public Static Methods

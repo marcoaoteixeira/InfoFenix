@@ -244,11 +244,15 @@ namespace InfoFenix.Core.Search {
         }
 
         /// <inheritdoc />
-        public ISearchBuilder WithField(string field, string value) {
+        public ISearchBuilder WithField(string field, string value, bool useWildCard) {
             CreatePendingClause();
 
             if (!string.IsNullOrWhiteSpace(value)) {
-                _query = new TermQuery(new Term(field, QueryParser.Escape(value)));
+                if (useWildCard) {
+                    _query = new WildcardQuery(new Term(field, value));
+                } else {
+                    _query = new TermQuery(new Term(field, QueryParser.Escape(value)));
+                }
             }
 
             return this;

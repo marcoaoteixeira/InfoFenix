@@ -42,6 +42,7 @@ namespace InfoFenix.Client.Views {
         #region Private Methods
 
         private void UpdateViewModel() {
+            ViewModel = ViewModel ?? new DocumentDirectoryEntity();
             ViewModel.Label = documentDirectoryLabelTextBox.Text;
             ViewModel.DirectoryPath = documentDirectoryPathTextBox.Text;
             ViewModel.Code = ViewModel.Code ?? Guid.NewGuid().ToString("N");
@@ -57,20 +58,23 @@ namespace InfoFenix.Client.Views {
         }
 
         private void SaveDocumentDirectory() {
-            _cqrsDispatcher.Command(new SaveDocumentDirectoryCommand {
+            var command = new SaveDocumentDirectoryCommand {
                 DocumentDirectoryID = ViewModel.DocumentDirectoryID,
                 Label = ViewModel.Label,
                 DirectoryPath = ViewModel.DirectoryPath,
                 Code = ViewModel.Code,
                 Watch = ViewModel.Watch,
                 Index = ViewModel.Index
-            });
+            };
+            _cqrsDispatcher.Command(command);
+            ViewModel.DocumentDirectoryID = command.DocumentDirectoryID;
         }
 
         private void SaveDocumentDirectoryDocuments() {
-            _cqrsDispatcher.Command(new SaveDocumentDirectoryDocumentsCommand {
+            _cqrsDispatcher.Command(new SaveDocumentsInDocumentDirectoryCommand {
                 DocumentDirectoryID = ViewModel.DocumentDirectoryID,
-                DocumentDirectoryDirectoryPath = ViewModel.DirectoryPath
+                DocumentDirectoryPath = ViewModel.DirectoryPath,
+                DocumentDirectoryCode = ViewModel.Code
             });
         }
 
@@ -89,7 +93,7 @@ namespace InfoFenix.Client.Views {
         }
 
         private void WatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _cqrsDispatcher.Command(new WatchDocumentDirectoryCommand {
+            _cqrsDispatcher.Command(new StartWatchDocumentDirectoryCommand {
                 DirectoryPath = documentDirectory.DirectoryPath
             });
         }
@@ -115,8 +119,8 @@ namespace InfoFenix.Client.Views {
             SaveDocumentDirectory();
             SaveDocumentDirectoryDocuments();
             
-            if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
-            if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
+            //if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
+            //if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
 
             DialogResult = DialogResult.OK;
         }

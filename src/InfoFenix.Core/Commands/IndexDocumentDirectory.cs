@@ -56,31 +56,19 @@ namespace InfoFenix.Core.Commands {
 
         #region Private Methods
 
-        private DocumentEntity MapDocumentEntity(IDataReader reader) {
-            return new DocumentEntity {
-                DocumentID = reader.GetInt32OrDefault("document_id"),
-                FullPath = reader.GetStringOrDefault("full_path")
-            };
-        }
-
-        #endregion Private Methods
-
-        #region Private Methods
-
-        private void ProcessDocuments(int documentDirectoryID, string code, string directoryPath) {
-            var documents = _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, MapDocumentEntity, parameters: new[] {
+        private void ProcessDocuments(int documentDirectoryID, string directoryPath, string code) {
+            var documents = _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
                 Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DocumentDirectoryID), documentDirectoryID, DbType.Int32)
             }).ToArray();
             var totalDocuments = documents.Length;
+            var error = string.Empty;
 
+            _pubSub.PublishAsync(new StartingDocumentDirectoryIndexingNotification {
+                FullPath = directoryPath,
+                TotalDocuments = totalDocuments
+            });
             if (totalDocuments > 0) {
                 var index = _indexProvider.GetOrCreate(code);
-
-                _pubSub.PublishAsync(new StartingDocumentDirectoryIndexingNotification {
-                    FullPath = directoryPath,
-                    TotalDocuments = totalDocuments
-                });
-
                 foreach (var document in documents) {
                     _pubSub.PublishAsync(new StartingDocumentIndexingNotification {
                         FullPath = document.FullPath,
@@ -92,14 +80,13 @@ namespace InfoFenix.Core.Commands {
                     wordDocument.Close();
 
                     var documentIndex = index.NewDocument(document.DocumentID.ToString());
-                    documentIndex.Add(Common.TagDocumentDirectoryCode, code).Store();
-                    documentIndex.Add(Common.TagContent, content).Analyze();
+                    documentIndex.Add(Common.DocumentIndex.Content, content).Analyze();
+                    documentIndex.Add(Common.DocumentIndex.DocumentDirectoryCode, code).Store();
+                    documentIndex.Add(Common.DocumentIndex.DocumentCode, document.Code).Store();
                     index.StoreDocuments(documentIndex);
 
                     _database.ExecuteNonQuery(SQL.SetDocumentIndexed, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentID), document.DocumentID,  DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.Indexed), 1, DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.Payload), document.Payload)
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentID), document.DocumentID,  DbType.Int32)
                     });
 
                     _pubSub.PublishAsync(new DocumentIndexingCompleteNotification {
@@ -107,7 +94,6 @@ namespace InfoFenix.Core.Commands {
                     });
                 }
             }
-
             _pubSub.PublishAsync(new DocumentDirectoryIndexingCompleteNotification {
                 FullPath = directoryPath,
                 TotalDocuments = totalDocuments
@@ -119,10 +105,11 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<IndexDocumentDirectoryCommand> Members
 
         public void Handle(IndexDocumentDirectoryCommand command) {
-            var token = _issuer.Get(command.Code);
+            var key = $"INDEXING::{command.Code}";
+            var token = _issuer.Get(key);
             Task
-                .Run(() => ProcessDocuments(command.DocumentDirectoryID, command.Code, command.DirectoryPath), token)
-                .ContinueWith(continuationAction => _issuer.MarkAsComplete(command.Code));
+                .Run(() => ProcessDocuments(command.DocumentDirectoryID, command.DirectoryPath, command.Code), token)
+                .ContinueWith(continuationAction => _issuer.MarkAsComplete(key));
         }
 
         #endregion ICommandHandler<IndexDocumentDirectoryCommand> Members

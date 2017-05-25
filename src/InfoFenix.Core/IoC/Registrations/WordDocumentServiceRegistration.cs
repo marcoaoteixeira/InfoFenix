@@ -1,16 +1,16 @@
 ﻿using Autofac;
-using InfoFenix.Core.IoC;
 using InfoFenix.Core.Office;
 
 namespace InfoFenix.Core.IoC {
-    public sealed class NullOfficeServiceRegistration : ServiceRegistrationBase {
+
+    public sealed class WordDocumentServiceRegistration : ServiceRegistrationBase {
 
         #region Public Override Methods
 
         public override void Register() {
             Builder
-                .RegisterInstance(NullMicrosoftWordApplication.Instance)
-                .As<IMicrosoftWordApplication>()
+                .RegisterType<SpireDocWordDocumentService>()
+                .As<IWordDocumentService>()
                 .SingleInstance();
         }
 

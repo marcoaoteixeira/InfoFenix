@@ -1,16 +1,16 @@
 ﻿INSERT OR REPLACE INTO [document_directories] (
-    [document_directory_id],
+    [id],
     [label],
-    [directory_path],
+    [path],
     [code],
     [watch],
     [index]
 ) VALUES (
-    @DocumentDirectoryID,
+    @ID,
     @Label,
-    @DirectoryPath,
+    @Path,
     @Code,
     @Watch,
     @Index
 );
-SELECT MAX([document_directory_id]) FROM [document_directories]
+SELECT MAX([id]) FROM [document_directories]

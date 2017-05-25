@@ -112,4 +112,30 @@ namespace InfoFenix.Core.PubSub {
 
         #endregion Public Properties
     }
+
+    public sealed class StartingProgressiveTaskNotification : NotificationBase {
+        #region Public Properties
+
+        public int MinimunValue { get; set; }
+        public int MaximunValue { get; set; }
+
+        #endregion
+    }
+
+    public sealed class ProgressiveTaskCompletedNotification : NotificationBase {
+        #region Public Properties
+
+        public int TotalSteps { get; set; }
+
+        #endregion
+    }
+
+    public sealed class ProgressiveTaskPerformStepNotification : NotificationBase {
+        #region Public Properties
+
+        public int ActualStep { get; set; }
+        public int StepsToCompletation { get; set; }
+
+        #endregion
+    }
 }

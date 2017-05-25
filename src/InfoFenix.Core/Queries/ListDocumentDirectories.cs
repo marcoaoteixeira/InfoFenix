@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using InfoFenix.Core;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
 using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
+
     public class ListDocumentDirectoriesQuery : IQuery<IEnumerable<DocumentDirectoryEntity>> {
 
         #region Public Properties
 
         public string Label { get; set; }
 
-        public string DirectoryPath { get; set; }
+        public string Path { get; set; }
 
         public string Code { get; set; }
 
@@ -42,30 +42,15 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Public Constructors
 
-        #region Private Static Methods
-
-        private static DocumentDirectoryEntity Map(IDataReader reader) {
-            return new DocumentDirectoryEntity {
-                DocumentDirectoryID = reader.GetInt32OrDefault("document_directory_id"),
-                Label = reader.GetStringOrDefault("label"),
-                DirectoryPath = reader.GetStringOrDefault("directory_path"),
-                Code = reader.GetStringOrDefault("code"),
-                Watch = reader.GetInt32OrDefault("watch") > 0,
-                Index = reader.GetInt32OrDefault("index") > 0
-            };
-        }
-
-        #endregion Private Static Methods
-
         #region IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryEntity>> Members
 
         public IEnumerable<DocumentDirectoryEntity> Handle(ListDocumentDirectoriesQuery query) {
-            return _database.ExecuteReader(SQL.ListDocumentDirectories, Map, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), query.Label),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DirectoryPath), query.DirectoryPath),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), query.Code),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), query.Watch == true ? 1 : 0, DbType.Int32),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), query.Index == true ? 1 : 0, DbType.Int32)
+            return _database.ExecuteReader(SQL.ListDocumentDirectories, DocumentDirectoryEntity.MapFromDataReader, parameters: new[] {
+                Parameter.CreateInputParameter(nameof(query.Label), query.Label),
+                Parameter.CreateInputParameter(nameof(query.Path), query.Path),
+                Parameter.CreateInputParameter(nameof(query.Code), query.Code),
+                Parameter.CreateInputParameter(nameof(query.Watch), query.Watch ? 1 : 0, DbType.Int32),
+                Parameter.CreateInputParameter(nameof(query.Index), query.Index ? 1 : 0, DbType.Int32)
             });
         }
 

@@ -5,16 +5,12 @@ using System.Threading;
 using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Core {
+
     public class CancellationTokenIssuer : IDisposable {
-
-        #region Private Read-Only Fields
-
-        private readonly ConcurrentDictionary<string, CancellationTokenSource> _cache = new ConcurrentDictionary<string, CancellationTokenSource>();
-
-        #endregion Private Read-Only Fields
 
         #region Private Fields
 
+        private ConcurrentDictionary<string, CancellationTokenSource> _cache;
         private bool _disposed;
 
         #endregion Private Fields
@@ -30,6 +26,14 @@ namespace InfoFenix.Core {
 
         #endregion Public Properties
 
+        #region Public Constructors
+
+        public CancellationTokenIssuer() {
+            _cache = new ConcurrentDictionary<string, CancellationTokenSource>();
+        }
+
+        #endregion Public Constructors
+
         #region Destructor
 
         ~CancellationTokenIssuer() {
@@ -41,25 +45,30 @@ namespace InfoFenix.Core {
         #region Public Methods
 
         public CancellationToken Get(string key) {
+            PreventCallAfterDispose();
             return _cache.GetOrAdd(key, _ => new CancellationTokenSource()).Token;
         }
 
         public void MarkAsComplete(string key) {
-            CancellationTokenSource source;
-            if (_cache.TryRemove(key, out source)) {
+            PreventCallAfterDispose();
+            if (_cache.TryRemove(key, out CancellationTokenSource source)) {
                 try { source.Dispose(); } catch (Exception ex) { Log.Error(ex, ex.Message); }
             }
         }
 
         public void Cancel(string key) {
-            CancellationTokenSource source;
-            if (_cache.TryRemove(key, out source)) {
+            PreventCallAfterDispose();
+            if (_cache.TryRemove(key, out CancellationTokenSource source)) {
                 try { source.Cancel(); } catch (Exception ex) { Log.Error(ex, ex.Message); }
             }
         }
 
         public void CancelAll() {
-            _cache.Keys.ToArray().Each(Cancel);
+            PreventCallAfterDispose();
+            var keys = _cache.Keys.ToArray();
+            foreach (var key in keys) {
+                Cancel(key);
+            }
         }
 
         #endregion Public Methods
@@ -68,15 +77,14 @@ namespace InfoFenix.Core {
 
         private void Dispose(bool disposing) {
             if (_disposed) { return; }
-            if (disposing) {
-                _cache.Keys.Each(_ => {
-                    CancellationTokenSource source;
-                    if (_cache.TryGetValue(_, out source)) {
-                        source.Dispose();
-                    }
-                });
-            }
+            if (disposing) { CancelAll(); }
             _disposed = true;
+        }
+
+        private void PreventCallAfterDispose() {
+            if (_disposed) {
+                throw new ObjectDisposedException(nameof(CancellationTokenIssuer));
+            }
         }
 
         #endregion Private Methods

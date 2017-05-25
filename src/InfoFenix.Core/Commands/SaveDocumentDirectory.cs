@@ -63,12 +63,12 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<SaveDocumentDirectoryCommand> Members
 
         public void Handle(SaveDocumentDirectoryCommand command) {
-            using (var transaction = _database.Connection.BeginTransaction(IsolationLevel.ReadUncommitted)) {
+            using (var transaction = _database.Connection.BeginTransaction()) {
                 try {
                     var output = _database.ExecuteScalar(SQL.SaveDocumentDirectory, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DocumentDirectoryID), command.DocumentDirectoryID > 0 ? (object)command.DocumentDirectoryID : DBNull.Value, DbType.Int32),
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectoryID > 0 ? (object)command.DocumentDirectoryID : DBNull.Value, DbType.Int32),
                         Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), command.Label),
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DirectoryPath), command.DirectoryPath),
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), command.DirectoryPath),
                         Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), command.Code),
                         Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), command.Watch == true ? 1 : 0, DbType.Int32),
                         Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), command.Index == true ? 1 : 0, DbType.Int32)

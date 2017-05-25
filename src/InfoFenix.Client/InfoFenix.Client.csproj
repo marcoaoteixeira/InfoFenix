@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ClientServiceRegistration.cs" />
+    <Compile Include="Code\Extensions\ControlExtension.cs" />
     <Compile Include="Code\Extensions\RichTextBoxExtension.cs" />
     <Compile Include="Code\FormManager.cs" />
     <Compile Include="Code\DialogHelper.cs" />
@@ -85,11 +86,11 @@
     <Compile Include="Views\DocumentDirectoryForm.Designer.cs">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\IndexDocumentDirectoryForm.cs">
+    <Compile Include="Views\ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\IndexDocumentDirectoryForm.Designer.cs">
-      <DependentUpon>IndexDocumentDirectoryForm.cs</DependentUpon>
+    <Compile Include="Views\ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ManageDocumentDirectoryForm.cs">
       <SubType>Form</SubType>
@@ -134,8 +135,8 @@
     <EmbeddedResource Include="Views\DocumentDirectoryForm.resx">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\IndexDocumentDirectoryForm.resx">
-      <DependentUpon>IndexDocumentDirectoryForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ManageDocumentDirectoryForm.resx">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>

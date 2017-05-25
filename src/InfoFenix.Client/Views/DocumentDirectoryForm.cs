@@ -44,7 +44,7 @@ namespace InfoFenix.Client.Views {
         private void UpdateViewModel() {
             ViewModel = ViewModel ?? new DocumentDirectoryEntity();
             ViewModel.Label = documentDirectoryLabelTextBox.Text;
-            ViewModel.DirectoryPath = documentDirectoryPathTextBox.Text;
+            ViewModel.Path = documentDirectoryPathTextBox.Text;
             ViewModel.Code = ViewModel.Code ?? Guid.NewGuid().ToString("N");
             ViewModel.Watch = watchDocumentDirectoryCheckBox.Checked;
             ViewModel.Index = indexDocumentDirectoryCheckBox.Checked;
@@ -59,23 +59,26 @@ namespace InfoFenix.Client.Views {
 
         private void SaveDocumentDirectory() {
             var command = new SaveDocumentDirectoryCommand {
-                DocumentDirectoryID = ViewModel.DocumentDirectoryID,
+                DocumentDirectoryID = ViewModel.ID,
                 Label = ViewModel.Label,
-                DirectoryPath = ViewModel.DirectoryPath,
+                DirectoryPath = ViewModel.Path,
                 Code = ViewModel.Code,
                 Watch = ViewModel.Watch,
                 Index = ViewModel.Index
             };
             _cqrsDispatcher.Command(command);
-            ViewModel.DocumentDirectoryID = command.DocumentDirectoryID;
+            ViewModel.ID = command.DocumentDirectoryID;
         }
 
         private void SaveDocumentDirectoryDocuments() {
-            _cqrsDispatcher.Command(new SaveDocumentsInDocumentDirectoryCommand {
-                DocumentDirectoryID = ViewModel.DocumentDirectoryID,
-                DocumentDirectoryPath = ViewModel.DirectoryPath,
-                DocumentDirectoryCode = ViewModel.Code
-            });
+            using (var form = _formManager.Get<ProgressForm>(mdi: null, multipleInstance: false)) {
+                form.Task = new SaveDocumentsInDocumentDirectoryCommand {
+                    DocumentDirectoryID = ViewModel.ID,
+                    DocumentDirectoryPath = ViewModel.Path,
+                    DocumentDirectoryCode = ViewModel.Code
+                };
+                form.ShowDialog();
+            }
         }
 
         private void SelectDocumentDirectoryPath() {
@@ -86,15 +89,19 @@ namespace InfoFenix.Client.Views {
         }
 
         private void IndexDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            using (var form = _formManager.Get<IndexDocumentDirectoryForm>(mdi: null, multipleInstance: false)) {
-                form.SetViewModel(documentDirectory);
+            using (var form = _formManager.Get<ProgressForm>(mdi: null, multipleInstance: false)) {
+                form.Task = new IndexDocumentDirectoryCommand {
+                    DocumentDirectoryCode = ViewModel.Code,
+                    DocumentDirectoryPath = ViewModel.Path,
+                    DocumentDirectoryID = ViewModel.ID
+                };
                 form.ShowDialog();
             }
         }
 
         private void WatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
             _cqrsDispatcher.Command(new StartWatchDocumentDirectoryCommand {
-                DirectoryPath = documentDirectory.DirectoryPath
+                DirectoryPath = documentDirectory.Path
             });
         }
 
@@ -119,7 +126,7 @@ namespace InfoFenix.Client.Views {
             SaveDocumentDirectory();
             SaveDocumentDirectoryDocuments();
             
-            //if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
+            if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
             //if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
 
             DialogResult = DialogResult.OK;

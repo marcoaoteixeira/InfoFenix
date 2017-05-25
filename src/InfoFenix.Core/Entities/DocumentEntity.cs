@@ -11,17 +11,13 @@ namespace InfoFenix.Core.Entities {
         #region Public Properties
 
         [Required]
-        public int DocumentID { get; set; }
+        public int ID { get; set; }
 
         public int DocumentDirectoryID { get; set; }
 
         [Required]
         [StringLength(6)]
-        public string FullPath { get; set; }
-
-        public string FileName {
-            get { return FullPath != null ? Path.GetFileName(FullPath) : string.Empty; }
-        }
+        public string Path { get; set; }
 
         [Required]
         public DateTime LastWriteTime { get; set; }
@@ -33,15 +29,20 @@ namespace InfoFenix.Core.Entities {
         [Required]
         public byte[] Payload { get; set; }
 
+        // Computed
+        public string FileName {
+            get { return Path != null ? System.IO.Path.GetFileName(Path) : string.Empty; }
+        }
+
         #endregion Public Properties
 
         #region Public Static Methods
 
         public static DocumentEntity MapFromDataReader(IDataReader reader) {
             return new DocumentEntity {
-                DocumentID = reader.GetInt32OrDefault("document_id"),
+                ID = reader.GetInt32OrDefault("id"),
                 DocumentDirectoryID = reader.GetInt32OrDefault("document_directory_id"),
-                FullPath = reader.GetStringOrDefault("full_path"),
+                Path = reader.GetStringOrDefault("path"),
                 Code = reader.GetInt32OrDefault("code"),
                 LastWriteTime = reader.GetDateTimeOrDefault("last_write_time", DateTime.MinValue),
                 Indexed = reader.GetInt32OrDefault("indexed") > 0,
@@ -54,7 +55,7 @@ namespace InfoFenix.Core.Entities {
         #region Public Methods
 
         public bool Equals(DocumentEntity obj) {
-            return obj != null && obj.DocumentID == DocumentID;
+            return obj != null && obj.ID == ID;
         }
 
         #endregion Public Methods
@@ -66,7 +67,7 @@ namespace InfoFenix.Core.Entities {
         }
 
         public override int GetHashCode() {
-            return DocumentID.GetHashCode();
+            return ID.GetHashCode();
         }
 
         #endregion Public Override Methods

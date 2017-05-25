@@ -1,18 +1,18 @@
 ﻿INSERT OR REPLACE INTO [documents] (
-    [document_id],
+    [id],
     [document_directory_id],
-    [full_path],
+    [path],
     [last_write_time],
     [code],
     [indexed],
     [payload]
 ) VALUES (
-    @DocumentID,
+    @ID,
     @DocumentDirectoryID,
-    @FullPath,
+    @Path,
     @LastWriteTime,
     @Code,
     @Indexed,
     @Payload
 );
-SELECT MAX([document_id]) FROM [documents];
+SELECT MAX([id]) FROM [documents];

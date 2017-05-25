@@ -35,27 +35,11 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Public Constructors
 
-        #region Private Static Methods
-
-        private static DocumentEntity Map(IDataReader reader) {
-            return new DocumentEntity {
-                DocumentID = reader.GetInt32OrDefault("document_id"),
-                DocumentDirectoryID = reader.GetInt32OrDefault("document_directory_id"),
-                FullPath = reader.GetStringOrDefault("full_path"),
-                Code = reader.GetInt32OrDefault("code"),
-                LastWriteTime = reader.GetDateTimeOrDefault("last_write_time", DateTime.MinValue),
-                Indexed = reader.GetInt32OrDefault("indexed") > 0,
-                Payload = reader.GetBlobOrDefault("payload")
-            };
-        }
-
-        #endregion Private Static Methods
-
         #region IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentEntity>> Members
 
         public IEnumerable<DocumentEntity> Handle(ListDocumentsByDocumentDirectoryQuery query) {
-            return _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, Map, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DocumentDirectoryID), query.DocumentDirectoryID, DbType.Int32)
+            return _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
+                Parameter.CreateInputParameter(nameof(query.DocumentDirectoryID), query.DocumentDirectoryID, DbType.Int32)
             });
         }
 

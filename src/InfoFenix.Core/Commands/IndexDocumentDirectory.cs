@@ -1,6 +1,6 @@
 ﻿using System.Data;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
@@ -17,9 +17,9 @@ namespace InfoFenix.Core.Commands {
 
         public int DocumentDirectoryID { get; set; }
 
-        public string Code { get; set; }
+        public string DocumentDirectoryCode { get; set; }
 
-        public string DirectoryPath { get; set; }
+        public string DocumentDirectoryPath { get; set; }
 
         #endregion Public Properties
     }
@@ -28,76 +28,33 @@ namespace InfoFenix.Core.Commands {
 
         #region Private Read-Only Fields
 
-        private readonly CancellationTokenIssuer _issuer;
         private readonly IDatabase _database;
         private readonly IIndexProvider _indexProvider;
-        private readonly IMicrosoftWordApplication _application;
-        private readonly IPublisherSubscriber _pubSub;
+        private readonly IPublisherSubscriber _publisherSubscriber;
+        private readonly IWordDocumentService _wordDocumentService;
 
         #endregion Private Read-Only Fields
 
         #region Public Constructors
 
-        public IndexDocumentDirectoryCommandHandler(CancellationTokenIssuer issuer, IDatabase database, IIndexProvider indexProvider, IMicrosoftWordApplication application, IPublisherSubscriber pubSub) {
-            Prevent.ParameterNull(issuer, nameof(issuer));
+        public IndexDocumentDirectoryCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber, IWordDocumentService wordDocumentService) {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
-            Prevent.ParameterNull(application, nameof(application));
-            Prevent.ParameterNull(pubSub, nameof(pubSub));
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
+            Prevent.ParameterNull(wordDocumentService, nameof(wordDocumentService));
 
-            _issuer = issuer;
             _database = database;
             _indexProvider = indexProvider;
-            _application = application;
-            _pubSub = pubSub;
+            _publisherSubscriber = publisherSubscriber;
+            _wordDocumentService = wordDocumentService;
         }
 
         #endregion Public Constructors
 
         #region Private Methods
 
-        private void ProcessDocuments(int documentDirectoryID, string directoryPath, string code) {
-            var documents = _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DocumentDirectoryID), documentDirectoryID, DbType.Int32)
-            }).ToArray();
-            var totalDocuments = documents.Length;
-            var error = string.Empty;
-
-            _pubSub.PublishAsync(new StartingDocumentDirectoryIndexingNotification {
-                FullPath = directoryPath,
-                TotalDocuments = totalDocuments
-            });
-            if (totalDocuments > 0) {
-                var index = _indexProvider.GetOrCreate(code);
-                foreach (var document in documents) {
-                    _pubSub.PublishAsync(new StartingDocumentIndexingNotification {
-                        FullPath = document.FullPath,
-                        TotalDocuments = totalDocuments
-                    });
-
-                    var wordDocument = _application.Open(document.FullPath);
-                    var content = wordDocument.ReadContent();
-                    wordDocument.Close();
-
-                    var documentIndex = index.NewDocument(document.DocumentID.ToString());
-                    documentIndex.Add(Common.DocumentIndex.Content, content).Analyze();
-                    documentIndex.Add(Common.DocumentIndex.DocumentDirectoryCode, code).Store();
-                    documentIndex.Add(Common.DocumentIndex.DocumentCode, document.Code).Store();
-                    index.StoreDocuments(documentIndex);
-
-                    _database.ExecuteNonQuery(SQL.SetDocumentIndexed, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentID), document.DocumentID,  DbType.Int32)
-                    });
-
-                    _pubSub.PublishAsync(new DocumentIndexingCompleteNotification {
-                        FullPath = document.FullPath
-                    });
-                }
-            }
-            _pubSub.PublishAsync(new DocumentDirectoryIndexingCompleteNotification {
-                FullPath = directoryPath,
-                TotalDocuments = totalDocuments
-            });
+        private string CleanContent(string content) {
+            return content;
         }
 
         #endregion Private Methods
@@ -105,11 +62,48 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<IndexDocumentDirectoryCommand> Members
 
         public void Handle(IndexDocumentDirectoryCommand command) {
-            var key = $"INDEXING::{command.Code}";
-            var token = _issuer.Get(key);
-            Task
-                .Run(() => ProcessDocuments(command.DocumentDirectoryID, command.DirectoryPath, command.Code), token)
-                .ContinueWith(continuationAction => _issuer.MarkAsComplete(key));
+            var documents = _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
+                Parameter.CreateInputParameter(nameof(command.DocumentDirectoryID), command.DocumentDirectoryID, DbType.Int32)
+            }).ToArray();
+            var totalDocuments = documents.Length;
+            var error = string.Empty;
+
+            _publisherSubscriber.PublishAsync(new StartingDocumentDirectoryIndexingNotification {
+                FullPath = command.DocumentDirectoryPath,
+                TotalDocuments = totalDocuments
+            });
+            if (totalDocuments > 0) {
+                var index = _indexProvider.GetOrCreate(command.DocumentDirectoryCode);
+                foreach (var document in documents) {
+                    _publisherSubscriber.PublishAsync(new StartingDocumentIndexingNotification {
+                        FullPath = document.Path,
+                        TotalDocuments = totalDocuments
+                    });
+
+                    var content = string.Empty;
+                    using (var memoryStream = new MemoryStream(document.Payload))
+                    using (var wordDocument = _wordDocumentService.Open(memoryStream)) {
+                        content = CleanContent(wordDocument.Text);
+                    }
+                    var documentIndex = index.NewDocument(document.ID.ToString());
+                    documentIndex.Add(Common.DocumentIndex.Content, content).Analyze();
+                    documentIndex.Add(Common.DocumentIndex.DocumentDirectoryCode, command.DocumentDirectoryCode).Store();
+                    documentIndex.Add(Common.DocumentIndex.DocumentCode, document.Code).Store();
+                    index.StoreDocuments(documentIndex);
+
+                    _database.ExecuteNonQuery(SQL.SetDocumentIndexed, parameters: new[] {
+                        Parameter.CreateInputParameter(nameof(document.ID), document.ID,  DbType.Int32)
+                    });
+
+                    _publisherSubscriber.PublishAsync(new DocumentIndexingCompleteNotification {
+                        FullPath = document.Path
+                    });
+                }
+            }
+            _publisherSubscriber.PublishAsync(new DocumentDirectoryIndexingCompleteNotification {
+                FullPath = command.DocumentDirectoryPath,
+                TotalDocuments = totalDocuments
+            });
         }
 
         #endregion ICommandHandler<IndexDocumentDirectoryCommand> Members

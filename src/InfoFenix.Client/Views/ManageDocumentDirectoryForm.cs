@@ -97,7 +97,7 @@ namespace InfoFenix.Client.Views {
             var documentDirectory = e.Node.Tag as DocumentDirectoryEntity;
             if (documentDirectory == null) { return; }
 
-            CurrentDocumentDirectoryItems = _cqrsDispatcher.Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectory.DocumentDirectoryID });
+            CurrentDocumentDirectoryItems = _cqrsDispatcher.Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectory.ID });
             foreach (var document in CurrentDocumentDirectoryItems) {
                 var text = Path.GetFileNameWithoutExtension(document.FileName);
                 documentDirectoryListView.Items.Add(new ListViewItem {
@@ -186,7 +186,7 @@ namespace InfoFenix.Client.Views {
         }
 
         private int GetImageListIndex(DocumentEntity document) {
-            var extension = Path.GetExtension(document.FullPath).ToLower();
+            var extension = Path.GetExtension(document.Path).ToLower();
             return document.Indexed
                 ? extension == "docx" ? WORD_DOCX_BLUE_ICON_INDEX : WORD_DOC_BLUE_ICON_INDEX
                 : extension == "doc" ? WORD_DOCX_GRAY_ICON_INDEX : WORD_DOC_GRAY_ICON_INDEX;

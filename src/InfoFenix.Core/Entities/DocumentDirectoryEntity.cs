@@ -8,7 +8,7 @@ namespace InfoFenix.Core.Entities {
 
         #region Public Properties
 
-        public int DocumentDirectoryID { get; set; }
+        public int ID { get; set; }
 
         [Required]
         [StringLength(6)]
@@ -16,7 +16,7 @@ namespace InfoFenix.Core.Entities {
 
         [Required]
         [StringLength(3)]
-        public string DirectoryPath { get; set; }
+        public string Path { get; set; }
 
         [Required]
         [StringLength(6)]
@@ -32,8 +32,9 @@ namespace InfoFenix.Core.Entities {
 
         public static DocumentDirectoryEntity MapFromDataReader(IDataReader reader) {
             return new DocumentDirectoryEntity {
-                DocumentDirectoryID = reader.GetInt32OrDefault("document_directory_id"),
+                ID = reader.GetInt32OrDefault("id"),
                 Label = reader.GetStringOrDefault("label"),
+                Path = reader.GetStringOrDefault("path"),
                 Code = reader.GetStringOrDefault("code"),
                 Watch = reader.GetInt32OrDefault("watch") > 0,
                 Index = reader.GetInt32OrDefault("index") > 0
@@ -45,7 +46,7 @@ namespace InfoFenix.Core.Entities {
         #region Public Methods
 
         public bool Equals(DocumentDirectoryEntity obj) {
-            return obj != null && obj.DocumentDirectoryID == DocumentDirectoryID;
+            return obj != null && obj.ID == ID;
         }
 
         #endregion Public Methods
@@ -57,7 +58,7 @@ namespace InfoFenix.Core.Entities {
         }
 
         public override int GetHashCode() {
-            return DocumentDirectoryID.GetHashCode();
+            return ID.GetHashCode();
         }
 
         #endregion Public Override Methods

@@ -58,11 +58,11 @@ namespace InfoFenix.Client {
             };
             var useRemoteSearchDatabaseServiceRegistrations = new IServiceRegistration[] {
                 //new NullIOServiceRegistration(),
-                new NullOfficeServiceRegistration()
+                new NullWordDocumentServiceRegistration()
             };
             var autonomousModeServiceRegistrations = new IServiceRegistration[] {
                 //new IOServiceRegistration(),
-                new OfficeServiceRegistration()
+                new WordDocumentServiceRegistration()
             };
             _compositionRoot = new CompositionRoot();
             _compositionRoot.Compose(defaultServiceRegistrations);

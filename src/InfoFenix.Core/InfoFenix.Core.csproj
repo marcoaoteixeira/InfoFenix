@@ -60,6 +60,18 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Spire.Doc, Version=5.3.36.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.Doc.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.DocViewer.Forms, Version=1.8.4.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.DocViewer.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.License, Version=1.3.3.40, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf, Version=3.2.74.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.Pdf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -80,14 +92,13 @@
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
     <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
-    <Compile Include="Bootstrap\Actions\004_InitializeComponentsAction.cs" />
-    <Compile Include="Bootstrap\Actions\003_KillMicrosoftWordApplicationAction.cs" />
     <Compile Include="Bootstrap\Bootstrapper.cs" />
     <Compile Include="Bootstrap\IAction.cs" />
     <Compile Include="Bootstrap\IBootstrapper.cs" />
     <Compile Include="Bootstrap\OrderAttribute.cs" />
     <Compile Include="CancellationTokenIssuer.cs" />
     <Compile Include="Commands\IndexDocumentDirectory.cs" />
+    <Compile Include="Commands\RemoveDocumentsInDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocumentsInDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocumentDirectory.cs" />
     <Compile Include="Commands\StopWatchDocumentDirectory.cs" />
@@ -131,8 +142,8 @@
     <Compile Include="IoC\Registrations\IOServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\LoggingServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\NullIOServiceRegistration.cs" />
-    <Compile Include="IoC\Registrations\NullOfficeServiceRegistration.cs" />
-    <Compile Include="IoC\Registrations\OfficeServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\NullWordDocumentServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\WordDocumentServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\PubSubServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\SearchServiceRegistration.cs" />
     <Compile Include="IoC\Resolver.cs" />
@@ -155,12 +166,12 @@
     <Compile Include="Logging\LogLevelExtension.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggerFactory.cs" />
-    <Compile Include="Office\IMicrosoftWordApplication.cs" />
-    <Compile Include="Office\IMicrosoftWordDocument.cs" />
-    <Compile Include="Office\MicrosoftWordApplication.cs" />
-    <Compile Include="Office\MicrosoftWordDocument.cs" />
-    <Compile Include="Office\NullMicrosoftWordApplication.cs" />
-    <Compile Include="Office\NullMicrosoftWordDocument.cs" />
+    <Compile Include="Office\IWordDocument.cs" />
+    <Compile Include="Office\IWordDocumentService.cs" />
+    <Compile Include="Office\NullWordDocument.cs" />
+    <Compile Include="Office\NullWordDocumentService.cs" />
+    <Compile Include="Office\SpireDocWordDocument.cs" />
+    <Compile Include="Office\SpireDocWordDocumentService.cs" />
     <Compile Include="Office\WordConvertType.cs" />
     <Compile Include="Prevent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

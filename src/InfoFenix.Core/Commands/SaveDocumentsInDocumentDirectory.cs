@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace InfoFenix.Core.Commands {
         #region Public Properties
 
         public int DocumentDirectoryID { get; set; }
+
+        public string DocumentDirectoryLabel { get; set; }
 
         public string DocumentDirectoryPath { get; set; }
 
@@ -62,38 +65,25 @@ namespace InfoFenix.Core.Commands {
 
         #region Private Methods
 
-        private void RemoveDocuments(SaveDocumentsInDocumentDirectoryCommand command, string[] physicalFiles, DocumentEntity[] documents, string[] databaseFiles) {
-            var toRemove = databaseFiles.Except(physicalFiles).ToArray();
-            _pubSub.PublishAsync(new DocumentsInDirectoryToRemoveNotification {
-                DocumentDirectoryLabel = string.Empty,
-                TotalDocuments = toRemove.Length
-            });
-            if (toRemove.Length > 0) {
-                var index = _indexProvider.GetOrCreate(command.DocumentDirectoryCode);
-                foreach (var file in toRemove) {
-                    var document = documents.Single(_ => _.FullPath == file);
-                    _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentID), document.DocumentID, DbType.Int32)
-                    });
-                    index.DeleteDocuments(document.DocumentID.ToString());
-                    _pubSub.PublishAsync(new DocumentRemovedNotification {
-                        FullPath = file
-                    });
-                }
-            }
-        }
-
-        private void SaveDocuments(SaveDocumentsInDocumentDirectoryCommand command, string[] physicalFiles, string[] databaseFiles) {
-            var toCreate = physicalFiles.Except(databaseFiles).ToArray();
+        private void SaveDocumentEntries(int documentDirectoryID, string documentDirectoryPath, IEnumerable<DocumentEntity> documents, IEnumerable<string> physicalFiles) {
+            var physicalFilesCount = physicalFiles.Count();
             _pubSub.PublishAsync(new DocumentsInDirectoryToSaveNotification {
                 DocumentDirectoryLabel = string.Empty,
-                TotalDocuments = toCreate.Length
+                TotalDocuments = physicalFilesCount
             });
-            foreach (var file in toCreate) {
+            _pubSub.PublishAsync(new StartingProgressiveTaskNotification {
+                Title = "Salvar Documentos",
+                Message = $"Salvando documentos do diretório: {documentDirectoryPath}",
+                MinimunValue = 1,
+                MaximunValue = physicalFilesCount
+            });
+            var counter = 1;
+            foreach (var file in physicalFiles) {
+                var document = documents.SingleOrDefault(_ => string.Equals(_.Path, file, StringComparison.InvariantCultureIgnoreCase));
                 _database.ExecuteScalar(SQL.SaveDocument, parameters: new[] {
-                    Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentID), DBNull.Value, DbType.Int32),
-                    Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentDirectoryID), command.DocumentDirectoryID, DbType.Int32),
-                    Parameter.CreateInputParameter(nameof(DocumentEntity.FullPath), file),
+                    Parameter.CreateInputParameter(nameof(DocumentEntity.ID), document != null ? (object)document.ID : DBNull.Value, DbType.Int32),
+                    Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentDirectoryID), documentDirectoryID, DbType.Int32),
+                    Parameter.CreateInputParameter(nameof(DocumentEntity.Path), file),
                     Parameter.CreateInputParameter(nameof(DocumentEntity.LastWriteTime), File.GetLastWriteTime(file), DbType.DateTime),
                     Parameter.CreateInputParameter(nameof(DocumentEntity.Code), Common.ExtractCodeFromFilePath(file), DbType.Int32),
                     Parameter.CreateInputParameter(nameof(DocumentEntity.Indexed), 0, DbType.Int32),
@@ -102,6 +92,48 @@ namespace InfoFenix.Core.Commands {
                 _pubSub.PublishAsync(new DocumentSavedNotification {
                     FullPath = file
                 });
+                _pubSub.PublishAsync(new ProgressiveTaskPerformStepNotification {
+                    Title = "Salvar Documentos",
+                    Message = $"Documento salvo: {Path.GetFileNameWithoutExtension(file)}",
+                    ActualStep = counter,
+                    StepsToCompletation = physicalFilesCount
+                });
+                counter++;
+            }
+        }
+        
+        private void RemoveDocumentEntries(SaveDocumentsInDocumentDirectoryCommand command, IEnumerable<DocumentEntity> documents, IEnumerable<string> toRemove) {
+            var toRemoveCount = toRemove.Count();
+            _pubSub.PublishAsync(new DocumentsInDirectoryToRemoveNotification {
+                DocumentDirectoryLabel = string.Empty,
+                TotalDocuments = toRemoveCount
+            });
+            if (toRemoveCount > 0) {
+                _pubSub.PublishAsync(new StartingProgressiveTaskNotification {
+                    Title = "Remover Documentos",
+                    Message = $"Removendo documentos do diretório: {command.DocumentDirectoryPath}",
+                    MinimunValue = 1,
+                    MaximunValue = toRemoveCount
+                });
+                var index = _indexProvider.GetOrCreate(command.DocumentDirectoryCode);
+                var counter = 1;
+                foreach (var file in toRemove) {
+                    var document = documents.Single(_ => string.Equals(_.Path, file, StringComparison.InvariantCultureIgnoreCase));
+                    _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.ID), document.ID, DbType.Int32)
+                    });
+                    index.DeleteDocuments(document.ID.ToString());
+                    _pubSub.PublishAsync(new DocumentRemovedNotification {
+                        FullPath = file
+                    });
+                    _pubSub.PublishAsync(new ProgressiveTaskPerformStepNotification {
+                        Title = "Remover Documentos",
+                        Message = $"Documento removido: {Path.GetFileNameWithoutExtension(file)}",
+                        ActualStep = counter,
+                        StepsToCompletation = toRemoveCount
+                    });
+                    counter++;
+                }
             }
         }
 
@@ -112,14 +144,16 @@ namespace InfoFenix.Core.Commands {
         public void Handle(SaveDocumentsInDocumentDirectoryCommand command) {
             var physicalFiles = Common.GetDocFiles(command.DocumentDirectoryPath);
             var documents = _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.DocumentDirectoryID), command.DocumentDirectoryID, DbType.Int32)
+                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectoryID, DbType.Int32)
             }).ToArray();
-            var databaseFiles = documents.Select(_ => _.FullPath).ToArray();
-
-            using (var transaction = _database.Connection.BeginTransaction(IsolationLevel.ReadUncommitted)) {
+            using (var transaction = _database.Connection.BeginTransaction()) {
                 try {
-                    SaveDocuments(command, physicalFiles, databaseFiles);
-                    RemoveDocuments(command, physicalFiles, documents, databaseFiles);
+                    SaveDocumentEntries(command.DocumentDirectoryID, command.DocumentDirectoryPath, documents, physicalFiles);
+
+                    var databaseFiles = documents.Select(_ => _.Path).ToArray();
+                    var toRemove = databaseFiles.Except(physicalFiles);
+                    RemoveDocumentEntries(command, documents, toRemove);
+
                     transaction.Commit();
                 } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
             }

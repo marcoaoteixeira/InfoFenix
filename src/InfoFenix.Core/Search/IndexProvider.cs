@@ -69,8 +69,7 @@ namespace InfoFenix.Core.Search {
                 if (!Cache.ContainsKey(indexName)) { return; }
 
                 Directory.Delete(Path.Combine(_settings.IndexStorageDirectoryPath, indexName));
-                var disposable = Cache[indexName] as IDisposable;
-                if (disposable != null) {
+                if (Cache[indexName] is IDisposable disposable) {
                     disposable.Dispose();
                 }
                 Cache.Remove(indexName);

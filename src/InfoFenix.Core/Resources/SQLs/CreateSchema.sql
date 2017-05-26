@@ -22,3 +22,5 @@ CREATE TABLE IF NOT EXISTS [documents] (
 
     FOREIGN KEY([document_directory_id]) REFERENCES [document_directories]([id])
 );
+
+CREATE INDEX IF NOT EXISTS [IDX_documents_code] ON [documents] ([code] ASC);

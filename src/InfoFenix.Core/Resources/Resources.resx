@@ -121,6 +121,12 @@
   <data name="CreateSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\createschema.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\getdocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\documentdirectory\getdocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="ListDocumentDirectories" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\listdocumentdirectories.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -129,6 +135,9 @@
   </data>
   <data name="RemoveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\removedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="RemoveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\documentdirectory\removedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="SaveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\savedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

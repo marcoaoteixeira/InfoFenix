@@ -13,7 +13,7 @@ using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
-    public class SaveDocumentsInDocumentDirectoryCommand : ICommand {
+    public class SaveDocumentsInsideDocumentDirectoryCommand : ICommand {
 
         #region Public Properties
 
@@ -28,7 +28,7 @@ namespace InfoFenix.Core.Commands {
         #endregion Public Properties
     }
 
-    public class SaveDocumentsInDocumentDirectoryCommandHandler : ICommandHandler<SaveDocumentsInDocumentDirectoryCommand> {
+    public class SaveDocumentsInsideDocumentDirectoryCommandHandler : ICommandHandler<SaveDocumentsInsideDocumentDirectoryCommand> {
 
         #region Private Read-Only Fields
 
@@ -51,7 +51,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public SaveDocumentsInDocumentDirectoryCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber pubSub) {
+        public SaveDocumentsInsideDocumentDirectoryCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber pubSub) {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
             Prevent.ParameterNull(pubSub, nameof(pubSub));
@@ -102,7 +102,7 @@ namespace InfoFenix.Core.Commands {
             }
         }
         
-        private void RemoveDocumentEntries(SaveDocumentsInDocumentDirectoryCommand command, IEnumerable<DocumentEntity> documents, IEnumerable<string> toRemove) {
+        private void RemoveDocumentEntries(SaveDocumentsInsideDocumentDirectoryCommand command, IEnumerable<DocumentEntity> documents, IEnumerable<string> toRemove) {
             var toRemoveCount = toRemove.Count();
             _pubSub.PublishAsync(new DocumentsInDirectoryToRemoveNotification {
                 DocumentDirectoryLabel = string.Empty,
@@ -139,9 +139,9 @@ namespace InfoFenix.Core.Commands {
 
         #endregion Private Methods
 
-        #region ICommandHandler<SaveDocumentsInDocumentDirectoryCommand> Members
+        #region ICommandHandler<SaveDocumentsInsideDocumentDirectoryCommand> Members
 
-        public void Handle(SaveDocumentsInDocumentDirectoryCommand command) {
+        public void Handle(SaveDocumentsInsideDocumentDirectoryCommand command) {
             var physicalFiles = Common.GetDocFiles(command.DocumentDirectoryPath);
             var documents = _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
                 Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectoryID, DbType.Int32)
@@ -159,6 +159,6 @@ namespace InfoFenix.Core.Commands {
             }
         }
 
-        #endregion ICommandHandler<SaveDocumentsInDocumentDirectoryCommand> Members
+        #endregion ICommandHandler<SaveDocumentsInsideDocumentDirectoryCommand> Members
     }
 }

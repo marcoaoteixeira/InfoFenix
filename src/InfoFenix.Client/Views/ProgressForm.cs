@@ -30,6 +30,7 @@ namespace InfoFenix.Client.Views {
         private ISubscription<StartingProgressiveTaskNotification> _startingProgressiveTaskNotificationSubscription;
         private ISubscription<ProgressiveTaskCompletedNotification> _progressiveTaskCompletedNotificationSubscription;
         private ISubscription<ProgressiveTaskPerformStepNotification> _progressiveTaskPerformStepNotificationSubscription;
+        private bool _detailsToggled;
 
         #endregion Private Fields
 
@@ -65,6 +66,9 @@ namespace InfoFenix.Client.Views {
 
             SubscribeForNotification();
             InitializeComponent();
+
+            // Shortcut...
+            RichTextBoxAppender.SetRichTextBox(progressLogRichTextBox, nameof(RichTextBoxAppender));
         }
 
         #endregion Public Constructors
@@ -108,6 +112,8 @@ namespace InfoFenix.Client.Views {
         }
 
         private void Initialize() {
+            Height = 210; /* Hides the log rich text box */
+
             titleLabel.Text = string.Empty;
             messageLabel.Text = string.Empty;
             mainProgressBar.Minimum = 0;
@@ -117,6 +123,7 @@ namespace InfoFenix.Client.Views {
         }
 
         private void StartTask() {
+            if (Task == null) { return; }
             _working = true;
             _cqrsDispatcher
                 .CommandAsync(Task, _cancellationTokenIssuer.Get(CancellationTokenKey))
@@ -159,6 +166,33 @@ namespace InfoFenix.Client.Views {
 
         private void stopButton_Click(object sender, EventArgs e) {
             Close();
+        }
+
+        private void toggleDetailsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            var linkLabel = sender as LinkLabel;
+            if (linkLabel == null) { return; }
+
+            if (!_detailsToggled) {
+                linkLabel.Text = "Menos detalhes";
+                Height += 200;
+                System.Threading.Tasks.Task.Run(() => {
+                    System.Threading.Thread.Sleep(500);
+                    for (int i = 0; i < 10; i++) {
+                        Log.Debug("Debug Line");
+                        Log.Error("Error Line");
+                        Log.Fatal("Fatal Line");
+                        Log.Information("Information Line");
+                        Log.Warning("Warning Line");
+                    }
+                });
+            } else {
+                linkLabel.Text = "Mais detalhes";
+                Height -= 200;
+            }
+
+            StartPosition = FormStartPosition.CenterScreen;
+
+            _detailsToggled = !_detailsToggled;
         }
 
         #endregion Event Handlers

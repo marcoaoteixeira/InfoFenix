@@ -61,15 +61,8 @@ namespace InfoFenix.Core.Search {
         /// <param name="analyzer">The analyzer provider.</param>
         /// <param name="indexName">The index name.</param>
         public SearchBuilder(LuceneDirectory directory, Analyzer analyzer) {
-            if (directory == null) {
-                throw new ArgumentNullException(nameof(directory));
-            }
-            if (analyzer == null) {
-                throw new ArgumentNullException(nameof(analyzer));
-            }
-
-            _directory = directory;
-            _analyzer = analyzer;
+            _directory = directory ?? throw new ArgumentNullException(nameof(directory));
+            _analyzer = analyzer ?? throw new ArgumentNullException(nameof(analyzer));
 
             _count = MAX_RESULTS;
             _skip = 0;
@@ -467,7 +460,7 @@ namespace InfoFenix.Core.Search {
         /// <inheritdoc />
         public ISearchBit GetBits() {
             var query = CreateQuery();
-
+            
             using (var reader = DirectoryReader.Open(_directory)) {
                 IndexSearcher searcher;
                 try { searcher = new IndexSearcher(reader); } catch { return null; /* index might not exist if it has been rebuilt */ }

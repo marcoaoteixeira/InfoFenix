@@ -19,11 +19,13 @@ namespace InfoFenix.Client.Code {
         #region Public Override Methods
 
         public override void Register() {
+            var forms = SupportAssemblies.SelectMany(_ => _.ExportedTypes)
+                .Where(_ => _.IsAssignableTo<Form>() && !_.IsAbstract)
+                .ToArray();
             Builder
-                .RegisterAssemblyTypes(SupportAssemblies)
-                .Where(_ => _.IsAssignableTo<Form>())
+                .RegisterTypes(forms)
                 .AsSelf()
-                .PropertiesAutowired()
+                //.PropertiesAutowired()
                 .InstancePerDependency();
 
             Builder

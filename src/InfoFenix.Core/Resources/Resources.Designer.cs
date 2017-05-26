@@ -62,17 +62,19 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS [document_directories] (
-        ///    [document_directory_id] INTEGER PRIMARY KEY AUTOINCREMENT,
-        ///    [label]                 TEXT                NOT NULL,
-        ///    [directory_path]        TEXT                NOT NULL,
-        ///    [code]                  TEXT                NOT NULL,
-        ///    [watch]                 INTEGER             NOT NULL,
-        ///    [index]                 INTEGER             NOT NULL,
+        ///    [id]    INTEGER PRIMARY KEY AUTOINCREMENT,
+        ///    [label] TEXT                NOT NULL,
+        ///    [path]  TEXT                NOT NULL,
+        ///    [code]  TEXT                NOT NULL,
+        ///    [watch] INTEGER             NOT NULL,
+        ///    [index] INTEGER             NOT NULL,
         ///
-        ///    CONSTRAINT [UQ_directory_path] UNIQUE ([directory_path])
+        ///    CONSTRAINT [UQ_document_directory_path] UNIQUE ([path])
         ///);
         ///
-        ///CREATE TABLE IF NOT EXISTS [do [rest of string was truncated]&quot;;.
+        ///CREATE TABLE IF NOT EXISTS [documents] (
+        ///    [id]                    INTEGER PRIMARY KEY AUTOINCREMENT,
+        ///    [document_directo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CreateSchema {
             get {
@@ -82,16 +84,54 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
+        ///    [id],
         ///    [document_directory_id],
+        ///    [path],
+        ///    [last_write_time],
+        ///    [code],
+        ///    [indexed],
+        ///    [payload]
+        ///FROM [documents]
+        ///WHERE
+        ///    (@ID IS NULL OR ([id] = @ID))
+        ///AND (@Code IS NULL OR ([code] = @Code)).
+        /// </summary>
+        internal static string GetDocument {
+            get {
+                return ResourceManager.GetString("GetDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    [id],
         ///    [label],
-        ///    [directory_path],
+        ///    [path],
+        ///    [code],
+        ///    [watch],
+        ///    [index]
+        ///FROM [document_directories]
+        ///WHERE
+        ///    [id] = @ID;.
+        /// </summary>
+        internal static string GetDocumentDirectory {
+            get {
+                return ResourceManager.GetString("GetDocumentDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    [id],
+        ///    [label],
+        ///    [path],
         ///    [code],
         ///    [watch],
         ///    [index]
         ///FROM [document_directories]
         ///WHERE
         ///    (@Label IS NULL OR ([label] LIKE &apos;%&apos; + @Label + &apos;%&apos;))
-        ///AND (@DirectoryPath IS NULL OR ([directory_path] LIKE &apos;%&apos; + @DirectoryPath + &apos;%&apos;))
+        ///AND (@Path IS NULL OR ([path] LIKE &apos;%&apos; + @Path + &apos;%&apos;))
         ///AND (@Code IS NULL OR ([code] LIKE &apos;%&apos; + @Code + &apos;%&apos;))
         ///AND (@Watch IS NULL OR ([watch] = @Watch))
         ///AND (@Index IS NULL OR ([index] = @Index));.
@@ -104,17 +144,17 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    [documents].[document_id],
+        ///    [documents].[id],
         ///    [documents].[document_directory_id],
-        ///    [documents].[full_path],
+        ///    [documents].[path],
         ///    [documents].[last_write_time],
         ///    [documents].[code],
         ///    [documents].[indexed],
         ///    [documents].[payload]
         ///FROM [documents]
-        ///    INNER JOIN [document_directories] ON [document_directories].[document_directory_id] = [documents].[document_directory_id]
+        ///    INNER JOIN [document_directories] ON [document_directories].[id] = [documents].[document_directory_id]
         ///WHERE
-        ///    [document_directories].[document_directory_id] = @DocumentDirectoryID;.
+        ///    [document_directories].[id] = @DocumentDirectoryID;.
         /// </summary>
         internal static string ListDocumentsByDocumentDirectory {
             get {
@@ -125,7 +165,7 @@ namespace InfoFenix.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to DELETE FROM [documents]
         ///WHERE
-        ///    [document_id] = @DocumentID;.
+        ///    [id] = @ID;.
         /// </summary>
         internal static string RemoveDocument {
             get {
@@ -134,24 +174,39 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM [documents]
+        ///WHERE
+        ///    [document_directory_id] = @DocumentDirectoryID;
+        ///
+        ///DELETE FROM [document_directories]
+        ///WHERE
+        ///    [id] = @DocumentDirectoryID;.
+        /// </summary>
+        internal static string RemoveDocumentDirectory {
+            get {
+                return ResourceManager.GetString("RemoveDocumentDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT OR REPLACE INTO [documents] (
-        ///    [document_id],
-        ///    [document_directory_label],
-        ///    [full_path],
+        ///    [id],
+        ///    [document_directory_id],
+        ///    [path],
         ///    [last_write_time],
         ///    [code],
         ///    [indexed],
         ///    [payload]
         ///) VALUES (
-        ///    @DocumentID,
-        ///    @DocumentDirectoryLabel,
-        ///    @FullPath,
+        ///    @ID,
+        ///    @DocumentDirectoryID,
+        ///    @Path,
         ///    @LastWriteTime,
         ///    @Code,
         ///    @Indexed,
         ///    @Payload
         ///);
-        ///SELECT MAX([document_id]) FROM [documents];.
+        ///SELECT MAX([id]) FROM [documents];.
         /// </summary>
         internal static string SaveDocument {
             get {
@@ -161,21 +216,21 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to INSERT OR REPLACE INTO [document_directories] (
-        ///    [document_directory_id],
+        ///    [id],
         ///    [label],
-        ///    [directory_path],
+        ///    [path],
         ///    [code],
         ///    [watch],
         ///    [index]
         ///) VALUES (
-        ///    @DocumentDirectoryID,
+        ///    @ID,
         ///    @Label,
-        ///    @DirectoryPath,
+        ///    @Path,
         ///    @Code,
         ///    @Watch,
         ///    @Index
         ///);
-        ///SELECT MAX([document_directory_id]) FROM [document_directories].
+        ///SELECT MAX([id]) FROM [document_directories].
         /// </summary>
         internal static string SaveDocumentDirectory {
             get {
@@ -185,9 +240,9 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE [documents] SET
-        ///    [indexed] = @Indexed,
-        ///    [payload] = @Payload
-        ///WHERE [document_id] = @DocumentID.
+        ///    [indexed] = 1
+        ///WHERE
+        ///    [id] = @ID.
         /// </summary>
         internal static string SetDocumentIndexed {
             get {

@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace InfoFenix.Core.Commands {
-    class RemoveDocumentsInDocumentDirectory {
+    class RemoveDocumentsFromDocumentDirectory {
     }
 }

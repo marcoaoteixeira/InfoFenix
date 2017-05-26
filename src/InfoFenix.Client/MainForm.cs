@@ -20,5 +20,11 @@ namespace InfoFenix.Client {
         private void documentDirectoryToolStripMenuItem_Click(object sender, EventArgs e) {
             _formManager.Get<ManageDocumentDirectoryForm>(mdi: this, multipleInstance: false).Show();
         }
+
+        private void searchToolStripMenuItem_Click(object sender, EventArgs e) {
+            using (var form = _formManager.Get<ProgressForm>(mdi: null, multipleInstance: false)) {
+                form.ShowDialog();
+            }
+        }
     }
 }

@@ -54,7 +54,7 @@ namespace InfoFenix.Client {
                 new CqrsServiceRegistration(supportAssemblies),
                 new PubSubServiceRegistration(),
                 new SearchServiceRegistration(),
-                //new LoggingServiceRegistration()
+                new LoggingServiceRegistration()
             };
             var useRemoteSearchDatabaseServiceRegistrations = new IServiceRegistration[] {
                 //new NullIOServiceRegistration(),

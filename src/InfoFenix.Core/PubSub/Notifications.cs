@@ -8,6 +8,18 @@ namespace InfoFenix.Core.PubSub {
         public string Title { get; set; }
         public string Message { get; set; }
         public string Error { get; set; }
+        public NotificationState State { get; set; }
+
+        #endregion
+
+        #region Public Enum
+
+        public enum NotificationState {
+            None,
+            Begin,
+            Error,
+            Done
+        }
 
         #endregion
     }
@@ -137,5 +149,8 @@ namespace InfoFenix.Core.PubSub {
         public int StepsToCompletation { get; set; }
 
         #endregion
+    }
+
+    public sealed class SaveDocumentNotification : NotificationBase {
     }
 }

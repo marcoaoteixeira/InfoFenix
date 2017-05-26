@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
@@ -17,9 +18,9 @@ namespace InfoFenix.Core.Queries {
 
         public string Code { get; set; }
 
-        public bool Watch { get; set; }
+        public bool? Watch { get; set; }
 
-        public bool Index { get; set; }
+        public bool? Index { get; set; }
 
         #endregion Public Properties
     }
@@ -46,11 +47,11 @@ namespace InfoFenix.Core.Queries {
 
         public IEnumerable<DocumentDirectoryEntity> Handle(ListDocumentDirectoriesQuery query) {
             return _database.ExecuteReader(SQL.ListDocumentDirectories, DocumentDirectoryEntity.MapFromDataReader, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(query.Label), query.Label),
-                Parameter.CreateInputParameter(nameof(query.Path), query.Path),
-                Parameter.CreateInputParameter(nameof(query.Code), query.Code),
-                Parameter.CreateInputParameter(nameof(query.Watch), query.Watch ? 1 : 0, DbType.Int32),
-                Parameter.CreateInputParameter(nameof(query.Index), query.Index ? 1 : 0, DbType.Int32)
+                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), (object)query.Label ?? DBNull.Value),
+                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), (object)query.Path ?? DBNull.Value),
+                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), (object)query.Code ?? DBNull.Value),
+                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), query.Watch.HasValue ? (object)(query.Watch.Value ? 1 : 0) : DBNull.Value , DbType.Int32),
+                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), query.Index.HasValue ? (object)(query.Index.Value ? 1 : 0) : DBNull.Value , DbType.Int32)
             });
         }
 

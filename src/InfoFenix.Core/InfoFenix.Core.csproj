@@ -91,6 +91,7 @@
     <Compile Include="Bootstrap\ActionBase.cs" />
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
+    <Compile Include="Bootstrap\Actions\003_InitializeServicesAction.cs" />
     <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
     <Compile Include="Bootstrap\Bootstrapper.cs" />
     <Compile Include="Bootstrap\IAction.cs" />
@@ -98,9 +99,12 @@
     <Compile Include="Bootstrap\OrderAttribute.cs" />
     <Compile Include="CancellationTokenIssuer.cs" />
     <Compile Include="Commands\IndexDocumentDirectory.cs" />
-    <Compile Include="Commands\RemoveDocumentsInDocumentDirectory.cs" />
-    <Compile Include="Commands\SaveDocumentsInDocumentDirectory.cs" />
+    <Compile Include="Commands\RemoveDocumentsFromDocumentDirectory.cs" />
+    <Compile Include="Commands\RemoveDocument.cs" />
+    <Compile Include="Commands\RemoveDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocumentDirectory.cs" />
+    <Compile Include="Commands\SaveDocument.cs" />
+    <Compile Include="Commands\SaveDocumentsInsideDocumentDirectory.cs" />
     <Compile Include="Commands\StopWatchDocumentDirectory.cs" />
     <Compile Include="Commands\StartWatchDocumentDirectory.cs" />
     <Compile Include="Data\Database.cs" />
@@ -188,6 +192,7 @@
     <Compile Include="PubSub\PublisherSubscriber.cs" />
     <Compile Include="PubSub\PublisherSubscriberExtension.cs" />
     <Compile Include="PubSub\Subscription.cs" />
+    <Compile Include="Queries\GetDocumentDirectory.cs" />
     <Compile Include="Queries\ListDocumentDirectories.cs" />
     <Compile Include="Queries\ListDocumentsByDocumentDirectory.cs" />
     <Compile Include="Resources\Resources.Designer.cs">
@@ -213,6 +218,8 @@
     <Compile Include="Search\SearchBit.cs" />
     <Compile Include="Search\SearchBuilder.cs" />
     <Compile Include="Search\SearchHit.cs" />
+    <Compile Include="Services\DocumentDirectoryService.cs" />
+    <Compile Include="Services\IDocumentDirectoryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -231,8 +238,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\SQLs\CreateSchema.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\GetDocumentDirectory.sql" />
     <Content Include="Resources\SQLs\DocumentDirectory\ListDocumentDirectories.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\RemoveDocumentDirectory.sql" />
     <Content Include="Resources\SQLs\DocumentDirectory\SaveDocumentDirectory.sql" />
+    <Content Include="Resources\SQLs\Document\GetDocument.sql" />
     <Content Include="Resources\SQLs\Document\ListDocumentsByDocumentDirectory.sql" />
     <Content Include="Resources\SQLs\Document\RemoveDocument.sql" />
     <Content Include="Resources\SQLs\Document\SetDocumentIndexed.sql" />

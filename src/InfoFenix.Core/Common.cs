@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -10,15 +8,10 @@ namespace InfoFenix.Core {
 
         #region Public Static Read-Only Fields
 
-        public static readonly IList<int> WordProcesses = new List<int>();
-
         public static readonly string ApplicationDirectoryPath = typeof(Common).Assembly.GetDirectoryPath();
         public static readonly string DefaultAppDataDirectoryPath = Path.Combine(ApplicationDirectoryPath, "App_Data");
-        public static readonly string DatabaseFileName = "InformaNET.s3db";
+        public static readonly string DatabaseFileName = "InfoFenix.s3db";
         public static readonly string IndexStorageDirectoryName = "IndexStorage";
-
-        public static readonly string TagDocumentDirectoryCode = "DocumentDirectoryCode";
-        public static readonly string TagContent = "Content";
 
         #endregion Public Static Read-Only Fields
 
@@ -37,34 +30,32 @@ namespace InfoFenix.Core {
             return GetDocFiles(path).Select(_ => new FileInfo(_)).ToArray();
         }
 
-        /// <summary>
-        /// Returns the name of that process given by that title
-        /// </summary>
-        /// <param name="mainWindowTitle">The window main title.</param>
-        /// <returns><see cref="int.MaxValue"/> returned if it cant be found</returns>
-        public static int GetProcessID(string mainWindowTitle) {
-            var processes = Process.GetProcesses();
-            for (var idx = 0; idx < processes.Length; idx++) {
-                if (processes[idx].MainWindowTitle == mainWindowTitle) {
-                    return processes[idx].Id;
-                }
-            }
-            return int.MaxValue;
-        }
-
         #endregion Public Static Methods
 
         #region Public Static Internal Classes
 
-        public static class DocumentIndex {
+        public static class Index {
 
             #region Public Static Read-Only Fields
 
-            public static readonly string Content = nameof(Content);
-            public static readonly string DocumentDirectoryCode = nameof(DocumentDirectoryCode);
-            public static readonly string DocumentCode = nameof(DocumentCode);
+            public static readonly string DefaultName = "INFO_FENIX_DOCUMENT_INDEX";
 
             #endregion Public Static Read-Only Fields
+
+            #region Public Static Inner Classes
+
+            public static class DocumentFieldName {
+
+                #region Public Static Read-Only Fields
+
+                public static readonly string Content = nameof(Content);
+                public static readonly string DocumentDirectoryCode = nameof(DocumentDirectoryCode);
+                public static readonly string DocumentCode = nameof(DocumentCode);
+
+                #endregion Public Static Read-Only Fields
+            }
+
+            #endregion Public Static Inner Classes
         }
 
         #endregion Public Static Internal Classes

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
 using Lucene.Net.Util;
 
 namespace InfoFenix.Core.Search {
@@ -23,6 +25,7 @@ namespace InfoFenix.Core.Search {
 
         #endregion Private Read-Only Fields
 
+
         #region Public Static Read-Only Fields
 
         /// <summary>
@@ -41,12 +44,8 @@ namespace InfoFenix.Core.Search {
         /// <param name="hostingEnvironment">The hosting environment.</param>
         /// <param name="analyzerProvider">The analyzer provider.</param>
         public IndexProvider(IAnalyzerProvider analyzerProvider, LuceneSettings settings) {
-            if (analyzerProvider == null) {
-                throw new ArgumentNullException(nameof(analyzerProvider));
-            }
-            if (settings == null) {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            Prevent.ParameterNull(analyzerProvider, nameof(analyzerProvider));
+            Prevent.ParameterNull(settings, nameof(settings));
 
             _analyzerProvider = analyzerProvider;
             _settings = settings;

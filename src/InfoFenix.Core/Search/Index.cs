@@ -20,6 +20,9 @@ namespace InfoFenix.Core.Search {
         #region Private Fields
 
         private LuceneDirectory _directory;
+        private IndexReader _indexReader;
+        private IndexSearcher _indexSearcher;
+        private IndexWriter _indexWriter;
         private bool _disposed;
 
         #endregion Private Fields
@@ -41,15 +44,9 @@ namespace InfoFenix.Core.Search {
         #region Public Constructors
 
         public Index(Analyzer analyzer, string basePath, string name) {
-            if (analyzer == null) {
-                throw new ArgumentNullException(nameof(analyzer));
-            }
-            if (string.IsNullOrWhiteSpace(basePath)) {
-                throw new ArgumentException("Parameter cannot be null, empty or white spaces.", nameof(basePath));
-            }
-            if (string.IsNullOrWhiteSpace(name)) {
-                throw new ArgumentException("Parameter cannot be null, empty or white spaces.", nameof(name));
-            }
+            Prevent.ParameterNull(analyzer, nameof(analyzer));
+            Prevent.ParameterNullOrWhiteSpace(basePath, nameof(basePath));
+            Prevent.ParameterNullOrWhiteSpace(name, nameof(name));
 
             _analyzer = analyzer;
             _basePath = basePath;
@@ -91,17 +88,13 @@ namespace InfoFenix.Core.Search {
 
         private void Initialize() {
             _directory = Lucene.Net.Store.FSDirectory.Open(new DirectoryInfo(Path.Combine(_basePath, Name)));
-
-            // Creates the index directory
-            using (CreateIndexWriter()) { }
+            _indexReader = DirectoryReader.Open(_directory);
+            _indexSearcher = new IndexSearcher(_indexReader);
+            _indexWriter = new IndexWriter(_directory, new IndexWriterConfig(IndexProvider.Version, _analyzer));
         }
 
         private bool IndexDirectoryExists() {
             return Directory.Exists(Path.Combine(_basePath, Name));
-        }
-
-        private IndexWriter CreateIndexWriter() {
-            return new IndexWriter(_directory, new IndexWriterConfig(IndexProvider.Version, _analyzer));
         }
 
         private void Dispose(bool disposing) {
@@ -110,9 +103,18 @@ namespace InfoFenix.Core.Search {
                 if (_directory != null) {
                     _directory.Dispose();
                 }
+                if (_indexReader != null) {
+                    _indexReader.Dispose();
+                }
+                if (_indexWriter != null) {
+                    _indexWriter.Dispose();
+                }
             }
 
             _directory = null;
+            _indexReader = null;
+            _indexSearcher = null;
+            _indexWriter = null;
             _disposed = true;
         }
 
@@ -127,13 +129,9 @@ namespace InfoFenix.Core.Search {
         }
 
         public int TotalDocuments() {
-            if (!IndexDirectoryExists()) {
-                return -1;
-            }
+            if (!IndexDirectoryExists()) { return -1; }
 
-            using (var reader = DirectoryReader.Open(_directory)) {
-                return reader.NumDocs;
-            }
+            return _indexReader.NumDocs;
         }
 
         public IDocumentIndex NewDocument(string documentID) {
@@ -146,10 +144,8 @@ namespace InfoFenix.Core.Search {
 
             DeleteDocuments(documents.OfType<DocumentIndex>().Select(_ => _.DocumentID).ToArray());
 
-            using (var writer = CreateIndexWriter()) {
-                foreach (var document in documents) {
-                    writer.AddDocument(CreateDocument(document));
-                }
+            foreach (var document in documents) {
+                _indexWriter.AddDocument(CreateDocument(document));
             }
         }
 
@@ -157,25 +153,23 @@ namespace InfoFenix.Core.Search {
             if (documentIDs == null) { return; }
             if (documentIDs.Length == 0) { return; }
 
-            using (var writer = CreateIndexWriter()) {
-                // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
+            // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
 
-                var pageCount = documentIDs.Length / (BatchSize + 1);
-                for (var page = 0; page < pageCount; page++) {
-                    var query = new BooleanQuery();
-                    try {
-                        var batch = documentIDs.Skip(page * BatchSize).Take(BatchSize);
-                        foreach (var id in batch) {
-                            query.Add(new BooleanClause(new TermQuery(new Term(nameof(SearchHit.DocumentID), id)), BooleanClause.Occur.SHOULD));
-                        }
-                        writer.DeleteDocuments(query);
-                    } catch (Exception) { /* Just skip error */ }
-                }
+            var pageCount = documentIDs.Length / (BatchSize + 1);
+            for (var page = 0; page < pageCount; page++) {
+                var query = new BooleanQuery();
+                try {
+                    var batch = documentIDs.Skip(page * BatchSize).Take(BatchSize);
+                    foreach (var id in batch) {
+                        query.Add(new BooleanClause(new TermQuery(new Term(nameof(SearchHit.DocumentID), id)), BooleanClause.Occur.SHOULD));
+                    }
+                    _indexWriter.DeleteDocuments(query);
+                } catch (Exception) { /* Just skip error */ }
             }
         }
 
         public ISearchBuilder CreateSearchBuilder() {
-            return new SearchBuilder(_directory, _analyzer);
+            return new SearchBuilder(_analyzer, _indexSearcher);
         }
 
         #endregion IIndex Members

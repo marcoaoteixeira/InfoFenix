@@ -86,9 +86,9 @@ namespace InfoFenix.Core.Commands {
                         content = CleanContent(wordDocument.Text);
                     }
                     var documentIndex = index.NewDocument(document.ID.ToString());
-                    documentIndex.Add(Common.Index.Content, content).Analyze();
-                    documentIndex.Add(Common.Index.DocumentDirectoryCode, command.DocumentDirectoryCode).Store();
-                    documentIndex.Add(Common.Index.DocumentCode, document.Code).Store();
+                    documentIndex.Add(Common.Index.DocumentFieldName.Content, content).Analyze();
+                    documentIndex.Add(Common.Index.DocumentFieldName.DocumentDirectoryCode, command.DocumentDirectoryCode).Store();
+                    documentIndex.Add(Common.Index.DocumentFieldName.DocumentCode, document.Code).Store();
                     index.StoreDocuments(documentIndex);
 
                     _database.ExecuteNonQuery(SQL.SetDocumentIndexed, parameters: new[] {

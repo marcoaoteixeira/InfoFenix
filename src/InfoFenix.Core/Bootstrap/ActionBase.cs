@@ -3,6 +3,8 @@
 
         #region IAction Members
 
+        public abstract string Description { get; }
+
         public abstract void Execute();
 
         #endregion IAction Members

@@ -1,7 +1,7 @@
 ﻿using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Core.Cqrs {
-    public sealed class CqrsDispatcher : ICqrsDispatcher {
+    public sealed class CommandQueryDispatcher : ICommandQueryDispatcher {
 
         #region Private Read-Only Fields
 
@@ -11,7 +11,7 @@ namespace InfoFenix.Core.Cqrs {
 
         #region Public Constructors
 
-        public CqrsDispatcher(IResolver resolver) {
+        public CommandQueryDispatcher(IResolver resolver) {
             Prevent.ParameterNull(resolver, nameof(resolver));
 
             _resolver = resolver;

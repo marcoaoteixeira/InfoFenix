@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Core;
-using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Entities;
 using InfoFenix.Core.Infrastructure;
-using InfoFenix.Core.Commands;
+using InfoFenix.Core.Logging;
+using InfoFenix.Core.Services;
 
 namespace InfoFenix.Client.Views {
 
@@ -14,12 +15,19 @@ namespace InfoFenix.Client.Views {
 
         #region Private Read-Only Fields
 
-        private readonly ICqrsDispatcher _cqrsDispatcher;
-        private readonly IFormManager _formManager;
+        private readonly IDocumentDirectoryService _documentDirectoryService;
+        private readonly ProgressiveTaskExecutor _progressiveTaskExecutor;
 
         #endregion Private Read-Only Fields
 
         #region Public Properties
+
+        private ILogger _log;
+
+        public ILogger Log {
+            get { return _log ?? NullLogger.Instance; }
+            set { _log = value ?? NullLogger.Instance; }
+        }
 
         public DocumentDirectoryEntity ViewModel { get; set; }
 
@@ -27,12 +35,12 @@ namespace InfoFenix.Client.Views {
 
         #region Public Constructors
 
-        public DocumentDirectoryForm(ICqrsDispatcher cqrsDispatcher, IFormManager formManager) {
-            Prevent.ParameterNull(cqrsDispatcher, nameof(cqrsDispatcher));
-            Prevent.ParameterNull(formManager, nameof(formManager));
+        public DocumentDirectoryForm(IDocumentDirectoryService documentDirectoryService, ProgressiveTaskExecutor progressiveTaskExecutor) {
+            Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
+            Prevent.ParameterNull(progressiveTaskExecutor, nameof(progressiveTaskExecutor));
 
-            _cqrsDispatcher = cqrsDispatcher;
-            _formManager = formManager;
+            _documentDirectoryService = documentDirectoryService;
+            _progressiveTaskExecutor = progressiveTaskExecutor;
 
             InitializeComponent();
         }
@@ -58,27 +66,15 @@ namespace InfoFenix.Client.Views {
         }
 
         private void SaveDocumentDirectory() {
-            var command = new SaveDocumentDirectoryCommand {
-                DocumentDirectoryID = ViewModel.ID,
-                Label = ViewModel.Label,
-                DirectoryPath = ViewModel.Path,
-                Code = ViewModel.Code,
-                Watch = ViewModel.Watch,
-                Index = ViewModel.Index
-            };
-            _cqrsDispatcher.Command(command);
-            ViewModel.ID = command.DocumentDirectoryID;
+            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.Save(ViewModel));
         }
 
-        private void SaveDocumentDirectoryDocuments() {
-            using (var form = _formManager.Get<ProgressForm>(mdi: null, multipleInstance: false)) {
-                form.Task = new SaveDocumentsInDocumentDirectoryCommand {
-                    DocumentDirectoryID = ViewModel.ID,
-                    DocumentDirectoryPath = ViewModel.Path,
-                    DocumentDirectoryCode = ViewModel.Code
-                };
-                form.ShowDialog();
-            }
+        private void SaveDocumentsInsideDirectoryDocuments() {
+            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.SaveDocumentsInsideDocumentDirectoryAsync(ViewModel.ID, cancellationToken));
+        }
+
+        private void CleanDocumentDirectory() {
+            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.CleanAsync(ViewModel.ID, cancellationToken));
         }
 
         private void SelectDocumentDirectoryPath() {
@@ -89,20 +85,11 @@ namespace InfoFenix.Client.Views {
         }
 
         private void IndexDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            using (var form = _formManager.Get<ProgressForm>(mdi: null, multipleInstance: false)) {
-                form.Task = new IndexDocumentDirectoryCommand {
-                    DocumentDirectoryCode = ViewModel.Code,
-                    DocumentDirectoryPath = ViewModel.Path,
-                    DocumentDirectoryID = ViewModel.ID
-                };
-                form.ShowDialog();
-            }
+            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.IndexAsync(ViewModel.ID, cancellationToken));
         }
 
         private void WatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _cqrsDispatcher.Command(new StartWatchDocumentDirectoryCommand {
-                DirectoryPath = documentDirectory.Path
-            });
+            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.WatchForModification(documentDirectory.ID));
         }
 
         #endregion Private Methods
@@ -124,9 +111,10 @@ namespace InfoFenix.Client.Views {
             if (!ValidateViewModel()) { return; }
 
             SaveDocumentDirectory();
-            SaveDocumentDirectoryDocuments();
-            
-            if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
+            SaveDocumentsInsideDirectoryDocuments();
+            CleanDocumentDirectory();
+
+            //if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
             //if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
 
             DialogResult = DialogResult.OK;

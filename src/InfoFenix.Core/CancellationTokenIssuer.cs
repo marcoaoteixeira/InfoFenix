@@ -56,11 +56,13 @@ namespace InfoFenix.Core {
             }
         }
 
-        public void Cancel(string key) {
+        public bool Cancel(string key) {
             PreventCallAfterDispose();
             if (_cache.TryRemove(key, out CancellationTokenSource source)) {
-                try { source.Cancel(); } catch (Exception ex) { Log.Error(ex, ex.Message); }
+                try { source.Cancel(); return true; }
+                catch (Exception ex) { Log.Error(ex, ex.Message); }
             }
+            return false;
         }
 
         public void CancelAll() {

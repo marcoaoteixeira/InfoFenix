@@ -4,30 +4,24 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.Search;
 using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
-    public sealed class RemoveDocumentCommand : ICommand {
+    public sealed class SetDocumentIndexCommand : ICommand {
 
         #region Public Properties
 
         public int ID { get; set; }
 
-        public string FileName { get; set; }
-
-        public string DocumentDirectoryCode { get; set; }
-
         #endregion Public Properties
     }
 
-    public sealed class RemoveDocumentCommandHandler : ICommandHandler<RemoveDocumentCommand> {
+    public sealed class SetDocumentIndexCommandHandler : ICommandHandler<SetDocumentIndexCommand> {
 
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
-        private readonly IIndexProvider _indexProvider;
 
         #endregion Private Read-Only Fields
 
@@ -44,35 +38,27 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public RemoveDocumentCommandHandler(IDatabase database, IIndexProvider indexProvider) {
+        public SetDocumentIndexCommandHandler(IDatabase database) {
             Prevent.ParameterNull(database, nameof(database));
-            Prevent.ParameterNull(indexProvider, nameof(indexProvider));
 
             _database = database;
-            _indexProvider = indexProvider;
         }
 
         #endregion Public Constructors
 
-        #region ICommandHandler<RemoveDocumentCommand> Members
+        #region ICommandHandler<SetDocumentIndexCommand> Members
 
-        public void Handle(RemoveDocumentCommand command) {
+        public void Handle(SetDocumentIndexCommand command) {
             using (var transaction = _database.Connection.BeginTransaction()) {
                 try {
-                    _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
+                    _database.ExecuteNonQuery(SQL.SetDocumentIndex, parameters: new[] {
                         Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.ID, DbType.Int32)
                     });
                     transaction.Commit();
                 } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
             }
-
-            try {
-                _indexProvider
-                    .GetOrCreate(command.DocumentDirectoryCode)
-                    .DeleteDocuments(command.ID.ToString());
-            } catch (Exception ex) { Log.Error(ex, $"Erro ao remover o documento {command.FileName} do índice."); }
         }
 
-        #endregion ICommandHandler<RemoveDocumentCommand> Members
+        #endregion ICommandHandler<SetDocumentIndexCommand> Members
     }
 }

@@ -27,8 +27,8 @@ namespace InfoFenix.Core.IoC {
                 .InstancePerDependency();
 
             Builder
-               .RegisterType<CqrsDispatcher>()
-               .As<ICqrsDispatcher>()
+               .RegisterType<CommandQueryDispatcher>()
+               .As<ICommandQueryDispatcher>()
                .SingleInstance();
         }
 

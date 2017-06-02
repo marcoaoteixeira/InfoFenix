@@ -6,14 +6,19 @@ using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using LuceneDirectory = Lucene.Net.Store.Directory;
+using LuceneFSDirectory = Lucene.Net.Store.FSDirectory;
 
 namespace InfoFenix.Core.Search {
+
     public class Index : IIndex, IDisposable {
 
         #region Private Read-Only Fields
 
         private readonly Analyzer _analyzer;
         private readonly string _basePath;
+        private readonly string _name;
+
+        private readonly object _syncLock = new object();
 
         #endregion Private Read-Only Fields
 
@@ -22,7 +27,6 @@ namespace InfoFenix.Core.Search {
         private LuceneDirectory _directory;
         private IndexReader _indexReader;
         private IndexSearcher _indexSearcher;
-        private IndexWriter _indexWriter;
         private bool _disposed;
 
         #endregion Private Fields
@@ -50,8 +54,7 @@ namespace InfoFenix.Core.Search {
 
             _analyzer = analyzer;
             _basePath = basePath;
-
-            Name = name;
+            _name = name;
 
             Initialize();
         }
@@ -87,14 +90,41 @@ namespace InfoFenix.Core.Search {
         #region Private Methods
 
         private void Initialize() {
-            _directory = Lucene.Net.Store.FSDirectory.Open(new DirectoryInfo(Path.Combine(_basePath, Name)));
-            _indexReader = DirectoryReader.Open(_directory);
-            _indexSearcher = new IndexSearcher(_indexReader);
-            _indexWriter = new IndexWriter(_directory, new IndexWriterConfig(IndexProvider.Version, _analyzer));
+            _directory = LuceneFSDirectory.Open(new DirectoryInfo(Path.Combine(_basePath, Name)));
+
+            using (CreateIndexWriter()) { /* Creates the index folder */ }
         }
 
         private bool IndexDirectoryExists() {
             return Directory.Exists(Path.Combine(_basePath, Name));
+        }
+
+        private IndexWriter CreateIndexWriter() {
+            return new IndexWriter(_directory, new IndexWriterConfig(IndexProvider.Version, _analyzer));
+        }
+
+        private IndexReader CreateIndexReader() {
+            lock (_syncLock) {
+                return _indexReader ?? (_indexReader = DirectoryReader.Open(_directory));
+            }
+        }
+
+        private IndexSearcher CreateIndexSearcher() {
+            lock (_syncLock) {
+                return _indexSearcher ?? (_indexSearcher = new IndexSearcher(CreateIndexReader()));
+            }
+        }
+
+        private void RenewIndex() {
+            lock (_syncLock) {
+                if (_indexReader != null) {
+                    _indexReader.Dispose();
+                    _indexReader = null;
+                }
+                if (_indexSearcher != null) {
+                    _indexSearcher = null;
+                }
+            }
         }
 
         private void Dispose(bool disposing) {
@@ -106,15 +136,11 @@ namespace InfoFenix.Core.Search {
                 if (_indexReader != null) {
                     _indexReader.Dispose();
                 }
-                if (_indexWriter != null) {
-                    _indexWriter.Dispose();
-                }
             }
 
             _directory = null;
             _indexReader = null;
             _indexSearcher = null;
-            _indexWriter = null;
             _disposed = true;
         }
 
@@ -122,7 +148,9 @@ namespace InfoFenix.Core.Search {
 
         #region IIndex Members
 
-        public string Name { get; }
+        public string Name {
+            get { return _name; }
+        }
 
         public bool IsEmpty() {
             return TotalDocuments() <= 0;
@@ -131,7 +159,7 @@ namespace InfoFenix.Core.Search {
         public int TotalDocuments() {
             if (!IndexDirectoryExists()) { return -1; }
 
-            return _indexReader.NumDocs;
+            return CreateIndexReader().NumDocs;
         }
 
         public IDocumentIndex NewDocument(string documentID) {
@@ -144,8 +172,12 @@ namespace InfoFenix.Core.Search {
 
             DeleteDocuments(documents.OfType<DocumentIndex>().Select(_ => _.DocumentID).ToArray());
 
-            foreach (var document in documents) {
-                _indexWriter.AddDocument(CreateDocument(document));
+            using (var writer = CreateIndexWriter()) {
+                foreach (var document in documents) {
+                    writer.AddDocument(CreateDocument(document));
+                }
+
+                RenewIndex();
             }
         }
 
@@ -155,21 +187,25 @@ namespace InfoFenix.Core.Search {
 
             // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
 
-            var pageCount = documentIDs.Length / (BatchSize + 1);
-            for (var page = 0; page < pageCount; page++) {
-                var query = new BooleanQuery();
-                try {
-                    var batch = documentIDs.Skip(page * BatchSize).Take(BatchSize);
-                    foreach (var id in batch) {
-                        query.Add(new BooleanClause(new TermQuery(new Term(nameof(SearchHit.DocumentID), id)), BooleanClause.Occur.SHOULD));
-                    }
-                    _indexWriter.DeleteDocuments(query);
-                } catch (Exception) { /* Just skip error */ }
+            using (var writer = CreateIndexWriter()) {
+                var pageCount = documentIDs.Length / (BatchSize + 1);
+                for (var page = 0; page < pageCount; page++) {
+                    var query = new BooleanQuery();
+                    try {
+                        var batch = documentIDs.Skip(page * BatchSize).Take(BatchSize);
+                        foreach (var id in batch) {
+                            query.Add(new BooleanClause(new TermQuery(new Term(nameof(ISearchHit.DocumentID), id)), BooleanClause.Occur.SHOULD));
+                        }
+                        writer.DeleteDocuments(query);
+                    } catch { /* Just skip error */ }
+                }
+
+                RenewIndex();
             }
         }
 
         public ISearchBuilder CreateSearchBuilder() {
-            return new SearchBuilder(_analyzer, _indexSearcher);
+            return new SearchBuilder(_analyzer, CreateIndexSearcher);
         }
 
         #endregion IIndex Members

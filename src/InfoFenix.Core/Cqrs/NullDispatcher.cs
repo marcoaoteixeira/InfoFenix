@@ -1,9 +1,9 @@
 ﻿namespace InfoFenix.Core.Cqrs {
-    public sealed class NullDispatcher : ICqrsDispatcher {
+    public sealed class NullDispatcher : ICommandQueryDispatcher {
 
         #region Public Static Read-Only Fields
 
-        public static readonly ICqrsDispatcher Instance = new NullDispatcher();
+        public static readonly ICommandQueryDispatcher Instance = new NullDispatcher();
 
         #endregion Public Static Read-Only Fields
 

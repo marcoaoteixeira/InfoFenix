@@ -25,6 +25,8 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region IAction Members
 
+        public override string Description => "Inicializando banco de dados do aplicativo...";
+
         public override void Execute() {
             var databaseFilePath = Path.Combine(_appSettings.ApplicationDataDirectoryPath, Common.DatabaseFileName);
             if (!File.Exists(databaseFilePath)) {

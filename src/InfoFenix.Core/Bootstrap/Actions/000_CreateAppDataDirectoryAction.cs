@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using InfoFenix.Core.PubSub;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
@@ -13,7 +14,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region Public Constructors
 
-        public CreateAppDataDirectoryAction(IAppSettings appSettings) {
+        public CreateAppDataDirectoryAction(IAppSettings appSettings, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(appSettings, nameof(appSettings));
 
             _appSettings = appSettings;
@@ -22,6 +23,8 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         #endregion Public Constructors
 
         #region IAction Members
+
+        public override string Description => "Inicializando diretório de dados para o aplicativo...";
 
         public override void Execute() {
             if (!Directory.Exists(_appSettings.ApplicationDataDirectoryPath)) {

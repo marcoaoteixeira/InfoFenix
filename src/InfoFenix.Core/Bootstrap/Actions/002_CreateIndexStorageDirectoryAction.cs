@@ -23,6 +23,8 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region IAction Members
 
+        public override string Description => "Inicializando diretório de índices do aplicativo...";
+
         public override void Execute() {
             var indexStoragePath = Path.Combine(_appSettings.ApplicationDataDirectoryPath, Common.IndexStorageDirectoryName);
             if (!Directory.Exists(indexStoragePath)) {

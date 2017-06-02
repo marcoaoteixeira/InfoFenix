@@ -21,6 +21,8 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region IAction Members
 
+        public override string Description => "Inicializando serviços do aplicativo...";
+
         public override void Execute() {
             _log.Information("Initializing services...");
 

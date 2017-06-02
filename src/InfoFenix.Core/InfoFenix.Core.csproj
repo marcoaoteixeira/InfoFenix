@@ -48,15 +48,6 @@
     <Reference Include="Lucene.Net.QueryParser">
       <HintPath>..\..\lib\Lucene.Net-v4.9.0\Lucene.Net.QueryParser.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Office.Core">
-      <HintPath>..\..\lib\Office-v15.0.0\Microsoft.Office.Core.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.Office.Interop.Word, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\lib\Office-v15.0.0\Microsoft.Office.Interop.Word.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -91,6 +82,7 @@
     <Compile Include="Bootstrap\ActionBase.cs" />
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
+    <Compile Include="Bootstrap\Actions\004_InitializeLuceneSearchIndexes.cs" />
     <Compile Include="Bootstrap\Actions\003_InitializeServicesAction.cs" />
     <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
     <Compile Include="Bootstrap\Bootstrapper.cs" />
@@ -98,13 +90,11 @@
     <Compile Include="Bootstrap\IBootstrapper.cs" />
     <Compile Include="Bootstrap\OrderAttribute.cs" />
     <Compile Include="CancellationTokenIssuer.cs" />
-    <Compile Include="Commands\IndexDocumentDirectory.cs" />
-    <Compile Include="Commands\RemoveDocumentsFromDocumentDirectory.cs" />
     <Compile Include="Commands\RemoveDocument.cs" />
     <Compile Include="Commands\RemoveDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocument.cs" />
-    <Compile Include="Commands\SaveDocumentsInsideDocumentDirectory.cs" />
+    <Compile Include="Commands\SetDocumentIndex.cs" />
     <Compile Include="Commands\StopWatchDocumentDirectory.cs" />
     <Compile Include="Commands\StartWatchDocumentDirectory.cs" />
     <Compile Include="Data\Database.cs" />
@@ -117,11 +107,11 @@
     <Compile Include="Data\IDbProvider.cs" />
     <Compile Include="Data\Parameter.cs" />
     <Compile Include="Common.cs" />
-    <Compile Include="Cqrs\CqrsDispatcher.cs" />
-    <Compile Include="Cqrs\CqrsDispatcherExtension.cs" />
+    <Compile Include="Cqrs\CommandQueryDispatcher.cs" />
+    <Compile Include="Cqrs\CommandQueryDispatcherExtension.cs" />
     <Compile Include="Cqrs\ICommand.cs" />
     <Compile Include="Cqrs\ICommandHandler.cs" />
-    <Compile Include="Cqrs\ICqrsDispatcher.cs" />
+    <Compile Include="Cqrs\ICommandQueryDispatcher.cs" />
     <Compile Include="Cqrs\IQuery.cs" />
     <Compile Include="Cqrs\IQueryHandler.cs" />
     <Compile Include="Cqrs\NullDispatcher.cs" />
@@ -147,6 +137,7 @@
     <Compile Include="IoC\Registrations\LoggingServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\NullIOServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\NullWordDocumentServiceRegistration.cs" />
+    <Compile Include="IoC\Registrations\ServicesServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\WordDocumentServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\PubSubServiceRegistration.cs" />
     <Compile Include="IoC\Registrations\SearchServiceRegistration.cs" />
@@ -171,11 +162,11 @@
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggerFactory.cs" />
     <Compile Include="Office\IWordDocument.cs" />
-    <Compile Include="Office\IWordDocumentService.cs" />
+    <Compile Include="Office\IWordApplication.cs" />
     <Compile Include="Office\NullWordDocument.cs" />
-    <Compile Include="Office\NullWordDocumentService.cs" />
+    <Compile Include="Office\NullWordApplication.cs" />
     <Compile Include="Office\SpireDocWordDocument.cs" />
-    <Compile Include="Office\SpireDocWordDocumentService.cs" />
+    <Compile Include="Office\SpireDocWordApplication.cs" />
     <Compile Include="Office\WordConvertType.cs" />
     <Compile Include="Prevent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -192,6 +183,7 @@
     <Compile Include="PubSub\PublisherSubscriber.cs" />
     <Compile Include="PubSub\PublisherSubscriberExtension.cs" />
     <Compile Include="PubSub\Subscription.cs" />
+    <Compile Include="Queries\GetDocument.cs" />
     <Compile Include="Queries\GetDocumentDirectory.cs" />
     <Compile Include="Queries\ListDocumentDirectories.cs" />
     <Compile Include="Queries\ListDocumentsByDocumentDirectory.cs" />
@@ -245,7 +237,7 @@
     <Content Include="Resources\SQLs\Document\GetDocument.sql" />
     <Content Include="Resources\SQLs\Document\ListDocumentsByDocumentDirectory.sql" />
     <Content Include="Resources\SQLs\Document\RemoveDocument.sql" />
-    <Content Include="Resources\SQLs\Document\SetDocumentIndexed.sql" />
+    <Content Include="Resources\SQLs\Document\SetDocumentIndex.sql" />
     <Content Include="Resources\SQLs\Document\SaveDocument.sql" />
   </ItemGroup>
   <ItemGroup />

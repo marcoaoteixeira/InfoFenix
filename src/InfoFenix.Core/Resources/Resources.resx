@@ -145,7 +145,7 @@
   <data name="SaveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\savedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="SetDocumentIndexed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\setdocumentindexed.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="SetDocumentIndex" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\setdocumentindex.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

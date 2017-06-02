@@ -59,7 +59,7 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<SaveDocumentDirectoryCommand> Members
 
         public void Handle(SaveDocumentDirectoryCommand command) {
-            using (var transaction = _database.Connection.BeginTransaction()) {
+            //using (var transaction = _database.Connection.BeginTransaction()) {
                 try {
                     var id = _database.ExecuteScalar(SQL.SaveDocumentDirectory, parameters: new[] {
                         Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.ID != 0 ? (object)command.ID : DBNull.Value, DbType.Int32),
@@ -70,9 +70,9 @@ namespace InfoFenix.Core.Commands {
                         Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), command.Index ? 1 : 0, DbType.Int32)
                     });
                     if (command.ID <= 0) { command.ID = Convert.ToInt32(id); }
-                    transaction.Commit();
-                } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
-            }
+                   // transaction.Commit();
+                } catch (Exception ex) { Log.Error(ex, ex.Message); /*transaction.Rollback();*/ throw; }
+            //}
         }
 
         #endregion ICommandHandler<SaveDocumentDirectoryCommand> Members

@@ -47,7 +47,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -63,6 +62,7 @@
     <Compile Include="Code\FormManager.cs" />
     <Compile Include="Code\DialogHelper.cs" />
     <Compile Include="Code\IFormManager.cs" />
+    <Compile Include="Code\ProgressiveTaskExecutor.cs" />
     <Compile Include="Code\RichTextBoxAppender.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -90,17 +90,17 @@
     <Compile Include="Views\DocumentDirectoryForm.Designer.cs">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProgressForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\ProgressForm.Designer.cs">
-      <DependentUpon>ProgressForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\ManageDocumentDirectoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\ManageDocumentDirectoryForm.Designer.cs">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\SearchDocumentForm.cs">
       <SubType>Form</SubType>
@@ -139,11 +139,11 @@
     <EmbeddedResource Include="Views\DocumentDirectoryForm.resx">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ProgressForm.resx">
-      <DependentUpon>ProgressForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\ManageDocumentDirectoryForm.resx">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SearchDocumentForm.resx">
       <DependentUpon>SearchDocumentForm.cs</DependentUpon>

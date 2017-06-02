@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Lucene.Net.Index;
-using Lucene.Net.Search;
 using Lucene.Net.Util;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Default implementation of <see cref="IIndexProvider"/>
     /// </summary>
@@ -24,7 +23,6 @@ namespace InfoFenix.Core.Search {
         private readonly LuceneSettings _settings;
 
         #endregion Private Read-Only Fields
-
 
         #region Public Static Read-Only Fields
 
@@ -67,11 +65,9 @@ namespace InfoFenix.Core.Search {
             lock (SyncLock) {
                 if (!Cache.ContainsKey(indexName)) { return; }
 
-                Directory.Delete(Path.Combine(_settings.IndexStorageDirectoryPath, indexName));
-                if (Cache[indexName] is IDisposable disposable) {
-                    disposable.Dispose();
-                }
+                if (Cache[indexName] is IDisposable disposable) { disposable.Dispose(); }
                 Cache.Remove(indexName);
+                Directory.Delete(Path.Combine(_settings.IndexStorageDirectoryPath, indexName));
             }
         }
 

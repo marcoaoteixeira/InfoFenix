@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using InfoFenix.Core.Entities;
 
 namespace InfoFenix.Core.Services {
@@ -7,7 +9,9 @@ namespace InfoFenix.Core.Services {
 
         #region Methods
 
-        void Save(DocumentDirectoryEntity documentDirectory, bool saveDocumentsInsideDirectory = false);
+        void Save(DocumentDirectoryEntity documentDirectory);
+
+        Task SaveDocumentsInsideDocumentDirectoryAsync(int documentDirectoryID, CancellationToken cancellationToken);
 
         void Remove(int documentDirectoryID);
 
@@ -15,9 +19,11 @@ namespace InfoFenix.Core.Services {
 
         IEnumerable<DocumentDirectoryEntity> List(string label = null, string path = null, string code = null);
 
-        void Index(int documentDirectoryID, bool reCreate = false);
+        Task IndexAsync(int documentDirectoryID, CancellationToken cancellationToken);
 
         void WatchForModification(int documentDirectoryID);
+
+        Task CleanAsync(int documentDirectoryID, CancellationToken cancellationToken);
 
         #endregion Methods
     }

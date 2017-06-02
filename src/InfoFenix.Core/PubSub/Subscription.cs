@@ -2,6 +2,7 @@
 using System.Reflection;
 
 namespace InfoFenix.Core.PubSub {
+
     /// <summary>
     /// Default implementation of <see cref="ISubscription{TMessage}"/>.
     /// </summary>
@@ -52,6 +53,26 @@ namespace InfoFenix.Core.PubSub {
         }
 
         #endregion Destructor
+
+        #region Public Methods
+
+        public bool Equals(Subscription<TMessage> obj) {
+            return obj != null && obj._methodInfo == _methodInfo;
+        }
+
+        #endregion Public Methods
+
+        #region Public Override Methods
+
+        public override bool Equals(object obj) {
+            return Equals(obj as Subscription<TMessage>);
+        }
+
+        public override int GetHashCode() {
+            return _methodInfo != null ? _methodInfo.GetHashCode() : 0;
+        }
+
+        #endregion Public Override Methods
 
         #region Private Methods
 

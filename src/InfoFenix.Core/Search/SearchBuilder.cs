@@ -11,6 +11,7 @@ using Lucene.Net.Search;
 using Lucene.Net.Util;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Default implementation of <see cref="ISearchBuilder"/>.
     /// </summary>
@@ -26,7 +27,7 @@ namespace InfoFenix.Core.Search {
         #region Private Read-Only Fields
 
         private readonly Analyzer _analyzer;
-        private readonly IndexSearcher _indexSearcher;
+        private readonly Func<IndexSearcher> _indexSearcherFactory;
         private readonly IList<BooleanClause> _clauses = new List<BooleanClause>();
         private readonly IList<BooleanClause> _filters = new List<BooleanClause>();
 
@@ -48,7 +49,7 @@ namespace InfoFenix.Core.Search {
         private bool _notAnalyzed;
         private float _boost;
         private Query _query;
-        
+
         #endregion Private Fields
 
         #region Public Constructors
@@ -57,13 +58,13 @@ namespace InfoFenix.Core.Search {
         /// Initializes a new instance of <see cref="SearchBuilder"/>.
         /// </summary>
         /// <param name="analyzer">The analyzer provider.</param>
-        /// <param name="indexSearcher">The index searcher.</param>
-        public SearchBuilder(Analyzer analyzer, IndexSearcher indexSearcher) {
+        /// <param name="indexSearcherFactory">The index searcher.</param>
+        public SearchBuilder(Analyzer analyzer, Func<IndexSearcher> indexSearcherFactory) {
             Prevent.ParameterNull(analyzer, nameof(analyzer));
-            Prevent.ParameterNull(indexSearcher, nameof(indexSearcher));
+            Prevent.ParameterNull(indexSearcherFactory, nameof(indexSearcherFactory));
 
             _analyzer = analyzer;
-            _indexSearcher = indexSearcher;
+            _indexSearcherFactory = indexSearcherFactory;
 
             _count = MAX_RESULTS;
             _skip = 0;
@@ -80,10 +81,7 @@ namespace InfoFenix.Core.Search {
 
         private static List<string> AnalyzeText(Analyzer analyzer, string field, string text) {
             var result = new List<string>();
-
-            if (string.IsNullOrEmpty(text)) {
-                return result;
-            }
+            if (string.IsNullOrEmpty(text)) { return result; }
 
             using (var stringReader = new StringReader(text)) {
                 using (var tokenStream = analyzer.TokenStream(field, stringReader)) {
@@ -105,7 +103,6 @@ namespace InfoFenix.Core.Search {
         #endregion Private Static Methods
 
         #region Private Methods
-
 
         private void InitializePendingClause() {
             _occur = BooleanClause.Occur.SHOULD;
@@ -430,11 +427,12 @@ namespace InfoFenix.Core.Search {
                 trackMaxScore: false,
                 docsScoredInOrder: true);
 
-            _indexSearcher.Search(query, collector);
+            var indexSearcher = _indexSearcherFactory();
+            indexSearcher.Search(query, collector);
 
             var results = collector.TopDocs().ScoreDocs
                 .Skip(_skip)
-                .Select(scoreDoc => new SearchHit(_indexSearcher.Doc(scoreDoc.Doc), scoreDoc.Score))
+                .Select(scoreDoc => new SearchHit(indexSearcher.Doc(scoreDoc.Doc), scoreDoc.Score))
                 .ToList();
 
             return results;
@@ -443,22 +441,22 @@ namespace InfoFenix.Core.Search {
         /// <inheritdoc />
         public ISearchHit GetDocument(Guid documentID) {
             var query = new TermQuery(new Term(nameof(ISearchHit.DocumentID), documentID.ToString()));
-
-            var hits = _indexSearcher.Search(query, 1);
+            var indexSearcher = _indexSearcherFactory();
+            var hits = indexSearcher.Search(query, 1);
 
             return hits.ScoreDocs.Length > 0
-                ? new SearchHit(_indexSearcher.Doc(hits.ScoreDocs[0].Doc), hits.ScoreDocs[0].Score)
+                ? new SearchHit(indexSearcher.Doc(hits.ScoreDocs[0].Doc), hits.ScoreDocs[0].Score)
                 : null;
         }
 
         /// <inheritdoc />
         public ISearchBit GetBits() {
             var query = CreateQuery();
-
             var filter = new QueryWrapperFilter(query);
-            var context = (AtomicReaderContext)_indexSearcher.IndexReader.Context;
+            var indexSearcher = _indexSearcherFactory();
+            var context = (AtomicReaderContext)indexSearcher.IndexReader.Context;
             var bits = filter.GetDocIdSet(context, context.AtomicReader.LiveDocs);
-            var documentSetIDInterator = new OpenBitSetDISI(bits.GetIterator(), _indexSearcher.IndexReader.MaxDoc);
+            var documentSetIDInterator = new OpenBitSetDISI(bits.GetIterator(), indexSearcher.IndexReader.MaxDoc);
 
             return new SearchBit(documentSetIDInterator);
         }
@@ -466,8 +464,8 @@ namespace InfoFenix.Core.Search {
         /// <inheritdoc />
         public int Count() {
             var query = CreateQuery();
-
-            var hits = _indexSearcher.Search(query, short.MaxValue);
+            var indexSearcher = _indexSearcherFactory();
+            var hits = indexSearcher.Search(query, short.MaxValue);
             var length = hits.ScoreDocs.Length;
 
             return Math.Min(length - _skip, _count);

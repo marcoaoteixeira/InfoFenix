@@ -244,9 +244,9 @@ namespace InfoFenix.Core.Resources {
         ///WHERE
         ///    [id] = @ID.
         /// </summary>
-        internal static string SetDocumentIndexed {
+        internal static string SetDocumentIndex {
             get {
-                return ResourceManager.GetString("SetDocumentIndexed", resourceCulture);
+                return ResourceManager.GetString("SetDocumentIndex", resourceCulture);
             }
         }
     }

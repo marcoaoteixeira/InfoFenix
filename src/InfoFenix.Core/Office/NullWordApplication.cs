@@ -2,22 +2,22 @@
 
 namespace InfoFenix.Core.Office {
 
-    public sealed class NullWordDocumentService : IWordDocumentService {
+    public sealed class NullWordApplication : IWordApplication {
 
         #region Public Static Read-Only Fields
 
-        public static readonly IWordDocumentService Instance = new NullWordDocumentService();
+        public static readonly IWordApplication Instance = new NullWordApplication();
 
         #endregion Public Static Read-Only Fields
 
         #region Private Constructors
 
-        private NullWordDocumentService() {
+        private NullWordApplication() {
         }
 
         #endregion Private Constructors
 
-        #region IWordDocumentService Members
+        #region IWordApplication Members
 
         public IWordDocument Open(Stream stream) {
             return NullWordDocument.Instance;
@@ -27,6 +27,9 @@ namespace InfoFenix.Core.Office {
             return NullWordDocument.Instance;
         }
 
-        #endregion IWordDocumentService Members
+        public void Quit() {
+        }
+
+        #endregion IWordApplication Members
     }
 }

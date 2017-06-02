@@ -28,7 +28,7 @@ namespace InfoFenix.Client.Views {
 
         #region Private Read-Only Fields
 
-        private readonly ICqrsDispatcher _cqrsDispatcher;
+        private readonly ICommandQueryDispatcher _commandQueryDispatcher;
         private readonly IFormManager _formManager;
         private readonly IPublisherSubscriber _pubSub;
 
@@ -52,12 +52,12 @@ namespace InfoFenix.Client.Views {
 
         #region Public Constructors
 
-        public ManageDocumentDirectoryForm(ICqrsDispatcher cqrsDispatcher, IFormManager formManager, IPublisherSubscriber pubSub) {
-            Prevent.ParameterNull(cqrsDispatcher, nameof(cqrsDispatcher));
+        public ManageDocumentDirectoryForm(ICommandQueryDispatcher commandQueryDispatcher, IFormManager formManager, IPublisherSubscriber pubSub) {
+            Prevent.ParameterNull(commandQueryDispatcher, nameof(commandQueryDispatcher));
             Prevent.ParameterNull(formManager, nameof(formManager));
             Prevent.ParameterNull(pubSub, nameof(pubSub));
 
-            _cqrsDispatcher = cqrsDispatcher;
+            _commandQueryDispatcher = commandQueryDispatcher;
             _formManager = formManager;
             _pubSub = pubSub;
 
@@ -97,7 +97,7 @@ namespace InfoFenix.Client.Views {
             var documentDirectory = e.Node.Tag as DocumentDirectoryEntity;
             if (documentDirectory == null) { return; }
 
-            CurrentDocumentDirectoryItems = _cqrsDispatcher.Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectory.ID });
+            CurrentDocumentDirectoryItems = _commandQueryDispatcher.Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectory.ID });
             foreach (var document in CurrentDocumentDirectoryItems) {
                 var text = Path.GetFileNameWithoutExtension(document.FileName);
                 documentDirectoryListView.Items.Add(new ListViewItem {
@@ -163,7 +163,7 @@ namespace InfoFenix.Client.Views {
         }
 
         private void LoadDirectoryTreeView() {
-            var documentDirectories = _cqrsDispatcher.Query(new ListDocumentDirectoriesQuery());
+            var documentDirectories = _commandQueryDispatcher.Query(new ListDocumentDirectoriesQuery());
 
             foreach (var documentDirectory in documentDirectories) {
                 CreateTreeViewEntry(documentDirectory);

@@ -9,8 +9,8 @@ namespace InfoFenix.Core.IoC {
 
         public override void Register() {
             Builder
-                .RegisterInstance(NullWordDocumentService.Instance)
-                .As<IWordDocumentService>()
+                .RegisterInstance(NullWordApplication.Instance)
+                .As<IWordApplication>()
                 .SingleInstance();
         }
 

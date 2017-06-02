@@ -21,6 +21,20 @@ namespace InfoFenix.Core.Office {
 
         #endregion Private Fields
 
+        #region Public Events
+
+        public event Action<SpireDocWordDocument> Closed;
+
+        #endregion
+
+        #region Public Properties
+
+        public int Key {
+            get { return _stream.GetHashCode(); }
+        }
+
+        #endregion
+
         #region Public Constructors
 
         public SpireDocWordDocument(Stream stream, ILogger log = null) {
@@ -56,6 +70,10 @@ namespace InfoFenix.Core.Office {
             _disposed = true;
         }
 
+        private void OnClose() {
+            Closed?.Invoke(this);
+        }
+
         #endregion Private Methods
 
         #region IWordDocument Members
@@ -77,6 +95,8 @@ namespace InfoFenix.Core.Office {
                 _document.Close();
                 _document.Dispose();
                 _document = null;
+
+                OnClose();
             }
             catch (Exception ex) { _log.Error(ex, $"ERROR CLOSING DOCUMENT: {ex.Message}"); }
         }

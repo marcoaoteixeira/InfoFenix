@@ -4,6 +4,7 @@ using InfoFenix.Client.Code;
 using InfoFenix.Core;
 using InfoFenix.Core.Bootstrap;
 using InfoFenix.Core.IoC;
+using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Client {
 
@@ -35,8 +36,8 @@ namespace InfoFenix.Client {
             Application.ApplicationExit += (sender, e) => TearDown();
 
             ConfigureCompositionRoot();
-            ExecuteBootstrapActions();
 
+            SplashScreenForm.Splash(() => _compositionRoot.Resolver.Resolve<SplashScreenForm>(), ExecuteBootstrapActions);
             Application.Run(_compositionRoot.Resolver.Resolve<MainForm>());
         }
 
@@ -54,7 +55,8 @@ namespace InfoFenix.Client {
                 new CqrsServiceRegistration(supportAssemblies),
                 new PubSubServiceRegistration(),
                 new SearchServiceRegistration(),
-                new LoggingServiceRegistration()
+                new LoggingServiceRegistration(),
+                new ServicesServiceRegistration()
             };
             var useRemoteSearchDatabaseServiceRegistrations = new IServiceRegistration[] {
                 //new NullIOServiceRegistration(),
@@ -75,7 +77,9 @@ namespace InfoFenix.Client {
         }
 
         private static void TearDown() {
-            CancellationTokenIssuer.CancelAll();
+            var logger = _compositionRoot.Resolver.Resolve<ILoggerFactory>().CreateLogger(typeof(EntryPoint));
+
+            try { CancellationTokenIssuer.CancelAll(); } catch (Exception ex) { logger.Error(ex, ex.Message); }
 
             _compositionRoot.TearDown();
             _compositionRoot = null;

@@ -82,7 +82,8 @@
     <Compile Include="Bootstrap\ActionBase.cs" />
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
-    <Compile Include="Bootstrap\Actions\004_InitializeLuceneSearchIndexes.cs" />
+    <Compile Include="Bootstrap\Actions\005_WatchDocumentDirectoriesAction.cs" />
+    <Compile Include="Bootstrap\Actions\004_InitializeLuceneSearchIndexesAction.cs" />
     <Compile Include="Bootstrap\Actions\003_InitializeServicesAction.cs" />
     <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
     <Compile Include="Bootstrap\Bootstrapper.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="Data\Database.cs" />
     <Compile Include="Data\DatabaseExtension.cs" />
     <Compile Include="Data\DatabaseSettings.cs" />
-    <Compile Include="Data\DatabaseWithTransaction.cs" />
     <Compile Include="Data\DataReaderExtension.cs" />
     <Compile Include="Data\DbProvider.cs" />
     <Compile Include="Data\IDatabase.cs" />
@@ -117,6 +117,7 @@
     <Compile Include="Cqrs\NullDispatcher.cs" />
     <Compile Include="Entities\DocumentDirectoryEntity.cs" />
     <Compile Include="Entities\DocumentEntity.cs" />
+    <Compile Include="Expando.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\EventHandlerExtension.cs" />
@@ -212,6 +213,8 @@
     <Compile Include="Search\SearchHit.cs" />
     <Compile Include="Services\DocumentDirectoryService.cs" />
     <Compile Include="Services\IDocumentDirectoryService.cs" />
+    <Compile Include="Services\ISearchIndexService.cs" />
+    <Compile Include="Services\SearchIndexService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

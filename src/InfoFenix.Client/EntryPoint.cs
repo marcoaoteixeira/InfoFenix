@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Core;
@@ -31,6 +33,10 @@ namespace InfoFenix.Client {
         /// </summary>
         [STAThread]
         private static void Main() {
+            // Try solve problems with spire.doc
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += (sender, e) => TearDown();
@@ -59,11 +65,11 @@ namespace InfoFenix.Client {
                 new ServicesServiceRegistration()
             };
             var useRemoteSearchDatabaseServiceRegistrations = new IServiceRegistration[] {
-                //new NullIOServiceRegistration(),
+                new NullIOServiceRegistration(),
                 new NullWordDocumentServiceRegistration()
             };
             var autonomousModeServiceRegistrations = new IServiceRegistration[] {
-                //new IOServiceRegistration(),
+                new IOServiceRegistration(),
                 new WordDocumentServiceRegistration()
             };
             _compositionRoot = new CompositionRoot();

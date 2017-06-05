@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ClientServiceRegistration.cs" />
+    <Compile Include="Code\DocumentViewModel.cs" />
     <Compile Include="Code\Extensions\ControlExtension.cs" />
     <Compile Include="Code\Extensions\RichTextBoxExtension.cs" />
     <Compile Include="Code\FormManager.cs" />
@@ -64,6 +65,8 @@
     <Compile Include="Code\IFormManager.cs" />
     <Compile Include="Code\ProgressiveTaskExecutor.cs" />
     <Compile Include="Code\RichTextBoxAppender.cs" />
+    <Compile Include="Code\SearchResultItemViewModel.cs" />
+    <Compile Include="Code\SearchResultViewModel.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,17 +105,17 @@
     <Compile Include="Views\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\SearchDocumentForm.cs">
+    <Compile Include="Views\SearchResultForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\SearchDocumentForm.Designer.cs">
-      <DependentUpon>SearchDocumentForm.cs</DependentUpon>
+    <Compile Include="Views\SearchResultForm.Designer.cs">
+      <DependentUpon>SearchResultForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\SearchDocumentResultForm.cs">
+    <Compile Include="Views\SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\SearchDocumentResultForm.Designer.cs">
-      <DependentUpon>SearchDocumentResultForm.cs</DependentUpon>
+    <Compile Include="Views\SearchForm.Designer.cs">
+      <DependentUpon>SearchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Shared\LayoutForm.cs">
       <SubType>Form</SubType>
@@ -145,8 +148,11 @@
     <EmbeddedResource Include="Views\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\SearchDocumentForm.resx">
-      <DependentUpon>SearchDocumentForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\SearchForm.resx">
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SearchResultForm.resx">
+      <DependentUpon>SearchResultForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Shared\LayoutForm.resx">
       <DependentUpon>LayoutForm.cs</DependentUpon>

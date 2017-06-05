@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -70,11 +71,15 @@ namespace InfoFenix.Client.Views {
         }
 
         private void SaveDocumentsInsideDirectoryDocuments() {
-            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.SaveDocumentsInsideDocumentDirectoryAsync(ViewModel.ID, cancellationToken));
+            if (Directory.GetFiles(ViewModel.Path).Length > 0) {
+                _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.SaveDocumentsInsideDocumentDirectoryAsync(ViewModel.ID, cancellationToken));
+            }
         }
 
         private void CleanDocumentDirectory() {
-            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.CleanAsync(ViewModel.ID, cancellationToken));
+            if (Directory.GetFiles(ViewModel.Path).Length > 0) {
+                _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.CleanAsync(ViewModel.ID, cancellationToken));
+            }
         }
 
         private void SelectDocumentDirectoryPath() {
@@ -85,7 +90,9 @@ namespace InfoFenix.Client.Views {
         }
 
         private void IndexDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.IndexAsync(ViewModel.ID, cancellationToken));
+            if (Directory.GetFiles(ViewModel.Path).Length > 0) {
+                _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.IndexAsync(ViewModel.ID, cancellationToken));
+            }
         }
 
         private void WatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
@@ -114,7 +121,7 @@ namespace InfoFenix.Client.Views {
             SaveDocumentsInsideDirectoryDocuments();
             CleanDocumentDirectory();
 
-            //if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
+            if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
             //if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
 
             DialogResult = DialogResult.OK;

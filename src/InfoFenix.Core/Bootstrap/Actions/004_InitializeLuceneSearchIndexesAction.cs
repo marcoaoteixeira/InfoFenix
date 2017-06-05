@@ -5,7 +5,7 @@ using InfoFenix.Core.Search;
 namespace InfoFenix.Core.Bootstrap.Actions {
 
     [Order(4)]
-    public class InitializeLuceneSearchIndexes : ActionBase {
+    public class InitializeLuceneSearchIndexesAction : ActionBase {
 
         #region Private Read-Only Fields
 
@@ -16,7 +16,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region Public Constructors
 
-        public InitializeLuceneSearchIndexes(ICommandQueryDispatcher commandQueryDispatcher, IIndexProvider indexProvider) {
+        public InitializeLuceneSearchIndexesAction(ICommandQueryDispatcher commandQueryDispatcher, IIndexProvider indexProvider) {
             Prevent.ParameterNull(commandQueryDispatcher, nameof(commandQueryDispatcher));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
 

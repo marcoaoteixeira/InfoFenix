@@ -2,11 +2,11 @@
 
 namespace InfoFenix.Client.Views {
 
-    public partial class SearchDocumentForm : LayoutForm {
+    public partial class SearchResultForm : LayoutForm {
 
         #region Public Constructors
 
-        public SearchDocumentForm() {
+        public SearchResultForm() {
             InitializeComponent();
         }
 

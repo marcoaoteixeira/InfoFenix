@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using InfoFenix.Core.IO;
-using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Core.IoC {
+
     public sealed class IOServiceRegistration : ServiceRegistrationBase {
 
         #region Public Override Methods

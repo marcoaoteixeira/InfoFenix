@@ -10,6 +10,8 @@ namespace InfoFenix.Core.Office {
 
         IWordDocument Open(string filePath);
 
+        void CloseAllDocuments();
+
         void Quit();
 
         #endregion Methods

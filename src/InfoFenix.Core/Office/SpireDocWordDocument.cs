@@ -9,15 +9,15 @@ namespace InfoFenix.Core.Office {
 
         #region Private Read-Only Fields
 
-        private readonly Stream _stream;
         private readonly ILogger _log;
 
         #endregion Private Read-Only Fields
 
         #region Private Fields
 
-        private Document _document;
         private bool _disposed;
+        private Document _document;
+        private Stream _stream;
 
         #endregion Private Fields
 
@@ -25,15 +25,7 @@ namespace InfoFenix.Core.Office {
 
         public event Action<SpireDocWordDocument> Closed;
 
-        #endregion
-
-        #region Public Properties
-
-        public int Key {
-            get { return _stream.GetHashCode(); }
-        }
-
-        #endregion
+        #endregion Public Events
 
         #region Public Constructors
 
@@ -67,6 +59,7 @@ namespace InfoFenix.Core.Office {
             if (_disposed) { return; }
             if (disposing) { Close(); }
             _document = null;
+            _stream = null;
             _disposed = true;
         }
 
@@ -83,22 +76,26 @@ namespace InfoFenix.Core.Office {
                 if (_document == null) { return null; }
 
                 var result = string.Empty;
-                try { result = _document.GetText(); }
-                catch (Exception ex) { _log.Error(ex, $"ERROR READING DOCUMENT TEXT: {ex.Message}"); }
+                try { result = _document.GetText(); } catch (Exception ex) { _log.Error(ex, $"ERROR READING DOCUMENT TEXT: {ex.Message}"); }
                 return result;
             }
         }
 
         public void Close() {
-            if (_document == null) { return; }
             try {
-                _document.Close();
-                _document.Dispose();
-                _document = null;
+                if (_document != null) {
+                    _document.Close();
+                    _document.Dispose();
+                    _document = null;
+                }
+
+                if (_stream != null) {
+                    _stream.Dispose();
+                    _stream = null;
+                }
 
                 OnClose();
-            }
-            catch (Exception ex) { _log.Error(ex, $"ERROR CLOSING DOCUMENT: {ex.Message}"); }
+            } catch (Exception ex) { _log.Error(ex, $"ERROR CLOSING DOCUMENT: {ex.Message}"); }
         }
 
         public void Convert(string outputPath, WordConvertType type) {

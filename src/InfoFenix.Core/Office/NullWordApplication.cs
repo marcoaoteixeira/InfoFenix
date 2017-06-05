@@ -27,6 +27,9 @@ namespace InfoFenix.Core.Office {
             return NullWordDocument.Instance;
         }
 
+        public void CloseAllDocuments() {
+        }
+
         public void Quit() {
         }
 

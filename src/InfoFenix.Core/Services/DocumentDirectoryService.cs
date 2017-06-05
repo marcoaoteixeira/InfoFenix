@@ -204,6 +204,8 @@ namespace InfoFenix.Core.Services {
         }
 
         public Task IndexAsync(int documentDirectoryID, CancellationToken cancellationToken) {
+            const int BATCH_SIZE = 128;
+
             var documentDirectory = Get(documentDirectoryID);
             if (documentDirectory == null) { return Task.FromResult(0); }
 
@@ -237,8 +239,8 @@ namespace InfoFenix.Core.Services {
 
                 try {
                     string content = string.Empty;
-                    using (var memoryStream = new MemoryStream(document.Payload)) {
-                        var wordDocument = _wordApplication.Open(memoryStream);
+                    using (var memoryStream = new MemoryStream(document.Payload))
+                    using (var wordDocument = _wordApplication.Open(memoryStream)) {
                         content = wordDocument.Text;
                     }
                     
@@ -249,6 +251,12 @@ namespace InfoFenix.Core.Services {
                     documentsToIndex.Add(documentIndex);
 
                     _commandQueryDispatcher.Command(new SetDocumentIndexCommand { ID = document.ID });
+
+                    // Flush documents if needed.
+                    if (counter % BATCH_SIZE == 0) {
+                        index.StoreDocuments(documentsToIndex.ToArray());
+                        documentsToIndex.Clear();
+                    }
 
                     _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
                         Title = "Indexar Diretório de Documentos",

@@ -22,7 +22,7 @@ namespace InfoFenix.Client {
         }
 
         private void searchToolStripMenuItem_Click(object sender, EventArgs e) {
-            
+            _formManager.Get<SearchResultForm>(mdi: this).Show();
         }
     }
 }

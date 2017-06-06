@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Core.Office {
@@ -22,8 +21,7 @@ namespace InfoFenix.Core.Office {
         public IWordDocument Open(Stream stream) {
             Prevent.ParameterNull(stream, nameof(stream));
 
-            try { return new SpireDocWordDocument(stream, _log); }
-            catch (Exception ex) { Log.Error(ex, ex.Message); throw; }
+            return new SpireDocWordDocument(stream, _log);
         }
 
         public IWordDocument Open(string filePath) {

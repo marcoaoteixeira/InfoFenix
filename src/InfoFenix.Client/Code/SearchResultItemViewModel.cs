@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace InfoFenix.Client.Code {
 
-    public class SearchResultItemViewModel {
+    public class DocumentDirectoryViewModel {
 
         #region Public Properties
 
@@ -11,7 +11,7 @@ namespace InfoFenix.Client.Code {
 
         public string Label { get; set; }
 
-        public int ActualTotalDocuments { get; set; }
+        public int TotalDocuments { get; set; }
 
         public int TotalDocumentsFound {
             get { return DocumentsFound != null ? DocumentsFound.Count() : 0; }

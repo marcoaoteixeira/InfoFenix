@@ -237,13 +237,26 @@ namespace InfoFenix.Core.Services {
                     return Task.FromResult(0);
                 }
 
+                string content = string.Empty;
                 try {
-                    string content = string.Empty;
                     using (var memoryStream = new MemoryStream(document.Payload))
                     using (var wordDocument = _wordApplication.Open(memoryStream)) {
                         content = wordDocument.Text;
                     }
-                    
+                } catch (Exception ex) {
+                    Log.Error(ex, $"ERROR OPENING DOCUMENT: {document.Path}");
+
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
+                        Title = "Indexar Diretório de Documentos",
+                        Message = $"Erro ao indexar o arquivo: ({document.FileName})",
+                        ActualStep = counter,
+                        TotalSteps = documents.Length
+                    });
+
+                    continue;
+                }
+
+                try {
                     var documentIndex = index.NewDocument(document.ID.ToString());
                     documentIndex.Add(Common.Index.DocumentFieldName.Content, content).Analyze();
                     documentIndex.Add(Common.Index.DocumentFieldName.DocumentDirectoryCode, documentDirectory.Code).Store();

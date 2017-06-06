@@ -8,7 +8,7 @@ namespace InfoFenix.Client.Code {
 
         public string SearchTerm { get; set; }
 
-        public IList<SearchResultItemViewModel> Items { get; set; } = new List<SearchResultItemViewModel>();
+        public IList<DocumentDirectoryViewModel> Items { get; set; } = new List<DocumentDirectoryViewModel>();
 
         #endregion Public Properties
     }

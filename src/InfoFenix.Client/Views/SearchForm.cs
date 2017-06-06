@@ -52,9 +52,9 @@ namespace InfoFenix.Client.Views {
             var result = _searchService.Search(ViewModel.SearchTerm);
             foreach (var set in result) {
                 var documentDirectory = _documentDirectoryService.List(code: set.IndexName).SingleOrDefault();
-                var list = new SearchResultItemViewModel {
+                var list = new DocumentDirectoryViewModel {
                     Code = set.IndexName,
-                    ActualTotalDocuments = set.TotalDocuments,
+                    TotalDocuments = set.TotalDocuments,
                     Label = documentDirectory.Label
                 };
                 foreach (dynamic item in set) {

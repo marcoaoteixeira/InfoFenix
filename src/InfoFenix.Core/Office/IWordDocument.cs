@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace InfoFenix.Core.Office {
 
@@ -13,6 +14,10 @@ namespace InfoFenix.Core.Office {
         #region Methods
 
         void Convert(string outputPath, WordConvertType type);
+
+        void Convert(Stream outputStream, WordConvertType type);
+
+        void Highlight(Stream outputStream, params string[] terms);
 
         void Close();
 

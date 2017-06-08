@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace InfoFenix.Client.Code {
 
@@ -9,7 +8,6 @@ namespace InfoFenix.Client.Code {
 
         internal static void SafeCall<TControl>(this TControl source, MethodInvoker action) where TControl : Control {
             if (source == null) { return; }
-            while (!source.Visible) { Thread.Sleep(50); }
             if (source.InvokeRequired) { source.Invoke(action); } else { action(); }
         }
 

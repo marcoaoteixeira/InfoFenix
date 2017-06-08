@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using InfoFenix.Core.Logging;
 using Spire.Doc;
@@ -51,8 +52,7 @@ namespace InfoFenix.Core.Office {
         #region Private Methods
 
         private void Initialize() {
-            try { _document = new Document(_stream); }
-            catch (Exception ex) { _log.Error(ex, $"ERROR OPENING DOCUMENT: {ex.Message}"); throw; }
+            try { _document = new Document(_stream); } catch (Exception ex) { _log.Error(ex, $"ERROR OPENING DOCUMENT: {ex.Message}"); throw; }
         }
 
         private void Dispose(bool disposing) {
@@ -113,6 +113,38 @@ namespace InfoFenix.Core.Office {
                 }
                 _document.SaveToFile(outputPath, fileFormat);
             } catch (Exception ex) { _log.Error(ex, $"ERROR CONVERTING DOCUMENT ({type}): {ex.Message}"); }
+        }
+
+        public void Convert(Stream outputStream, WordConvertType type) {
+            Prevent.ParameterNull(outputStream, nameof(outputStream));
+
+            if (_document == null) { return; }
+            try {
+                var fileFormat = FileFormat.Auto;
+                switch (type) {
+                    case WordConvertType.Rtf:
+                        fileFormat = FileFormat.Rtf;
+                        break;
+
+                    default:
+                        fileFormat = FileFormat.Doc;
+                        break;
+                }
+                _document.SaveToStream(outputStream, fileFormat);
+            } catch (Exception ex) { _log.Error(ex, $"ERROR CONVERTING DOCUMENT ({type}): {ex.Message}"); }
+        }
+
+        public void Highlight(Stream outputStream, params string[] terms) {
+            if (terms == null) { return; }
+
+            foreach (var term in terms) {
+                var occurences = _document.FindAllString(term, false, false);
+                if (occurences == null) { continue; }
+                foreach (var occurrence in occurences) {
+                    occurrence.GetAsOneRange().CharacterFormat.HighlightColor = Color.Yellow;
+                }
+            }
+            _document.SaveToStream(outputStream, _document.DetectedFormatType);
         }
 
         #endregion IWordDocument Members

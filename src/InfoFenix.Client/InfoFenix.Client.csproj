@@ -44,6 +44,25 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Spire.Doc, Version=5.3.36.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.Doc.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.DocViewer.Forms, Version=1.8.4.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\build\Spire.DocViewer.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.License, Version=1.3.3.40, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf, Version=3.2.74.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.Pdf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,16 +76,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ClientServiceRegistration.cs" />
-    <Compile Include="Code\DocumentViewModel.cs" />
+    <Compile Include="Models\SearchDocumentViewModel.cs" />
     <Compile Include="Code\Extensions\ControlExtension.cs" />
     <Compile Include="Code\Extensions\RichTextBoxExtension.cs" />
     <Compile Include="Code\FormManager.cs" />
     <Compile Include="Code\DialogHelper.cs" />
     <Compile Include="Code\IFormManager.cs" />
+    <Compile Include="Code\ProgressiveTaskCompleteEventArgs.cs" />
+    <Compile Include="Code\ProgressiveTaskCancelEventArgs.cs" />
     <Compile Include="Code\ProgressiveTaskExecutor.cs" />
     <Compile Include="Code\RichTextBoxAppender.cs" />
-    <Compile Include="Code\SearchResultItemViewModel.cs" />
-    <Compile Include="Code\SearchResultViewModel.cs" />
+    <Compile Include="Models\SearchDocumentDirectoryViewModel.cs" />
+    <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,11 +120,11 @@
     <Compile Include="Views\ManageDocumentDirectoryForm.Designer.cs">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProgressForm.cs">
+    <Compile Include="Views\ProgressiveTaskForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\ProgressForm.Designer.cs">
-      <DependentUpon>ProgressForm.cs</DependentUpon>
+    <Compile Include="Views\ProgressiveTaskForm.Designer.cs">
+      <DependentUpon>ProgressiveTaskForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\SearchResultForm.cs">
       <SubType>Form</SubType>
@@ -123,6 +144,7 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -145,8 +167,8 @@
     <EmbeddedResource Include="Views\ManageDocumentDirectoryForm.resx">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ProgressForm.resx">
-      <DependentUpon>ProgressForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\ProgressiveTaskForm.resx">
+      <DependentUpon>ProgressiveTaskForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>

@@ -3,6 +3,7 @@
 namespace InfoFenix.Core.PubSub {
 
     public abstract class NotificationBase {
+
         #region Public Properties
 
         public string Title { get; set; }
@@ -10,7 +11,7 @@ namespace InfoFenix.Core.PubSub {
         public string Error { get; set; }
         public NotificationState State { get; set; }
 
-        #endregion
+        #endregion Public Properties
 
         #region Public Enum
 
@@ -21,7 +22,7 @@ namespace InfoFenix.Core.PubSub {
             Done
         }
 
-        #endregion
+        #endregion Public Enum
     }
 
     public sealed class DirectoryContentChangeNotification : NotificationBase {
@@ -126,30 +127,80 @@ namespace InfoFenix.Core.PubSub {
     }
 
     public sealed class ProgressiveTaskStartNotification : NotificationBase {
+
         #region Public Properties
 
         public int TotalSteps { get; set; }
 
-        #endregion
+        #endregion Public Properties
+
+        #region Public Constructors
+
+        public ProgressiveTaskStartNotification() {
+            Message = "Iniciando tarefa...";
+        }
+
+        #endregion Public Constructors
     }
 
     public sealed class ProgressiveTaskPerformStepNotification : NotificationBase {
+
         #region Public Properties
 
         public int ActualStep { get; set; }
         public int TotalSteps { get; set; }
 
-        #endregion
+        #endregion Public Properties
     }
 
     public sealed class ProgressiveTaskCompleteNotification : NotificationBase {
+
         #region Public Properties
 
         public int TotalSteps { get; set; }
 
-        #endregion
+        #endregion Public Properties
+
+        #region Public Constructors
+
+        public ProgressiveTaskCompleteNotification() {
+            Message = "Tarefa concluída.";
+        }
+
+        #endregion Public Constructors
     }
 
-    public sealed class SaveDocumentNotification : NotificationBase {
+    public sealed class ProgressiveTaskCancelNotification : NotificationBase {
+
+        #region Public Properties
+
+        public int TotalSteps { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Constructors
+
+        public ProgressiveTaskCancelNotification() {
+            Message = "Tarefa cancelada.";
+        }
+
+        #endregion Public Constructors
+    }
+
+    public sealed class ProgressiveTaskCriticalErrorNotification : NotificationBase {
+
+        #region Public Properties
+
+        public int TotalSteps { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Constructors
+
+        public ProgressiveTaskCriticalErrorNotification() {
+            Message = "ERRO IRRECUPERÁVEL!";
+        }
+
+        #endregion Public Constructors
     }
 }

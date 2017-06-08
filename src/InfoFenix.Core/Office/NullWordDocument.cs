@@ -1,4 +1,6 @@
-﻿namespace InfoFenix.Core.Office {
+﻿using System.IO;
+
+namespace InfoFenix.Core.Office {
 
     public sealed class NullWordDocument : IWordDocument {
 
@@ -25,12 +27,18 @@
         public void Convert(string outputPath, WordConvertType type) {
         }
 
+        public void Convert(Stream outputStream, WordConvertType type) {
+        }
+
+        public void Highlight(Stream outputStream, params string[] terms) { }
+
         #endregion IWordDocument Members
 
         #region IDisposable Members
 
-        public void Dispose() { }
+        public void Dispose() {
+        }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

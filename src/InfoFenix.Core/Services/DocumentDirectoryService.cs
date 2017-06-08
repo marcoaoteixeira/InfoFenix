@@ -56,36 +56,48 @@ namespace InfoFenix.Core.Services {
         #region IDocumentDirectoryService Members
 
         public void Save(DocumentDirectoryEntity documentDirectory) {
+            const string notificationTitle = "Salvar Diretório de Documentos";
+
             _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Title = "Salvar Diretório de Documentos",
-                Message = $"Salvando diretório de documentos ({documentDirectory.Label}) na base de dados...",
+                Title = notificationTitle,
                 TotalSteps = 1
             });
-            var command = new SaveDocumentDirectoryCommand {
-                ID = documentDirectory.ID,
-                Label = documentDirectory.Label,
-                Path = documentDirectory.Path,
-                Code = documentDirectory.Code,
-                Index = documentDirectory.Index,
-                Watch = documentDirectory.Watch
-            };
-            _commandQueryDispatcher.Command(command);
-            if (documentDirectory.ID <= 0) { documentDirectory.ID = command.ID; }
+
+            try {
+                var command = new SaveDocumentDirectoryCommand {
+                    ID = documentDirectory.ID,
+                    Label = documentDirectory.Label,
+                    Path = documentDirectory.Path,
+                    Code = documentDirectory.Code,
+                    Index = documentDirectory.Index,
+                    Watch = documentDirectory.Watch
+                };
+                _commandQueryDispatcher.Command(command);
+                if (documentDirectory.ID <= 0) { documentDirectory.ID = command.ID; }
+            } catch {
+                _publisherSubscriber.PublishAsync(new ProgressiveTaskCriticalErrorNotification {
+                    Title = notificationTitle,
+                });
+
+                throw;
+            }
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                Title = "Salvar Diretório de Documentos",
-                Message = $"Diretório de documentos ({documentDirectory.Label}) salvo com sucesso.",
+                Title = notificationTitle,
+                Message = $"Salvando o diretório de documentos ({documentDirectory.Label})...",
                 ActualStep = 1,
                 TotalSteps = 1
             });
+
             _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Title = "Salvar Diretório de Documentos",
-                Message = $"Diretório de documentos ({documentDirectory.Label}) salvo com sucesso.",
+                Title = notificationTitle,
                 TotalSteps = 1
             });
         }
 
         public Task SaveDocumentsInsideDocumentDirectoryAsync(int documentDirectoryID, CancellationToken cancellationToken) {
+            const string notificationTitle = "Salvar Documentos do Diretório de Documentos";
+
             var documentDirectory = Get(documentDirectoryID);
             if (documentDirectory == null) { return Task.FromResult(0); }
 
@@ -95,17 +107,16 @@ namespace InfoFenix.Core.Services {
                 .ToArray();
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Title = "Salvar Documentos do Diretório de Documentos",
-                Message = $"Salvando documentos do diretório de documentos ({documentDirectory.Label}) na base de dados...",
+                Title = notificationTitle,
+                Message = "Iniciando tarefa...",
                 TotalSteps = physicalFiles.Length
             });
 
             var counter = 1;
             foreach (var physicalFile in physicalFiles) {
                 if (cancellationToken.IsCancellationRequested) {
-                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                        Title = "Salvar Documentos do Diretório de Documentos",
-                        Message = $"Tarefa cancelada",
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCancelNotification {
+                        Title = notificationTitle,
                         TotalSteps = counter
                     });
 
@@ -137,20 +148,19 @@ namespace InfoFenix.Core.Services {
                         Payload = File.ReadAllBytes(physicalFile) /* UPDATE */
                     };
                 }
-                if (command != null) {
-                    _commandQueryDispatcher.Command(command);
-                }
+
+                try { if (command != null) { _commandQueryDispatcher.Command(command); } } catch { Log.Error($"ERRO AO SALVAR DOCUMENTO. CAMINHO: {physicalFile}"); }
 
                 _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                    Title = "Salvar Documentos do Diretório de Documentos",
-                    Message = $"Salvando documento: {Path.GetFileName(physicalFile)}",
+                    Title = notificationTitle,
+                    Message = $"Documento: {Path.GetFileName(physicalFile)}",
                     ActualStep = counter++,
                     TotalSteps = physicalFiles.Length
                 });
             }
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Title = "Salvar Documentos do Diretório de Documentos",
+                Title = notificationTitle,
                 Message = $"Documentos do diretório de documentos ({documentDirectory.Label}) salvos com sucesso.",
                 TotalSteps = physicalFiles.Length
             });
@@ -162,9 +172,10 @@ namespace InfoFenix.Core.Services {
             var documentDirectory = Get(documentDirectoryID);
             if (documentDirectory == null) { return; }
 
+            const string notificationTitle = "Remover Diretório de Documentos";
+
             _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Title = "Remover Diretório de Documentos",
-                Message = $"Removendo diretório de documentos ({documentDirectory.Label}) da base de dados...",
+                Title = notificationTitle,
                 TotalSteps = 1
             });
 
@@ -175,14 +186,13 @@ namespace InfoFenix.Core.Services {
             });
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                Title = "Remover Diretório de Documentos",
+                Title = notificationTitle,
                 Message = $"Diretório de documentos ({documentDirectory.Label}) removido com sucesso.",
                 ActualStep = 1,
                 TotalSteps = 1
             });
             _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Title = "Remover Diretório de Documentos",
-                Message = $"Diretório de documentos ({documentDirectory.Label}) removido com sucesso.",
+                Title = notificationTitle,
                 TotalSteps = 1
             });
         }
@@ -205,6 +215,7 @@ namespace InfoFenix.Core.Services {
 
         public Task IndexAsync(int documentDirectoryID, CancellationToken cancellationToken) {
             const int BATCH_SIZE = 128;
+            const string notificationTitle = "Indexar Diretório de Documentos";
 
             var documentDirectory = Get(documentDirectoryID);
             if (documentDirectory == null) { return Task.FromResult(0); }
@@ -216,8 +227,7 @@ namespace InfoFenix.Core.Services {
             var index = _indexProvider.GetOrCreate(documentDirectory.Code);
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Title = "Indexar Diretório de Documentos",
-                Message = $"Indexando diretório de documentos ({documentDirectory.Label})...",
+                Title = notificationTitle,
                 TotalSteps = documents.Length
             });
 
@@ -228,9 +238,8 @@ namespace InfoFenix.Core.Services {
                     // Index the actual documents.
                     index.StoreDocuments(documentsToIndex.ToArray());
 
-                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                        Title = "Indexar Diretório de Documentos",
-                        Message = $"Tarefa cancelada.",
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCancelNotification {
+                        Title = notificationTitle,
                         TotalSteps = counter
                     });
 
@@ -247,7 +256,7 @@ namespace InfoFenix.Core.Services {
                     Log.Error(ex, $"ERROR OPENING DOCUMENT: {document.Path}");
 
                     _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                        Title = "Indexar Diretório de Documentos",
+                        Title = notificationTitle,
                         Message = $"Erro ao indexar o arquivo: ({document.FileName})",
                         ActualStep = counter,
                         TotalSteps = documents.Length
@@ -272,7 +281,7 @@ namespace InfoFenix.Core.Services {
                     }
 
                     _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                        Title = "Indexar Diretório de Documentos",
+                        Title = notificationTitle,
                         Message = $"Documento: ({document.FileName})",
                         ActualStep = counter,
                         TotalSteps = documents.Length
@@ -281,7 +290,7 @@ namespace InfoFenix.Core.Services {
                     Log.Error(ex, $"ERROR INDEXING FILE: {document.Path}");
 
                     _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                        Title = "Indexar Diretório de Documentos",
+                        Title = notificationTitle,
                         Message = $"Erro ao indexar o arquivo: ({document.FileName})",
                         ActualStep = counter,
                         TotalSteps = documents.Length
@@ -293,8 +302,7 @@ namespace InfoFenix.Core.Services {
             index.StoreDocuments(documentsToIndex.ToArray());
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Title = "Indexar Diretório de Documentos",
-                Message = $"Diretório de documentos ({documentDirectory.Label}) indexado com sucesso.",
+                Title = notificationTitle,
                 TotalSteps = documents.Length
             });
 
@@ -328,9 +336,11 @@ namespace InfoFenix.Core.Services {
             });
         }
 
-        public async Task CleanAsync(int documentDirectoryID, CancellationToken cancellationToken) {
+        public Task CleanAsync(int documentDirectoryID, CancellationToken cancellationToken) {
+            const string notificationTitle = "Limpar Diretório de Documentos";
+
             var documentDirectory = Get(documentDirectoryID);
-            if (documentDirectory == null) { return; }
+            if (documentDirectory == null) { return Task.FromResult(0); }
 
             var physicalFiles = Common.GetDocFiles(documentDirectory.Path);
             var databaseDocuments = _commandQueryDispatcher
@@ -340,22 +350,21 @@ namespace InfoFenix.Core.Services {
                 .Where(_ => !physicalFiles.Contains(_.Path, StringComparer.InvariantCultureIgnoreCase))
                 .ToArray();
 
-            await _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Title = "Limpar Diretório de Documentos",
+            _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
+                Title = notificationTitle,
                 Message = $"Iniciando limpeza do diretório de documentos ({documentDirectory.Label})...",
-                TotalSteps = 1
+                TotalSteps = toRemove.Length
             });
 
             var counter = 1;
             foreach (var document in toRemove) {
                 if (cancellationToken.IsCancellationRequested) {
-                    await _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                        Title = "Limpar Diretório de Documentos",
-                        Message = $"Tarefa cancelada.",
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
+                        Title = notificationTitle,
                         TotalSteps = counter
                     });
 
-                    return;
+                    return Task.FromResult(0);
                 }
 
                 _commandQueryDispatcher.Command(new RemoveDocumentCommand {
@@ -364,18 +373,20 @@ namespace InfoFenix.Core.Services {
                     DocumentDirectoryCode = documentDirectory.Code
                 });
 
-                await _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                    Title = "Limpar Diretório de Documentos",
-                    Message = $"Documento removido: ({documentDirectory.Label})",
+                _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
+                    Title = notificationTitle,
+                    Message = $"Documento: {document.FileName}",
                     ActualStep = counter++,
                     TotalSteps = toRemove.Length
                 });
             }
-            await _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Title = "Limpar Diretório de Documentos",
+            _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
+                Title = notificationTitle,
                 Message = $"Diretório de documentos ({documentDirectory.Label}) limpo com sucesso.",
                 TotalSteps = toRemove.Length
             });
+
+            return Task.FromResult(0);
         }
 
         #endregion IDocumentDirectoryService Members

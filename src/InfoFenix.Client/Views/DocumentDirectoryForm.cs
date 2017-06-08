@@ -117,7 +117,13 @@ namespace InfoFenix.Client.Views {
             UpdateViewModel();
             if (!ValidateViewModel()) { return; }
 
-            SaveDocumentDirectory();
+            try { SaveDocumentDirectory(); }
+            catch (Exception ex) {
+                MessageBox.Show($"Ocorreu um erro ao tentar salvar o diretório de documentos. ({ex.Message})", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                DialogResult = DialogResult.Abort;
+            }
+
             SaveDocumentsInsideDirectoryDocuments();
             CleanDocumentDirectory();
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using InfoFenix.Client.Code;
+using InfoFenix.Client.Models;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
 using InfoFenix.Core.Services;
@@ -19,7 +19,7 @@ namespace InfoFenix.Client.Views {
 
         #region Private Properties
 
-        private SearchResultViewModel ViewModel { get; set; }
+        private SearchViewModel ViewModel { get; set; }
 
         #endregion Private Properties
 
@@ -52,13 +52,13 @@ namespace InfoFenix.Client.Views {
             var result = _searchService.Search(ViewModel.SearchTerm);
             foreach (var set in result) {
                 var documentDirectory = _documentDirectoryService.List(code: set.IndexName).SingleOrDefault();
-                var list = new DocumentDirectoryViewModel {
+                var list = new SearchDocumentDirectoryViewModel {
                     Code = set.IndexName,
-                    TotalDocuments = set.TotalDocuments,
-                    Label = documentDirectory.Label
+                    Label = documentDirectory.Label,
+                    TotalDocuments = set.TotalDocuments
                 };
                 foreach (dynamic item in set) {
-                    list.DocumentsFound.Add(new DocumentViewModel {
+                    list.Documents.Add(new SearchDocumentViewModel {
                         ID = item.ID,
                         Code = item.Code,
                         Path = item.Path,

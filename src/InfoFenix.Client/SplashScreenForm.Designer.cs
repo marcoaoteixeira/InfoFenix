@@ -25,11 +25,11 @@
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreenForm));
             this.splashScreenPanel = new System.Windows.Forms.Panel();
+            this.messageLabel = new System.Windows.Forms.Label();
+            this.progressLabel = new System.Windows.Forms.Label();
             this.iconPictureBox = new System.Windows.Forms.PictureBox();
             this.versionLabel = new System.Windows.Forms.Label();
             this.titleLabel = new System.Windows.Forms.Label();
-            this.progressLabel = new System.Windows.Forms.Label();
-            this.messageLabel = new System.Windows.Forms.Label();
             this.splashScreenPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -48,6 +48,28 @@
             this.splashScreenPanel.Padding = new System.Windows.Forms.Padding(10);
             this.splashScreenPanel.Size = new System.Drawing.Size(380, 230);
             this.splashScreenPanel.TabIndex = 0;
+            // 
+            // messageLabel
+            // 
+            this.messageLabel.AutoEllipsis = true;
+            this.messageLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.messageLabel.Location = new System.Drawing.Point(13, 121);
+            this.messageLabel.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
+            this.messageLabel.Name = "messageLabel";
+            this.messageLabel.Size = new System.Drawing.Size(352, 67);
+            this.messageLabel.TabIndex = 4;
+            this.messageLabel.Text = "###########";
+            // 
+            // progressLabel
+            // 
+            this.progressLabel.AutoEllipsis = true;
+            this.progressLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.progressLabel.Location = new System.Drawing.Point(13, 198);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(150, 20);
+            this.progressLabel.TabIndex = 3;
+            this.progressLabel.Text = "###########";
+            this.progressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // iconPictureBox
             // 
@@ -79,28 +101,6 @@
             this.titleLabel.Size = new System.Drawing.Size(136, 29);
             this.titleLabel.TabIndex = 0;
             this.titleLabel.Text = "Info Fênix";
-            // 
-            // progressLabel
-            // 
-            this.progressLabel.AutoEllipsis = true;
-            this.progressLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.progressLabel.Location = new System.Drawing.Point(13, 198);
-            this.progressLabel.Name = "progressLabel";
-            this.progressLabel.Size = new System.Drawing.Size(150, 20);
-            this.progressLabel.TabIndex = 3;
-            this.progressLabel.Text = "###########";
-            this.progressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // messageLabel
-            // 
-            this.messageLabel.AutoEllipsis = true;
-            this.messageLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageLabel.Location = new System.Drawing.Point(13, 121);
-            this.messageLabel.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
-            this.messageLabel.Name = "messageLabel";
-            this.messageLabel.Size = new System.Drawing.Size(352, 67);
-            this.messageLabel.TabIndex = 4;
-            this.messageLabel.Text = "###########";
             // 
             // SplashScreenForm
             // 

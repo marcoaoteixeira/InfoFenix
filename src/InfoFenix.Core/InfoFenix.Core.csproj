@@ -213,7 +213,9 @@
     <Compile Include="Search\SearchBuilder.cs" />
     <Compile Include="Search\SearchHit.cs" />
     <Compile Include="Services\DocumentDirectoryService.cs" />
+    <Compile Include="Services\DocumentService.cs" />
     <Compile Include="Services\IDocumentDirectoryService.cs" />
+    <Compile Include="Services\IDocumentService.cs" />
     <Compile Include="Services\ISearchIndexService.cs" />
     <Compile Include="Services\SearchIndexService.cs" />
   </ItemGroup>

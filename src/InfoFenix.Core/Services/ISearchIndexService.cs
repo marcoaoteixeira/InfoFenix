@@ -59,6 +59,8 @@ namespace InfoFenix.Core.Services {
 
         #region Methods
 
+        SearchIndexResultSet AvaliableIndexes();
+
         SearchIndexResultSet Search(string term, params string[] indexNames);
 
         #endregion Methods

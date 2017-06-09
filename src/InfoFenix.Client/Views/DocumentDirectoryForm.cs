@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Core;
@@ -50,8 +49,11 @@ namespace InfoFenix.Client.Views {
 
         #region Private Methods
 
-        private void UpdateViewModel() {
+        private void Initialize() {
             ViewModel = ViewModel ?? new DocumentDirectoryEntity();
+        }
+
+        private void UpdateViewModel() {
             ViewModel.Label = documentDirectoryLabelTextBox.Text;
             ViewModel.Path = documentDirectoryPathTextBox.Text;
             ViewModel.Code = ViewModel.Code ?? Guid.NewGuid().ToString("N");
@@ -67,7 +69,7 @@ namespace InfoFenix.Client.Views {
         }
 
         private void SaveDocumentDirectory() {
-            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.Save(ViewModel));
+            _progressiveTaskExecutor.Execute(() => _documentDirectoryService.Save(ViewModel));
         }
 
         private void SaveDocumentsInsideDirectoryDocuments() {
@@ -96,12 +98,16 @@ namespace InfoFenix.Client.Views {
         }
 
         private void WatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.WatchForModification(documentDirectory.ID));
+            _progressiveTaskExecutor.Execute(() => _documentDirectoryService.StartWatchForModification(documentDirectory.ID));
         }
 
         #endregion Private Methods
 
         #region Event Handlers
+
+        private void DocumentDirectoryForm_Load(object sender, EventArgs e) {
+            Initialize();
+        }
 
         private void selectDocumentDirectoryPathButton_Click(object sender, EventArgs e) {
             var button = sender as Button;
@@ -117,10 +123,9 @@ namespace InfoFenix.Client.Views {
             UpdateViewModel();
             if (!ValidateViewModel()) { return; }
 
-            try { SaveDocumentDirectory(); }
-            catch (Exception ex) {
+            try { SaveDocumentDirectory(); } catch (Exception ex) {
                 MessageBox.Show($"Ocorreu um erro ao tentar salvar o diretório de documentos. ({ex.Message})", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+
                 DialogResult = DialogResult.Abort;
             }
 
@@ -128,7 +133,7 @@ namespace InfoFenix.Client.Views {
             CleanDocumentDirectory();
 
             if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
-            //if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
+            if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
 
             DialogResult = DialogResult.OK;
         }

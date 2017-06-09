@@ -18,13 +18,25 @@ namespace InfoFenix.Client {
 
         #endregion Private Static Fields
 
-        #region Private Static Properties
+        #region Internal Static Properties
 
         internal static CancellationTokenIssuer CancellationTokenIssuer {
             get { return _compositionRoot.Resolver.Resolve<CancellationTokenIssuer>(); }
         }
 
-        #endregion Private Static Properties
+        internal static bool IgnoreExitRoutine { get; set; }
+
+        #endregion Internal Static Properties
+
+        #region Internal Static Methods
+
+        internal static void RestartApplication() {
+            IgnoreExitRoutine = true;
+
+            Application.Restart();
+        }
+
+        #endregion Internal Static Methods
 
         #region Private Static Methods
 

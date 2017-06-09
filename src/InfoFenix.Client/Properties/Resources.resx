@@ -205,4 +205,7 @@
   <data name="word_document_doc_gray_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\word-document-doc_gray_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hourglass_20x20" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hourglass_20x20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

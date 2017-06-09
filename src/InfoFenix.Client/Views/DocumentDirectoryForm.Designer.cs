@@ -27,13 +27,13 @@
             this.actionPanel = new System.Windows.Forms.Panel();
             this.saveAndCloseButton = new System.Windows.Forms.Button();
             this.documentDirectoryPanel = new System.Windows.Forms.Panel();
+            this.indexDocumentDirectoryCheckBox = new System.Windows.Forms.CheckBox();
+            this.watchDocumentDirectoryCheckBox = new System.Windows.Forms.CheckBox();
             this.selectDocumentDirectoryPathButton = new System.Windows.Forms.Button();
             this.documentDirectoryPathTextBox = new System.Windows.Forms.TextBox();
             this.documentDirectoryPathLabel = new System.Windows.Forms.Label();
             this.documentDirectoryLabelTextBox = new System.Windows.Forms.TextBox();
             this.documentDirectoryLabelLabel = new System.Windows.Forms.Label();
-            this.watchDocumentDirectoryCheckBox = new System.Windows.Forms.CheckBox();
-            this.indexDocumentDirectoryCheckBox = new System.Windows.Forms.CheckBox();
             this.actionPanel.SuspendLayout();
             this.documentDirectoryPanel.SuspendLayout();
             this.SuspendLayout();
@@ -84,6 +84,32 @@
             this.documentDirectoryPanel.Padding = new System.Windows.Forms.Padding(10);
             this.documentDirectoryPanel.Size = new System.Drawing.Size(584, 231);
             this.documentDirectoryPanel.TabIndex = 8;
+            // 
+            // indexDocumentDirectoryCheckBox
+            // 
+            this.indexDocumentDirectoryCheckBox.AutoSize = true;
+            this.indexDocumentDirectoryCheckBox.Checked = true;
+            this.indexDocumentDirectoryCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.indexDocumentDirectoryCheckBox.Location = new System.Drawing.Point(17, 196);
+            this.indexDocumentDirectoryCheckBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
+            this.indexDocumentDirectoryCheckBox.Name = "indexDocumentDirectoryCheckBox";
+            this.indexDocumentDirectoryCheckBox.Size = new System.Drawing.Size(82, 23);
+            this.indexDocumentDirectoryCheckBox.TabIndex = 12;
+            this.indexDocumentDirectoryCheckBox.Text = "Indexar";
+            this.indexDocumentDirectoryCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // watchDocumentDirectoryCheckBox
+            // 
+            this.watchDocumentDirectoryCheckBox.AutoSize = true;
+            this.watchDocumentDirectoryCheckBox.Checked = true;
+            this.watchDocumentDirectoryCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.watchDocumentDirectoryCheckBox.Location = new System.Drawing.Point(17, 157);
+            this.watchDocumentDirectoryCheckBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
+            this.watchDocumentDirectoryCheckBox.Name = "watchDocumentDirectoryCheckBox";
+            this.watchDocumentDirectoryCheckBox.Size = new System.Drawing.Size(92, 23);
+            this.watchDocumentDirectoryCheckBox.TabIndex = 11;
+            this.watchDocumentDirectoryCheckBox.Text = "Observar";
+            this.watchDocumentDirectoryCheckBox.UseVisualStyleBackColor = true;
             // 
             // selectDocumentDirectoryPathButton
             // 
@@ -136,32 +162,6 @@
             this.documentDirectoryLabelLabel.TabIndex = 6;
             this.documentDirectoryLabelLabel.Text = "Rótulo";
             // 
-            // watchDocumentDirectoryCheckBox
-            // 
-            this.watchDocumentDirectoryCheckBox.AutoSize = true;
-            this.watchDocumentDirectoryCheckBox.Checked = true;
-            this.watchDocumentDirectoryCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.watchDocumentDirectoryCheckBox.Location = new System.Drawing.Point(17, 157);
-            this.watchDocumentDirectoryCheckBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
-            this.watchDocumentDirectoryCheckBox.Name = "watchDocumentDirectoryCheckBox";
-            this.watchDocumentDirectoryCheckBox.Size = new System.Drawing.Size(92, 23);
-            this.watchDocumentDirectoryCheckBox.TabIndex = 11;
-            this.watchDocumentDirectoryCheckBox.Text = "Observar";
-            this.watchDocumentDirectoryCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // indexDocumentDirectoryCheckBox
-            // 
-            this.indexDocumentDirectoryCheckBox.AutoSize = true;
-            this.indexDocumentDirectoryCheckBox.Checked = true;
-            this.indexDocumentDirectoryCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.indexDocumentDirectoryCheckBox.Location = new System.Drawing.Point(17, 196);
-            this.indexDocumentDirectoryCheckBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
-            this.indexDocumentDirectoryCheckBox.Name = "indexDocumentDirectoryCheckBox";
-            this.indexDocumentDirectoryCheckBox.Size = new System.Drawing.Size(82, 23);
-            this.indexDocumentDirectoryCheckBox.TabIndex = 12;
-            this.indexDocumentDirectoryCheckBox.Text = "Indexar";
-            this.indexDocumentDirectoryCheckBox.UseVisualStyleBackColor = true;
-            // 
             // DocumentDirectoryForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -175,6 +175,7 @@
             this.MinimizeBox = false;
             this.Name = "DocumentDirectoryForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Load += new System.EventHandler(this.DocumentDirectoryForm_Load);
             this.actionPanel.ResumeLayout(false);
             this.documentDirectoryPanel.ResumeLayout(false);
             this.documentDirectoryPanel.PerformLayout();

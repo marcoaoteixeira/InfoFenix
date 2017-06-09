@@ -12,6 +12,16 @@ namespace InfoFenix.Core.IoC {
                 .RegisterType<DocumentDirectoryService>()
                 .As<IDocumentDirectoryService>()
                 .SingleInstance();
+
+            Builder
+                .RegisterType<SearchIndexService>()
+                .As<ISearchIndexService>()
+                .SingleInstance();
+
+            Builder
+                .RegisterType<DocumentService>()
+                .As<IDocumentService>()
+                .SingleInstance();
         }
 
         #endregion Public Override Methods

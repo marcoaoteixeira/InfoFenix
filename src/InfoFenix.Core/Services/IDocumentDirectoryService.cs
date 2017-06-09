@@ -19,9 +19,13 @@ namespace InfoFenix.Core.Services {
 
         IEnumerable<DocumentDirectoryEntity> List(string label = null, string path = null, string code = null);
 
+        IEnumerable<DocumentEntity> GetDocuments(int documentDirectoryID);
+
         Task IndexAsync(int documentDirectoryID, CancellationToken cancellationToken);
 
-        void WatchForModification(int documentDirectoryID);
+        void StartWatchForModification(int documentDirectoryID);
+
+        void StopWatchForModification(int documentDirectoryID);
 
         Task CleanAsync(int documentDirectoryID, CancellationToken cancellationToken);
 

@@ -87,6 +87,17 @@ namespace InfoFenix.Core.Services {
 
         #region ISearchIndexService Members
 
+        public SearchIndexResultSet AvaliableIndexes() {
+            var result = new SearchIndexResultSet();
+            foreach (var index in GetIndexes(null)) {
+                result.Add(new SearchIndexCollection {
+                    IndexName = index.Name,
+                    TotalDocuments = index.TotalDocuments()
+                });
+            }
+            return result;
+        }
+
         public SearchIndexResultSet Search(string term, params string[] indexNames) {
             if (string.IsNullOrWhiteSpace(term)) { return SearchIndexResultSet.Empty; }
 

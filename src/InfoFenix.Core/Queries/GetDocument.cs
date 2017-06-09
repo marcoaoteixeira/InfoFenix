@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
@@ -11,6 +12,8 @@ namespace InfoFenix.Core.Queries {
         #region Public Properties
 
         public int ID { get; set; }
+
+        public int Code { get; set; }
 
         #endregion Public Properties
     }
@@ -37,7 +40,8 @@ namespace InfoFenix.Core.Queries {
 
         public DocumentEntity Handle(GetDocumentQuery query) {
             return _database.ExecuteReaderSingle(SQL.GetDocument, DocumentEntity.MapFromDataReader, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(DocumentEntity.ID), query.ID, DbType.Int32)
+                Parameter.CreateInputParameter(nameof(DocumentEntity.ID), query.ID != 0 ? (object)query.ID : DBNull.Value, DbType.Int32),
+                Parameter.CreateInputParameter(nameof(DocumentEntity.Code), query.Code != 0 ? (object)query.Code : DBNull.Value, DbType.Int32)
             });
         }
 

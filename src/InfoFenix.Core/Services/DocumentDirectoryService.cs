@@ -213,6 +213,12 @@ namespace InfoFenix.Core.Services {
             });
         }
 
+        public IEnumerable<DocumentEntity> GetDocuments(int documentDirectoryID) {
+            return _commandQueryDispatcher.Query(new ListDocumentsByDocumentDirectoryQuery {
+                DocumentDirectoryID = documentDirectoryID
+            });
+        }
+
         public Task IndexAsync(int documentDirectoryID, CancellationToken cancellationToken) {
             const int BATCH_SIZE = 128;
             const string notificationTitle = "Indexar Diretório de Documentos";
@@ -309,12 +315,14 @@ namespace InfoFenix.Core.Services {
             return Task.FromResult(0);
         }
 
-        public void WatchForModification(int documentDirectoryID) {
+        public void StartWatchForModification(int documentDirectoryID) {
             var documentDirectory = Get(documentDirectoryID);
             if (documentDirectory == null) { return; }
 
+            const string notificationTitle = "Observar Diretório de Documentos";
+
             _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Title = "Observar Diretório de Documentos",
+                Title = notificationTitle,
                 Message = $"Iniciando observação do diretório de documentos ({documentDirectory.Label})...",
                 TotalSteps = 1
             });
@@ -324,14 +332,43 @@ namespace InfoFenix.Core.Services {
             });
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                Title = "Observar Diretório de Documentos",
+                Title = notificationTitle,
                 Message = $"Observando diretório de documentos ({documentDirectory.Label}).",
                 ActualStep = 1,
                 TotalSteps = 1
             });
             _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Title = "Observar Diretório de Documentos",
+                Title = notificationTitle,
                 Message = $"Diretório de documentos ({documentDirectory.Label}) sendo observado com sucesso.",
+                TotalSteps = 1
+            });
+        }
+
+        public void StopWatchForModification(int documentDirectoryID) {
+            var documentDirectory = Get(documentDirectoryID);
+            if (documentDirectory == null) { return; }
+
+            const string notificationTitle = "Observar Diretório de Documentos";
+
+            _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
+                Title = notificationTitle,
+                Message = $"Parando observação do diretório de documentos ({documentDirectory.Label})...",
+                TotalSteps = 1
+            });
+
+            _commandQueryDispatcher.Command(new StopWatchDocumentDirectoryCommand {
+                DirectoryPath = documentDirectory.Path
+            });
+
+            _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
+                Title = notificationTitle,
+                Message = $"Executando ações necessários...",
+                ActualStep = 1,
+                TotalSteps = 1
+            });
+            _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
+                Title = notificationTitle,
+                Message = $"O diretório de documentos ({documentDirectory.Label}) não está mais sendo observado.",
                 TotalSteps = 1
             });
         }

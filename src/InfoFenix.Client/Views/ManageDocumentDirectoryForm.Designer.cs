@@ -25,17 +25,17 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManageDocumentDirectoryForm));
-            this.documentDirectorySplitContainer = new System.Windows.Forms.SplitContainer();
-            this.directoryTreeView = new System.Windows.Forms.TreeView();
+            this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.documentDirectoryTreeView = new System.Windows.Forms.TreeView();
             this.directoryActionPanel = new System.Windows.Forms.Panel();
-            this.addDirectoryButton = new System.Windows.Forms.Button();
-            this.documentDirectoryListView = new System.Windows.Forms.ListView();
+            this.createDocumentDirectoryButton = new System.Windows.Forms.Button();
+            this.documentListView = new System.Windows.Forms.ListView();
             this.manageDocumentDirectoryImageList = new System.Windows.Forms.ImageList(this.components);
             this.directoryInformationLabel = new System.Windows.Forms.Label();
             this.filterListViewPanel = new System.Windows.Forms.Panel();
             this.filterListViewTextBox = new System.Windows.Forms.TextBox();
             this.filterListViewLabel = new System.Windows.Forms.Label();
-            this.directoryTreeViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.documentDirectoryContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indexDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstDirectoryToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -43,7 +43,7 @@
             this.stopWatchDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.secondDirectoryToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.removeDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.documentDirectoryListViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.documentContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.indexDocumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstDocumentToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.removeDocumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,14 +52,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.contentPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.documentDirectorySplitContainer)).BeginInit();
-            this.documentDirectorySplitContainer.Panel1.SuspendLayout();
-            this.documentDirectorySplitContainer.Panel2.SuspendLayout();
-            this.documentDirectorySplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
+            this.mainSplitContainer.Panel1.SuspendLayout();
+            this.mainSplitContainer.Panel2.SuspendLayout();
+            this.mainSplitContainer.SuspendLayout();
             this.directoryActionPanel.SuspendLayout();
             this.filterListViewPanel.SuspendLayout();
-            this.directoryTreeViewContextMenuStrip.SuspendLayout();
-            this.documentDirectoryListViewContextMenuStrip.SuspendLayout();
+            this.documentDirectoryContextMenuStrip.SuspendLayout();
+            this.documentContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // iconPictureBox
@@ -76,52 +76,52 @@
             // 
             // contentPanel
             // 
-            this.contentPanel.Controls.Add(this.documentDirectorySplitContainer);
+            this.contentPanel.Controls.Add(this.mainSplitContainer);
             this.contentPanel.Padding = new System.Windows.Forms.Padding(0);
             // 
             // closeButton
             // 
             this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
-            // documentDirectorySplitContainer
+            // mainSplitContainer
             // 
-            this.documentDirectorySplitContainer.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.documentDirectorySplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.documentDirectorySplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.documentDirectorySplitContainer.Name = "documentDirectorySplitContainer";
+            this.mainSplitContainer.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.mainSplitContainer.Name = "mainSplitContainer";
             // 
-            // documentDirectorySplitContainer.Panel1
+            // mainSplitContainer.Panel1
             // 
-            this.documentDirectorySplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.documentDirectorySplitContainer.Panel1.Controls.Add(this.directoryTreeView);
-            this.documentDirectorySplitContainer.Panel1.Controls.Add(this.directoryActionPanel);
-            this.documentDirectorySplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(10);
-            this.documentDirectorySplitContainer.Panel1MinSize = 270;
+            this.mainSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.mainSplitContainer.Panel1.Controls.Add(this.documentDirectoryTreeView);
+            this.mainSplitContainer.Panel1.Controls.Add(this.directoryActionPanel);
+            this.mainSplitContainer.Panel1.Padding = new System.Windows.Forms.Padding(10);
+            this.mainSplitContainer.Panel1MinSize = 270;
             // 
-            // documentDirectorySplitContainer.Panel2
+            // mainSplitContainer.Panel2
             // 
-            this.documentDirectorySplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.documentDirectorySplitContainer.Panel2.Controls.Add(this.documentDirectoryListView);
-            this.documentDirectorySplitContainer.Panel2.Controls.Add(this.directoryInformationLabel);
-            this.documentDirectorySplitContainer.Panel2.Controls.Add(this.filterListViewPanel);
-            this.documentDirectorySplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(10);
-            this.documentDirectorySplitContainer.Size = new System.Drawing.Size(784, 381);
-            this.documentDirectorySplitContainer.SplitterDistance = 270;
-            this.documentDirectorySplitContainer.TabIndex = 0;
+            this.mainSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
+            this.mainSplitContainer.Panel2.Controls.Add(this.documentListView);
+            this.mainSplitContainer.Panel2.Controls.Add(this.directoryInformationLabel);
+            this.mainSplitContainer.Panel2.Controls.Add(this.filterListViewPanel);
+            this.mainSplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(10);
+            this.mainSplitContainer.Size = new System.Drawing.Size(784, 381);
+            this.mainSplitContainer.SplitterDistance = 270;
+            this.mainSplitContainer.TabIndex = 0;
             // 
-            // directoryTreeView
+            // documentDirectoryTreeView
             // 
-            this.directoryTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.directoryTreeView.Location = new System.Drawing.Point(10, 68);
-            this.directoryTreeView.Name = "directoryTreeView";
-            this.directoryTreeView.Size = new System.Drawing.Size(250, 303);
-            this.directoryTreeView.TabIndex = 1;
-            this.directoryTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.directoryTreeView_NodeMouseClick);
-            this.directoryTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.directoryTreeView_MouseUp);
+            this.documentDirectoryTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentDirectoryTreeView.Location = new System.Drawing.Point(10, 68);
+            this.documentDirectoryTreeView.Name = "documentDirectoryTreeView";
+            this.documentDirectoryTreeView.Size = new System.Drawing.Size(250, 303);
+            this.documentDirectoryTreeView.TabIndex = 1;
+            this.documentDirectoryTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.documentDirectoryTreeView_NodeMouseClick);
+            this.documentDirectoryTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.directoryTreeView_MouseUp);
             // 
             // directoryActionPanel
             // 
-            this.directoryActionPanel.Controls.Add(this.addDirectoryButton);
+            this.directoryActionPanel.Controls.Add(this.createDocumentDirectoryButton);
             this.directoryActionPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.directoryActionPanel.Location = new System.Drawing.Point(10, 10);
             this.directoryActionPanel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
@@ -130,34 +130,35 @@
             this.directoryActionPanel.Size = new System.Drawing.Size(250, 58);
             this.directoryActionPanel.TabIndex = 0;
             // 
-            // addDirectoryButton
+            // createDocumentDirectoryButton
             // 
-            this.addDirectoryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.addDirectoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.addDirectoryButton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.addDirectoryButton.Image = global::InfoFenix.Client.Properties.Resources.add_folder_32x32;
-            this.addDirectoryButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.addDirectoryButton.Location = new System.Drawing.Point(0, 0);
-            this.addDirectoryButton.Margin = new System.Windows.Forms.Padding(3, 3, 13, 3);
-            this.addDirectoryButton.Name = "addDirectoryButton";
-            this.addDirectoryButton.Padding = new System.Windows.Forms.Padding(10);
-            this.addDirectoryButton.Size = new System.Drawing.Size(250, 48);
-            this.addDirectoryButton.TabIndex = 0;
-            this.addDirectoryButton.Text = "Adicionar diretório";
-            this.manageDocumentDirectoryToolTip.SetToolTip(this.addDirectoryButton, "Adicionar diretório de documentos");
-            this.addDirectoryButton.UseVisualStyleBackColor = true;
-            this.addDirectoryButton.Click += new System.EventHandler(this.addDirectoryButton_Click);
+            this.createDocumentDirectoryButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.createDocumentDirectoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.createDocumentDirectoryButton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.createDocumentDirectoryButton.Image = global::InfoFenix.Client.Properties.Resources.add_folder_32x32;
+            this.createDocumentDirectoryButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.createDocumentDirectoryButton.Location = new System.Drawing.Point(0, 0);
+            this.createDocumentDirectoryButton.Margin = new System.Windows.Forms.Padding(3, 3, 13, 3);
+            this.createDocumentDirectoryButton.Name = "createDocumentDirectoryButton";
+            this.createDocumentDirectoryButton.Padding = new System.Windows.Forms.Padding(10);
+            this.createDocumentDirectoryButton.Size = new System.Drawing.Size(250, 48);
+            this.createDocumentDirectoryButton.TabIndex = 0;
+            this.createDocumentDirectoryButton.Text = "Adicionar diretório";
+            this.manageDocumentDirectoryToolTip.SetToolTip(this.createDocumentDirectoryButton, "Adicionar diretório de documentos");
+            this.createDocumentDirectoryButton.UseVisualStyleBackColor = true;
+            this.createDocumentDirectoryButton.Click += new System.EventHandler(this.createDocumentDirectoryButton_Click);
             // 
-            // documentDirectoryListView
+            // documentListView
             // 
-            this.documentDirectoryListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.documentDirectoryListView.LargeImageList = this.manageDocumentDirectoryImageList;
-            this.documentDirectoryListView.Location = new System.Drawing.Point(10, 68);
-            this.documentDirectoryListView.Name = "documentDirectoryListView";
-            this.documentDirectoryListView.Size = new System.Drawing.Size(490, 271);
-            this.documentDirectoryListView.TabIndex = 0;
-            this.documentDirectoryListView.UseCompatibleStateImageBehavior = false;
-            this.documentDirectoryListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.documentDirectoryListView_MouseDown);
+            this.documentListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentListView.LargeImageList = this.manageDocumentDirectoryImageList;
+            this.documentListView.Location = new System.Drawing.Point(10, 68);
+            this.documentListView.MultiSelect = false;
+            this.documentListView.Name = "documentListView";
+            this.documentListView.Size = new System.Drawing.Size(490, 271);
+            this.documentListView.TabIndex = 0;
+            this.documentListView.UseCompatibleStateImageBehavior = false;
+            this.documentListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.documentListView_MouseDown);
             // 
             // manageDocumentDirectoryImageList
             // 
@@ -198,7 +199,7 @@
             this.filterListViewTextBox.Name = "filterListViewTextBox";
             this.filterListViewTextBox.Size = new System.Drawing.Size(410, 27);
             this.filterListViewTextBox.TabIndex = 1;
-            this.filterListViewTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.filterListViewTextBox_KeyDown);
+            this.filterListViewTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.filterListViewTextBox_KeyUp);
             // 
             // filterListViewLabel
             // 
@@ -210,9 +211,9 @@
             this.filterListViewLabel.Text = "Filtrar:";
             this.filterListViewLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // directoryTreeViewContextMenuStrip
+            // documentDirectoryContextMenuStrip
             // 
-            this.directoryTreeViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.documentDirectoryContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editDirectoryToolStripMenuItem,
             this.indexDirectoryToolStripMenuItem,
             this.firstDirectoryToolStripSeparator,
@@ -220,75 +221,88 @@
             this.stopWatchDirectoryToolStripMenuItem,
             this.secondDirectoryToolStripSeparator,
             this.removeDirectoryToolStripMenuItem});
-            this.directoryTreeViewContextMenuStrip.Name = "directoryTreeViewContextMenuStrip";
-            this.directoryTreeViewContextMenuStrip.Size = new System.Drawing.Size(170, 126);
+            this.documentDirectoryContextMenuStrip.Name = "directoryTreeViewContextMenuStrip";
+            this.documentDirectoryContextMenuStrip.ShowImageMargin = false;
+            this.documentDirectoryContextMenuStrip.Size = new System.Drawing.Size(145, 126);
             // 
             // editDirectoryToolStripMenuItem
             // 
             this.editDirectoryToolStripMenuItem.Name = "editDirectoryToolStripMenuItem";
-            this.editDirectoryToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.editDirectoryToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.editDirectoryToolStripMenuItem.Tag = "EDIT";
             this.editDirectoryToolStripMenuItem.Text = "Editar";
+            this.editDirectoryToolStripMenuItem.Click += new System.EventHandler(this.documentDirectoryToolStripMenuItem_Click);
             // 
             // indexDirectoryToolStripMenuItem
             // 
             this.indexDirectoryToolStripMenuItem.Name = "indexDirectoryToolStripMenuItem";
-            this.indexDirectoryToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.indexDirectoryToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.indexDirectoryToolStripMenuItem.Tag = "INDEX";
             this.indexDirectoryToolStripMenuItem.Text = "Indexar";
+            this.indexDirectoryToolStripMenuItem.Click += new System.EventHandler(this.documentDirectoryToolStripMenuItem_Click);
             // 
             // firstDirectoryToolStripSeparator
             // 
             this.firstDirectoryToolStripSeparator.Name = "firstDirectoryToolStripSeparator";
-            this.firstDirectoryToolStripSeparator.Size = new System.Drawing.Size(166, 6);
+            this.firstDirectoryToolStripSeparator.Size = new System.Drawing.Size(141, 6);
             // 
             // startWatchDirectoryToolStripMenuItem
             // 
             this.startWatchDirectoryToolStripMenuItem.Name = "startWatchDirectoryToolStripMenuItem";
-            this.startWatchDirectoryToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.startWatchDirectoryToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.startWatchDirectoryToolStripMenuItem.Tag = "START_WATCH";
             this.startWatchDirectoryToolStripMenuItem.Text = "Iniciar observação";
+            this.startWatchDirectoryToolStripMenuItem.Click += new System.EventHandler(this.documentDirectoryToolStripMenuItem_Click);
             // 
             // stopWatchDirectoryToolStripMenuItem
             // 
             this.stopWatchDirectoryToolStripMenuItem.Name = "stopWatchDirectoryToolStripMenuItem";
-            this.stopWatchDirectoryToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.stopWatchDirectoryToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.stopWatchDirectoryToolStripMenuItem.Tag = "STOP_WATCH";
             this.stopWatchDirectoryToolStripMenuItem.Text = "Parar observação";
             this.stopWatchDirectoryToolStripMenuItem.Visible = false;
+            this.stopWatchDirectoryToolStripMenuItem.Click += new System.EventHandler(this.documentDirectoryToolStripMenuItem_Click);
             // 
             // secondDirectoryToolStripSeparator
             // 
             this.secondDirectoryToolStripSeparator.Name = "secondDirectoryToolStripSeparator";
-            this.secondDirectoryToolStripSeparator.Size = new System.Drawing.Size(166, 6);
+            this.secondDirectoryToolStripSeparator.Size = new System.Drawing.Size(141, 6);
             // 
             // removeDirectoryToolStripMenuItem
             // 
             this.removeDirectoryToolStripMenuItem.Name = "removeDirectoryToolStripMenuItem";
-            this.removeDirectoryToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.removeDirectoryToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.removeDirectoryToolStripMenuItem.Tag = "REMOVE";
             this.removeDirectoryToolStripMenuItem.Text = "Remover";
-            this.removeDirectoryToolStripMenuItem.Click += new System.EventHandler(this.removeDirectoryToolStripMenuItem_Click);
+            this.removeDirectoryToolStripMenuItem.Click += new System.EventHandler(this.documentDirectoryToolStripMenuItem_Click);
             // 
-            // documentDirectoryListViewContextMenuStrip
+            // documentContextMenuStrip
             // 
-            this.documentDirectoryListViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.documentContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.indexDocumentToolStripMenuItem,
             this.firstDocumentToolStripSeparator,
             this.removeDocumentToolStripMenuItem});
-            this.documentDirectoryListViewContextMenuStrip.Name = "documentDirectoryListViewContextMenuStrip";
-            this.documentDirectoryListViewContextMenuStrip.Size = new System.Drawing.Size(122, 54);
+            this.documentContextMenuStrip.Name = "documentDirectoryListViewContextMenuStrip";
+            this.documentContextMenuStrip.ShowImageMargin = false;
+            this.documentContextMenuStrip.Size = new System.Drawing.Size(97, 54);
             // 
             // indexDocumentToolStripMenuItem
             // 
             this.indexDocumentToolStripMenuItem.Name = "indexDocumentToolStripMenuItem";
-            this.indexDocumentToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.indexDocumentToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.indexDocumentToolStripMenuItem.Tag = "INDEX";
             this.indexDocumentToolStripMenuItem.Text = "Indexar";
             // 
             // firstDocumentToolStripSeparator
             // 
             this.firstDocumentToolStripSeparator.Name = "firstDocumentToolStripSeparator";
-            this.firstDocumentToolStripSeparator.Size = new System.Drawing.Size(118, 6);
+            this.firstDocumentToolStripSeparator.Size = new System.Drawing.Size(93, 6);
             // 
             // removeDocumentToolStripMenuItem
             // 
             this.removeDocumentToolStripMenuItem.Name = "removeDocumentToolStripMenuItem";
-            this.removeDocumentToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.removeDocumentToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.removeDocumentToolStripMenuItem.Tag = "REMOVE";
             this.removeDocumentToolStripMenuItem.Text = "Remover";
             // 
             // ManageDocumentDirectoryForm
@@ -308,28 +322,28 @@
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
             this.contentPanel.ResumeLayout(false);
             this.actionPanel.ResumeLayout(false);
-            this.documentDirectorySplitContainer.Panel1.ResumeLayout(false);
-            this.documentDirectorySplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.documentDirectorySplitContainer)).EndInit();
-            this.documentDirectorySplitContainer.ResumeLayout(false);
+            this.mainSplitContainer.Panel1.ResumeLayout(false);
+            this.mainSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
+            this.mainSplitContainer.ResumeLayout(false);
             this.directoryActionPanel.ResumeLayout(false);
             this.filterListViewPanel.ResumeLayout(false);
             this.filterListViewPanel.PerformLayout();
-            this.directoryTreeViewContextMenuStrip.ResumeLayout(false);
-            this.documentDirectoryListViewContextMenuStrip.ResumeLayout(false);
+            this.documentDirectoryContextMenuStrip.ResumeLayout(false);
+            this.documentContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer documentDirectorySplitContainer;
-        private System.Windows.Forms.TreeView directoryTreeView;
+        private System.Windows.Forms.SplitContainer mainSplitContainer;
+        private System.Windows.Forms.TreeView documentDirectoryTreeView;
         private System.Windows.Forms.Panel directoryActionPanel;
-        private System.Windows.Forms.Button addDirectoryButton;
-        private System.Windows.Forms.ListView documentDirectoryListView;
-        private System.Windows.Forms.ContextMenuStrip directoryTreeViewContextMenuStrip;
-        private System.Windows.Forms.ContextMenuStrip documentDirectoryListViewContextMenuStrip;
+        private System.Windows.Forms.Button createDocumentDirectoryButton;
+        private System.Windows.Forms.ListView documentListView;
+        private System.Windows.Forms.ContextMenuStrip documentDirectoryContextMenuStrip;
+        private System.Windows.Forms.ContextMenuStrip documentContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editDirectoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem indexDirectoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator firstDirectoryToolStripSeparator;

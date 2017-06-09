@@ -42,6 +42,7 @@ namespace InfoFenix.Client.Views {
 
             InitializeComponent();
 
+            /*
             SearchTerms = new[] { "AÇÃO" };
             SearchResult = new SearchDocumentDirectoryViewModel {
                 Documents = new List<SearchDocumentViewModel> {
@@ -67,6 +68,7 @@ namespace InfoFenix.Client.Views {
                     }
                 }
             };
+            */
         }
 
         #endregion Public Constructors

@@ -25,6 +25,8 @@ namespace InfoFenix.Client.Views {
 
         #region Private Fields
 
+        private bool _canCancel;
+
         private ISubscription<ProgressiveTaskStartNotification> _progressiveTaskStartSubscription;
         private ISubscription<ProgressiveTaskPerformStepNotification> _progressiveTaskPerformStepSubscription;
         private ISubscription<ProgressiveTaskCompleteNotification> _progressiveTaskCompleteSubscription;
@@ -47,24 +49,31 @@ namespace InfoFenix.Client.Views {
 
         #region Public Methods
 
-        public void Initialize() {
+        public void Initialize(bool canCancel = true) {
+            _canCancel = canCancel;
+
             titleLabel.Text = string.Empty;
             messageLabel.Text = string.Empty;
             mainProgressBar.Step = 1;
             mainProgressBar.Minimum = 0;
             mainProgressBar.Maximum = 100;
             progressLabel.Text = string.Empty;
-            cancelButton.Visible = true;
-            okButton.Visible = false;
+            
+            cancelButton.Visible = _canCancel;
+            okButton.Visible = !_canCancel;
+            okButton.Enabled = !_canCancel;
 
             // Fix OK Button position
             okButton.Location = new Point(cancelButton.Location.X, cancelButton.Location.Y);
-            okButton.SendToBack();
+            if (_canCancel) { okButton.SendToBack(); } else { okButton.BringToFront(); }
         }
 
         private void Finish() {
             cancelButton.SafeCall(() => cancelButton.Visible = false);
-            okButton.SafeCall(() => okButton.Visible = true);
+            okButton.SafeCall(() => {
+                okButton.Visible = true;
+                okButton.Enabled = true;
+            });
             
             // Fix OK Button position
             var newPoint = new Point(cancelButton.Location.X, cancelButton.Location.Y);

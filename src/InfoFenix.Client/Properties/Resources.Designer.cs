@@ -223,6 +223,16 @@ namespace InfoFenix.Client.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap hourglass_20x20 {
+            get {
+                object obj = ResourceManager.GetObject("hourglass_20x20", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap index_128x128 {
             get {
                 object obj = ResourceManager.GetObject("index_128x128", resourceCulture);

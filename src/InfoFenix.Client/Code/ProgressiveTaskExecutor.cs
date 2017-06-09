@@ -45,9 +45,23 @@ namespace InfoFenix.Client.Code {
 
         #region Public Methods
 
+        public void Execute(Action action) {
+            using (var form = _formManager.Get<ProgressiveTaskForm>()) {
+                form.Initialize(canCancel: false);
+
+                form.CompleteProgressiveTask += Form_CompleteProgressiveTask;
+
+                Task
+                    .Run(action)
+                    .ContinueWith(Continuation);
+
+                form.ShowDialog();
+            }
+        }
+
         public void Execute(Action<CancellationToken> action) {
             using (var form = _formManager.Get<ProgressiveTaskForm>()) {
-                form.Initialize();
+                form.Initialize(canCancel: true);
 
                 form.CancelProgressiveTask += Form_CancelProgressiveTask;
                 form.CompleteProgressiveTask += Form_CompleteProgressiveTask;

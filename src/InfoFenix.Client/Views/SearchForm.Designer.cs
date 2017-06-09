@@ -31,6 +31,7 @@
             this.labelDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.actualTotalDocumentsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.totalDocumentsFoundDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.informationLabel = new System.Windows.Forms.Label();
             this.titlePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.contentPanel.SuspendLayout();
@@ -39,24 +40,53 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchResultDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
+            // titlePanel
+            // 
+            this.titlePanel.Size = new System.Drawing.Size(634, 96);
+            // 
             // iconPictureBox
             // 
             this.iconPictureBox.Image = global::InfoFenix.Client.Properties.Resources.search_128x128;
             // 
             // titleLabel
             // 
+            this.titleLabel.Size = new System.Drawing.Size(538, 56);
             this.titleLabel.Text = "Pesquisar";
             // 
             // subTitleLabel
             // 
+            this.subTitleLabel.Size = new System.Drawing.Size(538, 40);
             this.subTitleLabel.Text = "Pesquise por todos os diretórios de documentos que foram adicionados a base de da" +
     "dos.";
+            // 
+            // topSeparator
+            // 
+            this.topSeparator.Size = new System.Drawing.Size(634, 2);
             // 
             // contentPanel
             // 
             this.contentPanel.Controls.Add(this.searchResultDataGridView);
             this.contentPanel.Controls.Add(this.searchTermPanel);
             this.contentPanel.Padding = new System.Windows.Forms.Padding(0);
+            this.contentPanel.Size = new System.Drawing.Size(634, 281);
+            // 
+            // bottomSeparator
+            // 
+            this.bottomSeparator.Location = new System.Drawing.Point(0, 379);
+            this.bottomSeparator.Size = new System.Drawing.Size(634, 2);
+            // 
+            // actionPanel
+            // 
+            this.actionPanel.Controls.Add(this.informationLabel);
+            this.actionPanel.Location = new System.Drawing.Point(0, 381);
+            this.actionPanel.Size = new System.Drawing.Size(634, 80);
+            this.actionPanel.Controls.SetChildIndex(this.closeButton, 0);
+            this.actionPanel.Controls.SetChildIndex(this.informationLabel, 0);
+            // 
+            // closeButton
+            // 
+            this.closeButton.Location = new System.Drawing.Point(494, 20);
+            this.closeButton.Margin = new System.Windows.Forms.Padding(23, 3, 3, 3);
             // 
             // searchTermPanel
             // 
@@ -67,7 +97,7 @@
             this.searchTermPanel.Location = new System.Drawing.Point(0, 0);
             this.searchTermPanel.Name = "searchTermPanel";
             this.searchTermPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.searchTermPanel.Size = new System.Drawing.Size(784, 60);
+            this.searchTermPanel.Size = new System.Drawing.Size(634, 60);
             this.searchTermPanel.TabIndex = 0;
             // 
             // searchTermTextBox
@@ -77,13 +107,14 @@
             this.searchTermTextBox.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchTermTextBox.Location = new System.Drawing.Point(131, 15);
             this.searchTermTextBox.Name = "searchTermTextBox";
-            this.searchTermTextBox.Size = new System.Drawing.Size(532, 30);
+            this.searchTermTextBox.Size = new System.Drawing.Size(382, 30);
             this.searchTermTextBox.TabIndex = 2;
+            this.searchTermTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTermTextBox_KeyDown);
             // 
             // executeSearchButton
             // 
             this.executeSearchButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.executeSearchButton.Location = new System.Drawing.Point(674, 10);
+            this.executeSearchButton.Location = new System.Drawing.Point(524, 10);
             this.executeSearchButton.Margin = new System.Windows.Forms.Padding(8, 3, 3, 3);
             this.executeSearchButton.Name = "executeSearchButton";
             this.executeSearchButton.Size = new System.Drawing.Size(100, 40);
@@ -120,19 +151,21 @@
             this.searchResultDataGridView.Name = "searchResultDataGridView";
             this.searchResultDataGridView.ReadOnly = true;
             this.searchResultDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.searchResultDataGridView.Size = new System.Drawing.Size(764, 297);
+            this.searchResultDataGridView.Size = new System.Drawing.Size(614, 197);
             this.searchResultDataGridView.TabIndex = 1;
             this.searchResultDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchResultDataGridView_CellDoubleClick);
             // 
             // labelDataGridViewTextBoxColumn
             // 
             this.labelDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.labelDataGridViewTextBoxColumn.DataPropertyName = "Label";
             this.labelDataGridViewTextBoxColumn.HeaderText = "Rótulo";
             this.labelDataGridViewTextBoxColumn.Name = "labelDataGridViewTextBoxColumn";
             this.labelDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // actualTotalDocumentsDataGridViewTextBoxColumn
             // 
+            this.actualTotalDocumentsDataGridViewTextBoxColumn.DataPropertyName = "TotalDocuments";
             this.actualTotalDocumentsDataGridViewTextBoxColumn.HeaderText = "Total de documentos";
             this.actualTotalDocumentsDataGridViewTextBoxColumn.Name = "actualTotalDocumentsDataGridViewTextBoxColumn";
             this.actualTotalDocumentsDataGridViewTextBoxColumn.ReadOnly = true;
@@ -140,16 +173,28 @@
             // 
             // totalDocumentsFoundDataGridViewTextBoxColumn
             // 
+            this.totalDocumentsFoundDataGridViewTextBoxColumn.DataPropertyName = "TotalDocumentsFound";
             this.totalDocumentsFoundDataGridViewTextBoxColumn.HeaderText = "Documentos encontrados";
             this.totalDocumentsFoundDataGridViewTextBoxColumn.Name = "totalDocumentsFoundDataGridViewTextBoxColumn";
             this.totalDocumentsFoundDataGridViewTextBoxColumn.ReadOnly = true;
             this.totalDocumentsFoundDataGridViewTextBoxColumn.Width = 200;
             // 
+            // informationLabel
+            // 
+            this.informationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.informationLabel.Location = new System.Drawing.Point(23, 20);
+            this.informationLabel.Name = "informationLabel";
+            this.informationLabel.Size = new System.Drawing.Size(445, 40);
+            this.informationLabel.TabIndex = 1;
+            this.informationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(634, 461);
             this.Name = "SearchForm";
             this.Text = "Pesquisar";
             this.Load += new System.EventHandler(this.SearchForm_Load);
@@ -171,6 +216,7 @@
         private System.Windows.Forms.TextBox searchTermTextBox;
         private System.Windows.Forms.Button executeSearchButton;
         private System.Windows.Forms.Label searchByLabel;
+        private System.Windows.Forms.Label informationLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn labelDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn actualTotalDocumentsDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalDocumentsFoundDataGridViewTextBoxColumn;

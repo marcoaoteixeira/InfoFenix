@@ -26,6 +26,8 @@ namespace InfoFenix.Core.Entities {
 
         public bool Index { get; set; }
 
+        public int TotalDocuments { get; set; }
+
         #endregion Public Properties
 
         #region Public Static Methods
@@ -37,7 +39,8 @@ namespace InfoFenix.Core.Entities {
                 Path = reader.GetStringOrDefault("path"),
                 Code = reader.GetStringOrDefault("code"),
                 Watch = reader.GetInt32OrDefault("watch") > 0,
-                Index = reader.GetInt32OrDefault("index") > 0
+                Index = reader.GetInt32OrDefault("index") > 0,
+                TotalDocuments = reader.GetInt32OrDefault("total_documents")
             };
         }
 

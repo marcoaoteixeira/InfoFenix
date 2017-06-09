@@ -25,7 +25,6 @@ namespace InfoFenix.Client.Code {
             Builder
                 .RegisterTypes(forms)
                 .AsSelf()
-                //.PropertiesAutowired()
                 .InstancePerDependency();
 
             Builder

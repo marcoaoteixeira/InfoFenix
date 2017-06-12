@@ -67,9 +67,7 @@ namespace InfoFenix.Client {
         private void Initialize() {
             messageLabel.Text = string.Empty;
             progressLabel.Text = string.Empty;
-
-            var version = typeof(SplashScreenForm).Assembly.GetName().Version;
-            versionLabel.Text = $"ver. {version.Major}.{version.Minor}.{version.Revision}";
+            versionLabel.Text = $"ver. {EntryPoint.ApplicationVersion.Major}.{EntryPoint.ApplicationVersion.Minor}.{EntryPoint.ApplicationVersion.Revision}";
         }
 
         private void SubscribeForNotifications() {

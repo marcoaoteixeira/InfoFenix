@@ -86,19 +86,19 @@
             // helpInformationToolStripMenuItem
             // 
             this.helpInformationToolStripMenuItem.Name = "helpInformationToolStripMenuItem";
-            this.helpInformationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helpInformationToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.helpInformationToolStripMenuItem.Text = "Informações";
             this.helpInformationToolStripMenuItem.Click += new System.EventHandler(this.helpInformationToolStripMenuItem_Click);
             // 
             // firstToolStripSeparator
             // 
             this.firstToolStripSeparator.Name = "firstToolStripSeparator";
-            this.firstToolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.firstToolStripSeparator.Size = new System.Drawing.Size(137, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.aboutToolStripMenuItem.Text = "Sobre";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -125,6 +125,7 @@
             this.informationToolStripStatusLabel.Name = "informationToolStripStatusLabel";
             this.informationToolStripStatusLabel.Size = new System.Drawing.Size(819, 17);
             this.informationToolStripStatusLabel.Spring = true;
+            this.informationToolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // MainForm
             // 
@@ -140,6 +141,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Info Fênix";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.mainMenuStrip.ResumeLayout(false);
             this.mainMenuStrip.PerformLayout();
             this.mainStatusStrip.ResumeLayout(false);

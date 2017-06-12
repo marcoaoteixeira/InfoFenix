@@ -24,7 +24,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region IAction Members
 
-        public override string Description => "Inicializando diretório de dados para o aplicativo...";
+        public override string Name => "Criar Diretório de Dados";
 
         public override void Execute() {
             if (!Directory.Exists(_appSettings.ApplicationDataDirectoryPath)) {

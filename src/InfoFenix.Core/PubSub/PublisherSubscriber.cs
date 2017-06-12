@@ -52,14 +52,13 @@ namespace InfoFenix.Core.PubSub {
             if (_disposed) { return; }
             if (disposing) {
                 lock (SyncLock) {
-                    _subscriptions.Each(subscriptionList => {
-                        subscriptionList.Value.Each(subscription => {
-                            var disposable = subscription as IDisposable;
-                            if (disposable != null) {
-                                disposable.Dispose();
-                            }
-                        });
-                    });
+                    //_subscriptions.Each(subscriptionList => {
+                    //    subscriptionList.Value.Each(subscription => {
+                    //        if (subscription is IDisposable disposable) {
+                    //            disposable.Dispose();
+                    //        }
+                    //    });
+                    //});
                     _subscriptions.Clear();
                 }
             }

@@ -3,7 +3,7 @@
 
         #region IAction Members
 
-        public abstract string Description { get; }
+        public abstract string Name { get; }
 
         public abstract void Execute();
 

@@ -103,14 +103,14 @@ namespace InfoFenix.Client.Views {
         }
 
         private void searchTermTextBox_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter && !string.IsNullOrWhiteSpace(searchTermTextBox.Text)) {
+            if (e.KeyCode == Keys.Enter && !string.IsNullOrWhiteSpace(searchTermTextBox.Text) && searchTermTextBox.Text.Trim().Length > 1) {
                 DoSearch();
             }
         }
 
         private void executeSearchButton_Click(object sender, EventArgs e) {
             if (!(sender is Button button)) { return; }
-            if (string.IsNullOrWhiteSpace(searchTermTextBox.Text)) { return; }
+            if (string.IsNullOrWhiteSpace(searchTermTextBox.Text) && searchTermTextBox.Text.Trim().Length < 2) { return; }
 
             DoSearch();
         }

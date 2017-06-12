@@ -8,6 +8,8 @@
 
         void Remove(int documentID);
 
+        void Process(string documentDirectoryPath, string documentPath);
+
         #endregion Methods
     }
 }

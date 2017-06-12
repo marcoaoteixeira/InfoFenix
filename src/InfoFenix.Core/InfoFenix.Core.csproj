@@ -76,6 +76,8 @@
       <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.105.1\lib\net451\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -83,7 +85,8 @@
     <Compile Include="Bootstrap\ActionBase.cs" />
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
-    <Compile Include="Bootstrap\Actions\005_WatchDocumentDirectoriesAction.cs" />
+    <Compile Include="Bootstrap\Actions\005_IndexDocumentDirectoriesAction.cs" />
+    <Compile Include="Bootstrap\Actions\006_WatchDocumentDirectoriesAction.cs" />
     <Compile Include="Bootstrap\Actions\004_InitializeLuceneSearchIndexesAction.cs" />
     <Compile Include="Bootstrap\Actions\003_InitializeServicesAction.cs" />
     <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
@@ -185,7 +188,9 @@
     <Compile Include="PubSub\PublisherSubscriber.cs" />
     <Compile Include="PubSub\PublisherSubscriberExtension.cs" />
     <Compile Include="PubSub\Subscription.cs" />
+    <Compile Include="Queries\GetDocumentByPath.cs" />
     <Compile Include="Queries\GetDocument.cs" />
+    <Compile Include="Queries\GetDocumentDirectoryByPath.cs" />
     <Compile Include="Queries\GetDocumentDirectory.cs" />
     <Compile Include="Queries\ListDocumentDirectories.cs" />
     <Compile Include="Queries\ListDocumentsByDocumentDirectory.cs" />
@@ -216,7 +221,9 @@
     <Compile Include="Services\DocumentService.cs" />
     <Compile Include="Services\IDocumentDirectoryService.cs" />
     <Compile Include="Services\IDocumentService.cs" />
+    <Compile Include="Services\IManagementService.cs" />
     <Compile Include="Services\ISearchIndexService.cs" />
+    <Compile Include="Services\ManagementService.cs" />
     <Compile Include="Services\SearchIndexService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -237,10 +244,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\SQLs\CreateSchema.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\GetDocumentDirectoryByPath.sql" />
     <Content Include="Resources\SQLs\DocumentDirectory\GetDocumentDirectory.sql" />
     <Content Include="Resources\SQLs\DocumentDirectory\ListDocumentDirectories.sql" />
     <Content Include="Resources\SQLs\DocumentDirectory\RemoveDocumentDirectory.sql" />
     <Content Include="Resources\SQLs\DocumentDirectory\SaveDocumentDirectory.sql" />
+    <Content Include="Resources\SQLs\Document\GetDocumentByPath.sql" />
     <Content Include="Resources\SQLs\Document\GetDocument.sql" />
     <Content Include="Resources\SQLs\Document\ListDocumentsByDocumentDirectory.sql" />
     <Content Include="Resources\SQLs\Document\RemoveDocument.sql" />

@@ -36,7 +36,7 @@ namespace InfoFenix.Core.Bootstrap {
             });
             actions.Each((_, idx) => {
                 _publisherSubscriber.Publish(new ProgressiveTaskPerformStepNotification {
-                    Message = $"Tarefa: {_.Description}",
+                    Message = $"Tarefa: {_.Name}",
                     ActualStep = (idx + 1),
                     TotalSteps = actions.Length
                 });

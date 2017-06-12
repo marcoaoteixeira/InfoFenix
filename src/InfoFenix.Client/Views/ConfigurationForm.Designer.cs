@@ -29,15 +29,16 @@
             this.remoteDatabaseDirectoryPathTextBox = new System.Windows.Forms.TextBox();
             this.remoteDatabaseDirectoryPathLabel = new System.Windows.Forms.Label();
             this.useRemoteDatabaseCheckBox = new System.Windows.Forms.CheckBox();
-            this.backupDatabaseTabPage = new System.Windows.Forms.TabPage();
+            this.backupRestoreDatabaseTabPage = new System.Windows.Forms.TabPage();
             this.performDatabaseBackupButton = new System.Windows.Forms.Button();
+            this.performDatabaseRestoreButton = new System.Windows.Forms.Button();
             this.titlePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.contentPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
             this.configurationTabControl.SuspendLayout();
             this.remoteConfigurationTabPage.SuspendLayout();
-            this.backupDatabaseTabPage.SuspendLayout();
+            this.backupRestoreDatabaseTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // titlePanel
@@ -86,7 +87,7 @@
             // configurationTabControl
             // 
             this.configurationTabControl.Controls.Add(this.remoteConfigurationTabPage);
-            this.configurationTabControl.Controls.Add(this.backupDatabaseTabPage);
+            this.configurationTabControl.Controls.Add(this.backupRestoreDatabaseTabPage);
             this.configurationTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.configurationTabControl.Location = new System.Drawing.Point(10, 10);
             this.configurationTabControl.Name = "configurationTabControl";
@@ -152,26 +153,37 @@
             this.useRemoteDatabaseCheckBox.UseVisualStyleBackColor = true;
             this.useRemoteDatabaseCheckBox.CheckedChanged += new System.EventHandler(this.useRemoteDatabaseCheckBox_CheckedChanged);
             // 
-            // backupDatabaseTabPage
+            // backupRestoreDatabaseTabPage
             // 
-            this.backupDatabaseTabPage.Controls.Add(this.performDatabaseBackupButton);
-            this.backupDatabaseTabPage.Location = new System.Drawing.Point(4, 28);
-            this.backupDatabaseTabPage.Name = "backupDatabaseTabPage";
-            this.backupDatabaseTabPage.Padding = new System.Windows.Forms.Padding(10);
-            this.backupDatabaseTabPage.Size = new System.Drawing.Size(456, 129);
-            this.backupDatabaseTabPage.TabIndex = 1;
-            this.backupDatabaseTabPage.Text = "Backup";
-            this.backupDatabaseTabPage.UseVisualStyleBackColor = true;
+            this.backupRestoreDatabaseTabPage.Controls.Add(this.performDatabaseRestoreButton);
+            this.backupRestoreDatabaseTabPage.Controls.Add(this.performDatabaseBackupButton);
+            this.backupRestoreDatabaseTabPage.Location = new System.Drawing.Point(4, 28);
+            this.backupRestoreDatabaseTabPage.Name = "backupRestoreDatabaseTabPage";
+            this.backupRestoreDatabaseTabPage.Padding = new System.Windows.Forms.Padding(10);
+            this.backupRestoreDatabaseTabPage.Size = new System.Drawing.Size(456, 129);
+            this.backupRestoreDatabaseTabPage.TabIndex = 1;
+            this.backupRestoreDatabaseTabPage.Text = "Backup e Restauração";
+            this.backupRestoreDatabaseTabPage.UseVisualStyleBackColor = true;
             // 
             // performDatabaseBackupButton
             // 
             this.performDatabaseBackupButton.Location = new System.Drawing.Point(13, 13);
             this.performDatabaseBackupButton.Name = "performDatabaseBackupButton";
-            this.performDatabaseBackupButton.Size = new System.Drawing.Size(300, 45);
+            this.performDatabaseBackupButton.Size = new System.Drawing.Size(430, 45);
             this.performDatabaseBackupButton.TabIndex = 0;
-            this.performDatabaseBackupButton.Text = "Realizar backup da base de dados";
+            this.performDatabaseBackupButton.Text = "Backup da base de dados";
             this.performDatabaseBackupButton.UseVisualStyleBackColor = true;
             this.performDatabaseBackupButton.Click += new System.EventHandler(this.performDatabaseBackupButton_Click);
+            // 
+            // performDatabaseRestoreButton
+            // 
+            this.performDatabaseRestoreButton.Location = new System.Drawing.Point(13, 71);
+            this.performDatabaseRestoreButton.Name = "performDatabaseRestoreButton";
+            this.performDatabaseRestoreButton.Size = new System.Drawing.Size(430, 45);
+            this.performDatabaseRestoreButton.TabIndex = 1;
+            this.performDatabaseRestoreButton.Text = "Restaurar base de dados";
+            this.performDatabaseRestoreButton.UseVisualStyleBackColor = true;
+            this.performDatabaseRestoreButton.Click += new System.EventHandler(this.performDatabaseRestoreButton_Click);
             // 
             // ConfigurationForm
             // 
@@ -190,7 +202,7 @@
             this.configurationTabControl.ResumeLayout(false);
             this.remoteConfigurationTabPage.ResumeLayout(false);
             this.remoteConfigurationTabPage.PerformLayout();
-            this.backupDatabaseTabPage.ResumeLayout(false);
+            this.backupRestoreDatabaseTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -203,7 +215,8 @@
         private System.Windows.Forms.TextBox remoteDatabaseDirectoryPathTextBox;
         private System.Windows.Forms.Label remoteDatabaseDirectoryPathLabel;
         private System.Windows.Forms.CheckBox useRemoteDatabaseCheckBox;
-        private System.Windows.Forms.TabPage backupDatabaseTabPage;
+        private System.Windows.Forms.TabPage backupRestoreDatabaseTabPage;
         private System.Windows.Forms.Button performDatabaseBackupButton;
+        private System.Windows.Forms.Button performDatabaseRestoreButton;
     }
 }

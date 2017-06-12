@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
+using InfoFenix.Core.Services;
 
 namespace InfoFenix.Client.Views {
 
@@ -11,6 +12,7 @@ namespace InfoFenix.Client.Views {
         #region Private Read-Only Fields
 
         private readonly IAppSettings _appSettings;
+        private readonly IManagementService _managementService;
 
         #endregion Private Read-Only Fields
 
@@ -22,10 +24,12 @@ namespace InfoFenix.Client.Views {
 
         #region Public Constructors
 
-        public ConfigurationForm(IAppSettings appSettings) {
+        public ConfigurationForm(IAppSettings appSettings, IManagementService managementService) {
             Prevent.ParameterNull(appSettings, nameof(appSettings));
+            Prevent.ParameterNull(managementService, nameof(managementService));
 
             _appSettings = appSettings;
+            _managementService = managementService;
 
             InitializeComponent();
         }
@@ -105,6 +109,21 @@ namespace InfoFenix.Client.Views {
         }
 
         private void performDatabaseBackupButton_Click(object sender, EventArgs e) {
+            var path = DialogHelper.OpenFolderBrowserDialog("Selecionar diretório de destino");
+            if (string.IsNullOrEmpty(path)) { return; }
+
+            WaitForm.WaitFor(() => _managementService.BackupDatabase(path));
+        }
+
+        private void performDatabaseRestoreButton_Click(object sender, EventArgs e) {
+            var paths = DialogHelper.OpenFileBrowserDialog("Selecionar arquivo de restauração");
+            if (paths.IsNullOrEmpty()) { return; }
+
+            WaitForm.WaitFor(() => _managementService.RestoreDatabase(paths[0]));
+
+            _mustRestartApplication = true;
+
+            NeedReboot();
         }
 
         private void closeButton_Click(object sender, EventArgs e) {

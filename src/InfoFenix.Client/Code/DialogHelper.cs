@@ -8,15 +8,28 @@ namespace InfoFenix.Client.Code {
         #region Public Static Methods
 
         public static string OpenFolderBrowserDialog(string description, string startPath = null) {
-            using (var folderBrowserDialog = new FolderBrowserDialog()) {
-                folderBrowserDialog.Description = description;
-                folderBrowserDialog.SelectedPath = (startPath ?? typeof(EntryPoint).Assembly.GetDirectoryPath());
+            using (var dialog = new FolderBrowserDialog()) {
+                dialog.Description = description;
+                dialog.SelectedPath = (startPath ?? typeof(EntryPoint).Assembly.GetDirectoryPath());
 
-                var result = folderBrowserDialog.ShowDialog();
+                var result = dialog.ShowDialog();
 
                 if (result != DialogResult.OK) { return null; }
 
-                return folderBrowserDialog.SelectedPath;
+                return dialog.SelectedPath;
+            }
+        }
+
+        public static string[] OpenFileBrowserDialog(string description, bool multiSelect = false, string startPath = null) {
+            using (var dialog = new OpenFileDialog()) {
+                dialog.Title = description;
+                dialog.Multiselect = multiSelect;
+
+                var result = dialog.ShowDialog();
+
+                if (result != DialogResult.OK) { return null; }
+
+                return dialog.FileNames;
             }
         }
 

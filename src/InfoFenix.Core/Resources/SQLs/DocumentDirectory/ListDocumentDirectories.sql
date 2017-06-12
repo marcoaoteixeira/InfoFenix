@@ -5,9 +5,13 @@
     [document_directories].[code],
     [document_directories].[watch],
     [document_directories].[index],
-    COUNT([documents].[id]) AS [total_documents]
+    (SELECT
+        COUNT([documents].[id])
+     FROM [documents]
+     WHERE
+        [documents].[document_directory_id] = [document_directories].[id]
+    ) AS [total_documents]
 FROM [document_directories]
-INNER JOIN [documents] ON [documents].[document_directory_id] = [document_directories].[id]
 WHERE
     (@Label IS NULL OR ([document_directories].[label] LIKE '%' + @Label + '%'))
 AND (@Path IS NULL OR ([document_directories].[path] LIKE '%' + @Path + '%'))

@@ -1,38 +1,37 @@
-﻿using InfoFenix.Core.Search;
+﻿using InfoFenix.Core.Logging;
 using InfoFenix.Core.Services;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
-    [Order(4)]
-    public class InitializeLuceneSearchIndexesAction : ActionBase {
+    [Order(6)]
+    public class WatchDocumentDirectoriesAction : ActionBase {
 
         #region Private Read-Only Fields
 
         private readonly IDocumentDirectoryService _documentDirectoryService;
-        private readonly IIndexProvider _indexProvider;
+        private readonly ILogger _log;
 
         #endregion Private Read-Only Fields
 
         #region Public Constructors
 
-        public InitializeLuceneSearchIndexesAction(IDocumentDirectoryService documentDirectoryService, IIndexProvider indexProvider) {
+        public WatchDocumentDirectoriesAction(IDocumentDirectoryService documentDirectoryService, ILogger log) {
             Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
-            Prevent.ParameterNull(indexProvider, nameof(indexProvider));
 
             _documentDirectoryService = documentDirectoryService;
-            _indexProvider = indexProvider;
+            _log = log ?? NullLogger.Instance;
         }
 
         #endregion Public Constructors
 
         #region IAction Members
 
-        public override string Name => "Inicializar Motor de Pesquisa";
+        public override string Name => "Observar Diretórios de Documentos";
 
         public override void Execute() {
             var documentDirectories = _documentDirectoryService.List();
             foreach (var documentDirectory in documentDirectories) {
-                _indexProvider.GetOrCreate(documentDirectory.Code);
+                _documentDirectoryService.StartWatchForModification(documentDirectory.ID);
             }
         }
 

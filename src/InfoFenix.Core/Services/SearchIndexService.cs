@@ -51,6 +51,10 @@ namespace InfoFenix.Core.Services {
                     .Forbidden();
             }
 
+            searchBuilder
+                .SortByInteger(Common.Index.DocumentFieldName.DocumentCode)
+                .Ascending();
+
             return searchBuilder;
         }
 

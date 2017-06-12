@@ -7,7 +7,7 @@ namespace InfoFenix.Core.IO {
 
         #region Private Read-Only Fields
 
-        private readonly IPublisherSubscriber _pubSub;
+        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -21,10 +21,10 @@ namespace InfoFenix.Core.IO {
 
         #region Public Constructors
 
-        public DirectoryWatcher(IPublisherSubscriber pubsub) {
-            Prevent.ParameterNull(pubsub, nameof(pubsub));
+        public DirectoryWatcher(IPublisherSubscriber publisherSubscriber) {
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
-            _pubSub = pubsub;
+            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
@@ -47,7 +47,7 @@ namespace InfoFenix.Core.IO {
             // Ignore error files.
             if (!File.Exists(e.FullPath)) { return; }
 
-            _pubSub.PublishAsync(new DirectoryContentChangeNotification {
+            _publisherSubscriber.PublishAsync(new DirectoryContentChangeNotification {
                 WatchingPath = _path,
                 FullPath = e.FullPath,
                 Changes = (DirectoryContentChangeNotification.ChangeTypes)(int)e.ChangeType

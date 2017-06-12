@@ -26,6 +26,8 @@ namespace InfoFenix.Client {
 
         internal static bool IgnoreExitRoutine { get; set; }
 
+        internal static Version ApplicationVersion => typeof(EntryPoint).Assembly.GetName().Version;
+
         #endregion Internal Static Properties
 
         #region Internal Static Methods

@@ -25,6 +25,22 @@ namespace InfoFenix.Core.PubSub {
         #endregion Public Enum
     }
 
+    public sealed class ProcessDocumentInitializeNotification : NotificationBase {
+        #region Public Properties
+
+        public string FileName { get; set; }
+
+        #endregion
+    }
+
+    public sealed class ProcessDocumentCompleteNotification : NotificationBase {
+        #region Public Properties
+
+        public string FileName { get; set; }
+
+        #endregion
+    }
+
     public sealed class DirectoryContentChangeNotification : NotificationBase {
 
         #region Public Properties

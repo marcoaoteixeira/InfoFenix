@@ -3,7 +3,7 @@
 
         #region Properties
 
-        string Description { get; }
+        string Name { get; }
 
         #endregion
 

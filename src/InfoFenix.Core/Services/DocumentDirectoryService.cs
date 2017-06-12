@@ -112,8 +112,10 @@ namespace InfoFenix.Core.Services {
                 TotalSteps = physicalFiles.Length
             });
 
+            var databaseFiles = databaseDocuments.Select(_ => _.Path).ToArray();
+            var toCreate = physicalFiles.Except(databaseFiles);
             var counter = 1;
-            foreach (var physicalFile in physicalFiles) {
+            foreach (var file in toCreate) {
                 if (cancellationToken.IsCancellationRequested) {
                     _publisherSubscriber.PublishAsync(new ProgressiveTaskCancelNotification {
                         Title = notificationTitle,
@@ -124,36 +126,36 @@ namespace InfoFenix.Core.Services {
                 }
 
                 // Document não está na base de dados? Adiciona.
-                var document = databaseDocuments.SingleOrDefault(_ => string.Equals(_.Path, physicalFile, StringComparison.InvariantCultureIgnoreCase));
+                var document = databaseDocuments.SingleOrDefault(_ => string.Equals(_.Path, file, StringComparison.InvariantCultureIgnoreCase));
                 SaveDocumentCommand command = null;
                 if (document == null) {
                     command = new SaveDocumentCommand {
                         DocumentDirectoryID = documentDirectory.ID,
-                        Path = physicalFile,
-                        LastWriteTime = File.GetLastWriteTime(physicalFile),
-                        Code = Common.ExtractCodeFromFilePath(physicalFile),
+                        Path = file,
+                        LastWriteTime = File.GetLastWriteTime(file),
+                        Code = Common.ExtractCodeFromFilePath(file),
                         Indexed = false,
-                        Payload = File.ReadAllBytes(physicalFile)
+                        Payload = File.ReadAllBytes(file)
                     };
                 }
                 // Caso exista, verifica a data do arquivo com a data do documento, se for diferente, atualiza.
-                if (document != null && document.LastWriteTime != File.GetLastWriteTime(physicalFile)) {
+                if (document != null && document.LastWriteTime != File.GetLastWriteTime(file)) {
                     command = new SaveDocumentCommand {
                         ID = document.ID,
                         DocumentDirectoryID = document.DocumentDirectoryID,
                         Path = document.Path,
-                        LastWriteTime = File.GetLastWriteTime(physicalFile) /* UPDATE */,
+                        LastWriteTime = File.GetLastWriteTime(file) /* UPDATE */,
                         Code = document.Code,
                         Indexed = false,
-                        Payload = File.ReadAllBytes(physicalFile) /* UPDATE */
+                        Payload = File.ReadAllBytes(file) /* UPDATE */
                     };
                 }
 
-                try { if (command != null) { _commandQueryDispatcher.Command(command); } } catch { Log.Error($"ERRO AO SALVAR DOCUMENTO. CAMINHO: {physicalFile}"); }
+                try { if (command != null) { _commandQueryDispatcher.Command(command); } } catch { Log.Error($"ERRO AO SALVAR DOCUMENTO. CAMINHO: {file}"); }
 
                 _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
                     Title = notificationTitle,
-                    Message = $"Documento: {Path.GetFileName(physicalFile)}",
+                    Message = $"Documento: {Path.GetFileName(file)}",
                     ActualStep = counter++,
                     TotalSteps = physicalFiles.Length
                 });
@@ -228,6 +230,7 @@ namespace InfoFenix.Core.Services {
 
             var documents = _commandQueryDispatcher
                 .Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectoryID })
+                .Where(_ => !_.Indexed)
                 .ToArray();
 
             var index = _indexProvider.GetOrCreate(documentDirectory.Code);

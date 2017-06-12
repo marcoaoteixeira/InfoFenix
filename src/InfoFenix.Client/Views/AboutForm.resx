@@ -117,41 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CreateSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\createschema.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\getdocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetDocumentByPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\getdocumentbypath.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\getdocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetDocumentDirectoryByPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\getdocumentdirectorybypath.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ListDocumentDirectories" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\listdocumentdirectories.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ListDocumentsByDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\listdocumentsbydocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemoveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\removedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemoveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\removedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="SaveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\savedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="SaveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\savedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="SetDocumentIndex" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\setdocumentindex.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
 </root>

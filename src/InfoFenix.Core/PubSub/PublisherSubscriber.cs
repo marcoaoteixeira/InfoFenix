@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace InfoFenix.Core.PubSub {
+
     /// <summary>
     /// Default implementation of <see cref="IPublisherSubscriber"/>.
     /// </summary>
-    public sealed class PublisherSubscriber : IPublisherSubscriber, IDisposable {
+    public sealed class PublisherSubscriber : IPublisherSubscriber {
 
         #region Private Static Read-Only Fields
 
@@ -21,12 +22,6 @@ namespace InfoFenix.Core.PubSub {
 
         #endregion Private Read-Only Fields
 
-        #region Private Fields
-
-        private bool _disposed;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
         public PublisherSubscriber() {
@@ -34,38 +29,6 @@ namespace InfoFenix.Core.PubSub {
         }
 
         #endregion Public Constructors
-
-        #region Destructors
-
-        /// <summary>
-        /// Destructor.
-        /// </summary>
-        ~PublisherSubscriber() {
-            Dispose(disposing: false);
-        }
-
-        #endregion Destructors
-
-        #region Private Methods
-
-        private void Dispose(bool disposing) {
-            if (_disposed) { return; }
-            if (disposing) {
-                lock (SyncLock) {
-                    //_subscriptions.Each(subscriptionList => {
-                    //    subscriptionList.Value.Each(subscription => {
-                    //        if (subscription is IDisposable disposable) {
-                    //            disposable.Dispose();
-                    //        }
-                    //    });
-                    //});
-                    _subscriptions.Clear();
-                }
-            }
-            _disposed = true;
-        }
-
-        #endregion Private Methods
 
         #region IPublisherSubscriber Members
 
@@ -114,15 +77,5 @@ namespace InfoFenix.Core.PubSub {
         }
 
         #endregion IPublisherSubscriber Members
-
-        #region IDisposable Members
-
-        /// <inheritdoc />
-        public void Dispose() {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion IDisposable Members
     }
 }

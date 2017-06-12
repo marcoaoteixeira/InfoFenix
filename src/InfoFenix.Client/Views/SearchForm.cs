@@ -121,6 +121,10 @@ namespace InfoFenix.Client.Views {
             }
         }
 
+        private void closeButton_Click(object sender, EventArgs e) {
+            Close();
+        }
+
         #endregion Event Handlers
     }
 }

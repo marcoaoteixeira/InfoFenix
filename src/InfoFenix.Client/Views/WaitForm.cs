@@ -31,9 +31,10 @@ namespace InfoFenix.Client.Views {
         #region Private Static Methods
 
         private static void Continuation(Task continuation, object state) {
-            var form = state as WaitForm;
+            if (continuation.Exception != null) { MessageBox.Show($"Erro: {continuation.Exception.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            else { MessageBox.Show($"Ação concluída com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information); }
 
-            form.DialogResult = DialogResult.OK;
+            (state as WaitForm).DialogResult = DialogResult.OK;
         }
 
         #endregion Private Static Methods

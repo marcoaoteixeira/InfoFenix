@@ -87,6 +87,7 @@
             // 
             this.closeButton.Location = new System.Drawing.Point(494, 20);
             this.closeButton.Margin = new System.Windows.Forms.Padding(23, 3, 3, 3);
+            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
             // searchTermPanel
             // 

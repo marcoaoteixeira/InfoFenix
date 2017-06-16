@@ -76,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ClientServiceRegistration.cs" />
-    <Compile Include="Code\Jobs\IJob.cs" />
+    <Compile Include="Code\Jobs\JobExecutor.cs" />
     <Compile Include="Code\PowerListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -157,16 +157,22 @@
     <Compile Include="Views\Shared\LayoutForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Shared\TaskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\TaskForm.Designer.cs">
+      <DependentUpon>TaskForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\TaskForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\TaskForm.Designer.cs">
       <DependentUpon>TaskForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserControls\TaskItemUserControl.cs">
+    <Compile Include="Views\Shared\TaskItemUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\UserControls\TaskItemUserControl.Designer.cs">
+    <Compile Include="Views\Shared\TaskItemUserControl.Designer.cs">
       <DependentUpon>TaskItemUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\WaitForm.cs">
@@ -222,7 +228,7 @@
     <EmbeddedResource Include="Views\TaskForm.resx">
       <DependentUpon>TaskForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\UserControls\TaskItemUserControl.resx">
+    <EmbeddedResource Include="Views\Shared\TaskItemUserControl.resx">
       <DependentUpon>TaskItemUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\WaitForm.resx">
@@ -453,6 +459,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Help\img\" />
+    <Folder Include="Views\DocumentDirectory\" />
+    <Folder Include="Views\Manage\" />
+    <Folder Include="Views\Search\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -133,25 +133,67 @@
   <data name="GetDocumentDirectoryByPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\getdocumentdirectorybypath.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="IndexDocumentCollection_ProgressiveTask_Title" xml:space="preserve">
+    <value>Indexar Documentos</value>
+  </data>
   <data name="ListDocumentDirectories" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\listdocumentdirectories.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="ListDocumentsByDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\listdocumentsbydocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="ProgressiveTaskCancelNotification_Message" xml:space="preserve">
+    <value>Tarefa cancelada!</value>
+  </data>
+  <data name="ProgressiveTaskCompleteNotification_Message" xml:space="preserve">
+    <value>Tarefa concluída!</value>
+  </data>
+  <data name="ProgressiveTaskErrorNotification_Message" xml:space="preserve">
+    <value>Erro durante execução da tarefa!</value>
+  </data>
+  <data name="ProgressiveTaskStartNotification_Message" xml:space="preserve">
+    <value>Iniciando tarefa...</value>
+  </data>
   <data name="RemoveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\removedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="RemoveDocumentCollection_ProgressiveTaskPerformStep_Index_Message" xml:space="preserve">
+    <value>Removendo documentos do índice</value>
+  </data>
+  <data name="RemoveDocumentCollection_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+    <value>Removendo documento: {0}</value>
+  </data>
+  <data name="RemoveDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
+    <value>Remover Documentos</value>
   </data>
   <data name="RemoveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\removedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="RemoveDocumentDirectory_ProgressiveTask_Title" xml:space="preserve">
+    <value>Remover Diretório de Documentos</value>
+  </data>
   <data name="SaveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\savedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SaveDocumentCollection_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+    <value>Salvando documento: {0}</value>
+  </data>
+  <data name="SaveDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
+    <value>Salvar Documentos</value>
   </data>
   <data name="SaveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\savedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="SaveDocumentDirectory_ProgressiveTask_Title" xml:space="preserve">
+    <value>Salvar Diretório de Documentos</value>
+  </data>
   <data name="SetDocumentIndex" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\setdocumentindex.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="StartWatchDocumentDirectory_ProgressiveTask_Title" xml:space="preserve">
+    <value>Observar Diretório de Documentos</value>
+  </data>
+  <data name="StopWatchDocumentDirectory_ProgressiveTask_Title" xml:space="preserve">
+    <value>Liberar Diretório de Documentos</value>
   </data>
 </root>

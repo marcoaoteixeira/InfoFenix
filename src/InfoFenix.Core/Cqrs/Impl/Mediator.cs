@@ -1,7 +1,10 @@
-﻿using InfoFenix.Core.IoC;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Core.Cqrs {
-    public sealed class CommandQueryDispatcher : ICommandQueryDispatcher {
+
+    public sealed class Mediator : IMediator {
 
         #region Private Read-Only Fields
 
@@ -11,7 +14,7 @@ namespace InfoFenix.Core.Cqrs {
 
         #region Public Constructors
 
-        public CommandQueryDispatcher(IResolver resolver) {
+        public Mediator(IResolver resolver) {
             Prevent.ParameterNull(resolver, nameof(resolver));
 
             _resolver = resolver;
@@ -21,22 +24,22 @@ namespace InfoFenix.Core.Cqrs {
 
         #region ICommandQueryDispatcher Members
 
-        public void Command(ICommand command) {
+        public Task CommandAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken)) {
             Prevent.ParameterNull(command, nameof(command));
 
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
             dynamic handler = _resolver.Resolve(handlerType);
 
-            handler.Handle((dynamic)command);
+            return handler.HandleAsync((dynamic)command, cancellationToken);
         }
 
-        public TResult Query<TResult>(IQuery<TResult> query) {
+        public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default(CancellationToken)) {
             Prevent.ParameterNull(query, nameof(query));
 
             var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
             dynamic handler = _resolver.Resolve(handlerType);
 
-            return handler.Handle((dynamic)query);
+            return handler.HandleAsync((dynamic)query, cancellationToken);
         }
 
         #endregion ICommandQueryDispatcher Members

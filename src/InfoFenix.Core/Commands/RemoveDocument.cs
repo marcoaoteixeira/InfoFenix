@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
@@ -56,21 +58,23 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<RemoveDocumentCommand> Members
 
-        public void Handle(RemoveDocumentCommand command) {
-            using (var transaction = _database.Connection.BeginTransaction()) {
-                try {
-                    _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.ID, DbType.Int32)
-                    });
-                    transaction.Commit();
-                } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
-            }
+        public Task HandleAsync(RemoveDocumentCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.Run(() => {
+                using (var transaction = _database.Connection.BeginTransaction()) {
+                    try {
+                        _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
+                            Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.ID, DbType.Int32)
+                        });
+                        transaction.Commit();
+                    } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
+                }
 
-            try {
-                _indexProvider
-                    .GetOrCreate(command.DocumentDirectoryCode)
-                    .DeleteDocuments(command.ID.ToString());
-            } catch (Exception ex) { Log.Error(ex, $"Erro ao remover o documento {command.FileName} do índice."); }
+                try {
+                    _indexProvider
+                        .GetOrCreate(command.DocumentDirectoryCode)
+                        .DeleteDocuments(command.ID.ToString());
+                } catch (Exception ex) { Log.Error(ex, $"Erro ao remover o documento {command.FileName} do índice."); }
+            });
         }
 
         #endregion ICommandHandler<RemoveDocumentCommand> Members

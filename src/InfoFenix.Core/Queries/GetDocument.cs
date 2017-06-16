@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
@@ -38,11 +40,13 @@ namespace InfoFenix.Core.Queries {
 
         #region IQueryHandler<GetDocumentQuery, DocumentEntity> Members
 
-        public DocumentEntity Handle(GetDocumentQuery query) {
-            return _database.ExecuteReaderSingle(SQL.GetDocument, DocumentEntity.MapFromDataReader, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(DocumentEntity.ID), query.ID != 0 ? (object)query.ID : DBNull.Value, DbType.Int32),
-                Parameter.CreateInputParameter(nameof(DocumentEntity.Code), query.Code != 0 ? (object)query.Code : DBNull.Value, DbType.Int32)
-            });
+        public Task<DocumentEntity> HandleAsync(GetDocumentQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.Run(() => {
+                return _database.ExecuteReaderSingle(SQL.GetDocument, DocumentEntity.MapFromDataReader, parameters: new[] {
+                    Parameter.CreateInputParameter(nameof(DocumentEntity.ID), query.ID != 0 ? (object)query.ID : DBNull.Value, DbType.Int32),
+                    Parameter.CreateInputParameter(nameof(DocumentEntity.Code), query.Code != 0 ? (object)query.Code : DBNull.Value, DbType.Int32)
+                });
+            }, cancellationToken);
         }
 
         #endregion IQueryHandler<GetDocumentQuery, DocumentEntity> Members

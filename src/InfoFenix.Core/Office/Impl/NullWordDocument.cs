@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InfoFenix.Core.Office {
 
@@ -19,18 +21,16 @@ namespace InfoFenix.Core.Office {
 
         #region IWordDocument Members
 
-        public string Text => string.Empty;
+        public Task<string> GetTextAsync(CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.FromResult(string.Empty);
+        }
 
         public void Close() {
         }
 
-        public void Convert(string outputPath, WordConvertType type) {
+        public Task<Stream> HighlightTextAsync(CancellationToken cancellationToken = default(CancellationToken), params string[] terms) {
+            return Task.FromResult(Stream.Null);
         }
-
-        public void Convert(Stream outputStream, WordConvertType type) {
-        }
-
-        public void Highlight(Stream outputStream, params string[] terms) { }
 
         #endregion IWordDocument Members
 

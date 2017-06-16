@@ -36,12 +36,7 @@ namespace InfoFenix.Core.Search {
         public IEnumerable<IndexableField> Fields {
             get { return _fields; }
         }
-
-        /// <summary>
-        /// Gets the content item ID.
-        /// </summary>
-        public string DocumentID { get; private set; }
-
+        
         #endregion Public Properties
 
         #region Public Constructors
@@ -110,6 +105,11 @@ namespace InfoFenix.Core.Search {
         #endregion Internal Methods
 
         #region IDocumentIndex Members
+
+        /// <summary>
+        /// Gets the content item ID.
+        /// </summary>
+        public string DocumentID { get; private set; }
 
         /// <inheritdoc />
         public bool IsDirty { get; private set; }

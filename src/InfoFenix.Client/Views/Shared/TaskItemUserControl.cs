@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace InfoFenix.Client.Views.UserControls {
+namespace InfoFenix.Client.Views.Shared {
 
     public partial class TaskItemUserControl : UserControl {
 
@@ -32,15 +32,15 @@ namespace InfoFenix.Client.Views.UserControls {
         }
 
         [Browsable(true)]
-        public override string Text {
-            get { return mainLabel.Text; }
-            set { mainLabel.Text = value; }
+        public string Title {
+            get { return titleLabel.Text; }
+            set { titleLabel.Text = value; }
         }
 
         [Browsable(true)]
-        public ContentAlignment TextAlign {
-            get { return mainLabel.TextAlign; }
-            set { mainLabel.TextAlign = value; }
+        public string Message {
+            get { return messageLabel.Text; }
+            set { messageLabel.Text = value; }
         }
 
         #endregion Public Properties
@@ -57,7 +57,7 @@ namespace InfoFenix.Client.Views.UserControls {
 
         public void SetComplete() {
             Icon = TaskIcon.Complete;
-            mainLabel.Font = new Font(mainLabel.Font, FontStyle.Bold);
+            titleLabel.Font = new Font(titleLabel.Font, FontStyle.Bold);
         }
 
         #endregion Public Methods

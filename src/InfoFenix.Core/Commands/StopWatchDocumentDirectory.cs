@@ -1,5 +1,10 @@
-﻿using InfoFenix.Core.Cqrs;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.IO;
+using InfoFenix.Core.Logging;
+using InfoFenix.Core.PubSub;
 
 namespace InfoFenix.Core.Commands {
 
@@ -16,24 +21,62 @@ namespace InfoFenix.Core.Commands {
 
         #region Private Read-Only Fields
 
-        private readonly IDirectoryWatcherManager _manager;
+        private readonly IDirectoryWatcherManager _directoryWatcherManager;
+        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
+        #region Public Properties
+
+        private ILogger _log;
+
+        public ILogger Log {
+            get { return _log ?? NullLogger.Instance; }
+            set { _log = value ?? NullLogger.Instance; }
+        }
+
+        #endregion Public Properties
+
         #region Public Constructors
 
-        public StopWatchDocumentDirectoryCommandHandler(IDirectoryWatcherManager manager) {
-            Prevent.ParameterNull(manager, nameof(manager));
+        public StopWatchDocumentDirectoryCommandHandler(IDirectoryWatcherManager directoryWatcherManager, IPublisherSubscriber publisherSubscriber) {
+            Prevent.ParameterNull(directoryWatcherManager, nameof(directoryWatcherManager));
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
-            _manager = manager;
+            _directoryWatcherManager = directoryWatcherManager;
+            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
 
         #region ICommandHandler<StopWatchDocumentDirectoryCommand> Members
 
-        public void Handle(StopWatchDocumentDirectoryCommand command) {
-            _manager.StopWatch(command.DirectoryPath);
+        public Task HandleAsync(StopWatchDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.Run(() => {
+                _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
+                    Title = Resources.Resources.StartWatchDocumentDirectory_ProgressiveTask_Title,
+                    TotalSteps = 1
+                });
+
+                try {
+                    _directoryWatcherManager.StopWatch(command.DirectoryPath);
+
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
+                        ActualStep = 1,
+                        TotalSteps = 1
+                    });
+                } catch (Exception ex) {
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskErrorNotification {
+                        TotalSteps = 1
+                    });
+
+                    Log.Error(ex, ex.Message); throw;
+                } finally {
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
+                        TotalSteps = 1
+                    });
+                }
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<StopWatchDocumentDirectoryCommand> Members

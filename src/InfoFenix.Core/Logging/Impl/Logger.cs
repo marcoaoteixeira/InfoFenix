@@ -4,6 +4,7 @@ using log4net;
 using log4net.Core;
 
 namespace InfoFenix.Core.Logging {
+
     /// <summary>
     /// log4net implementation of <see cref="ILogger"/>
     /// </summary>

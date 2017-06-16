@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using InfoFenix.Core;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
@@ -37,10 +39,12 @@ namespace InfoFenix.Core.Queries {
 
         #region IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentEntity>> Members
 
-        public IEnumerable<DocumentEntity> Handle(ListDocumentsByDocumentDirectoryQuery query) {
-            return _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(query.DocumentDirectoryID), query.DocumentDirectoryID, DbType.Int32)
-            });
+        public Task<IEnumerable<DocumentEntity>> HandleAsync(ListDocumentsByDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.Run(() => {
+                return _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
+                    Parameter.CreateInputParameter(nameof(query.DocumentDirectoryID), query.DocumentDirectoryID, DbType.Int32)
+                });
+            }, cancellationToken);
         }
 
         #endregion IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentEntity>> Members

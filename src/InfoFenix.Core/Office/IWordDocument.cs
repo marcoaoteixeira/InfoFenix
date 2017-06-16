@@ -1,23 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InfoFenix.Core.Office {
 
     public interface IWordDocument : IDisposable {
 
-        #region Properties
-
-        string Text { get; }
-
-        #endregion Properties
-
         #region Methods
 
-        void Convert(string outputPath, WordConvertType type);
+        Task<string> GetTextAsync(CancellationToken cancellationToken = default(CancellationToken));
 
-        void Convert(Stream outputStream, WordConvertType type);
-
-        void Highlight(Stream outputStream, params string[] terms);
+        Task<Stream> HighlightTextAsync(CancellationToken cancellationToken = default(CancellationToken), params string[] terms);
 
         void Close();
 

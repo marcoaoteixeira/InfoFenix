@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Client.Views.UserControls {
+﻿namespace InfoFenix.Client.Views.Shared {
     partial class TaskItemUserControl {
         /// <summary> 
         /// Required designer variable.
@@ -26,8 +26,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TaskItemUserControl));
             this.mainImageList = new System.Windows.Forms.ImageList(this.components);
-            this.mainLabel = new System.Windows.Forms.Label();
+            this.titleLabel = new System.Windows.Forms.Label();
             this.mainPictureBox = new System.Windows.Forms.PictureBox();
+            this.messageLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -40,18 +41,19 @@
             this.mainImageList.Images.SetKeyName(2, "complete_24x24.png");
             this.mainImageList.Images.SetKeyName(3, "error_24x24.png");
             // 
-            // mainLabel
+            // titleLabel
             // 
-            this.mainLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.titleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.mainLabel.AutoEllipsis = true;
-            this.mainLabel.Location = new System.Drawing.Point(35, 0);
-            this.mainLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.mainLabel.Name = "mainLabel";
-            this.mainLabel.Size = new System.Drawing.Size(265, 32);
-            this.mainLabel.TabIndex = 1;
-            this.mainLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.titleLabel.AutoEllipsis = true;
+            this.titleLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleLabel.Location = new System.Drawing.Point(35, 0);
+            this.titleLabel.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.titleLabel.Name = "titleLabel";
+            this.titleLabel.Size = new System.Drawing.Size(265, 32);
+            this.titleLabel.TabIndex = 1;
+            this.titleLabel.Text = "titleLabel";
+            this.titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // mainPictureBox
             // 
@@ -63,15 +65,28 @@
             this.mainPictureBox.TabIndex = 0;
             this.mainPictureBox.TabStop = false;
             // 
+            // messageLabel
+            // 
+            this.messageLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.messageLabel.AutoEllipsis = true;
+            this.messageLabel.Location = new System.Drawing.Point(35, 35);
+            this.messageLabel.Name = "messageLabel";
+            this.messageLabel.Size = new System.Drawing.Size(265, 70);
+            this.messageLabel.TabIndex = 2;
+            this.messageLabel.Text = "messageLabel";
+            // 
             // TaskItemUserControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.mainLabel);
+            this.Controls.Add(this.messageLabel);
+            this.Controls.Add(this.titleLabel);
             this.Controls.Add(this.mainPictureBox);
-            this.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MinimumSize = new System.Drawing.Size(150, 32);
             this.Name = "TaskItemUserControl";
-            this.Size = new System.Drawing.Size(300, 32);
+            this.Size = new System.Drawing.Size(300, 105);
             this.Load += new System.EventHandler(this.TaskItemUserControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).EndInit();
             this.ResumeLayout(false);
@@ -82,6 +97,7 @@
 
         private System.Windows.Forms.ImageList mainImageList;
         private System.Windows.Forms.PictureBox mainPictureBox;
-        private System.Windows.Forms.Label mainLabel;
+        private System.Windows.Forms.Label titleLabel;
+        private System.Windows.Forms.Label messageLabel;
     }
 }

@@ -9,37 +9,15 @@ namespace InfoFenix.Core.PubSub {
         public string Title { get; set; }
         public string Message { get; set; }
         public string Error { get; set; }
-        public NotificationState State { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Enum
-
-        public enum NotificationState {
-            None,
-            Begin,
-            Error,
-            Done
+        public bool HasError {
+            get { return !string.IsNullOrWhiteSpace(Error); }
         }
 
-        #endregion Public Enum
+        #endregion Public Properties
     }
 
-    public sealed class ProcessDocumentInitializeNotification : NotificationBase {
-        #region Public Properties
-
-        public string FileName { get; set; }
-
-        #endregion
-    }
-
-    public sealed class ProcessDocumentCompleteNotification : NotificationBase {
-        #region Public Properties
-
-        public string FileName { get; set; }
-
-        #endregion
-    }
+    #region I/O Notifications
 
     public sealed class DirectoryContentChangeNotification : NotificationBase {
 
@@ -65,101 +43,11 @@ namespace InfoFenix.Core.PubSub {
         #endregion Public Enums
     }
 
-    public sealed class StartingDocumentDirectoryIndexingNotification : NotificationBase {
+    #endregion I/O Notifications
 
-        #region Public Properties
+    #region Task Execution Notifications
 
-        public string FullPath { get; set; }
-        public int TotalDocuments { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class DocumentDirectoryIndexingCompleteNotification : NotificationBase {
-
-        #region Public Properties
-
-        public string FullPath { get; set; }
-        public int TotalDocuments { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class StartingDocumentIndexingNotification : NotificationBase {
-
-        #region Public Properties
-
-        public string FullPath { get; set; }
-        public int TotalDocuments { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class DocumentIndexingCompleteNotification : NotificationBase {
-
-        #region Public Properties
-
-        public string FullPath { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class DocumentsInDirectoryToSaveNotification : NotificationBase {
-
-        #region Public Properties
-
-        public string DocumentDirectoryLabel { get; set; }
-        public int TotalDocuments { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class DocumentSavedNotification : NotificationBase {
-
-        #region Public Properties
-
-        public string FullPath { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class DocumentsInDirectoryToRemoveNotification : NotificationBase {
-
-        #region Public Properties
-
-        public string DocumentDirectoryLabel { get; set; }
-        public int TotalDocuments { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class DocumentRemovedNotification : NotificationBase {
-
-        #region Public Properties
-
-        public string FullPath { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public sealed class ProgressiveTaskStartNotification : NotificationBase {
-
-        #region Public Properties
-
-        public int TotalSteps { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Constructors
-
-        public ProgressiveTaskStartNotification() {
-            Message = "Iniciando tarefa...";
-        }
-
-        #endregion Public Constructors
-    }
-
-    public sealed class ProgressiveTaskPerformStepNotification : NotificationBase {
+    public abstract class ProgressiveTaskNotification : NotificationBase {
 
         #region Public Properties
 
@@ -169,54 +57,52 @@ namespace InfoFenix.Core.PubSub {
         #endregion Public Properties
     }
 
-    public sealed class ProgressiveTaskCompleteNotification : NotificationBase {
+    public sealed class ProgressiveTaskStartNotification : ProgressiveTaskNotification {
 
-        #region Public Properties
+        #region Public Constructors
 
-        public int TotalSteps { get; set; }
+        public ProgressiveTaskStartNotification() {
+            Message = Resources.Resources.ProgressiveTaskStartNotification_Message;
+        }
 
-        #endregion Public Properties
+        #endregion Public Constructors
+    }
+
+    public sealed class ProgressiveTaskPerformStepNotification : ProgressiveTaskNotification {
+    }
+
+    public sealed class ProgressiveTaskCompleteNotification : ProgressiveTaskNotification {
 
         #region Public Constructors
 
         public ProgressiveTaskCompleteNotification() {
-            Message = "Tarefa concluída.";
+            Message = Resources.Resources.ProgressiveTaskCompleteNotification_Message;
         }
 
         #endregion Public Constructors
     }
 
-    public sealed class ProgressiveTaskCancelNotification : NotificationBase {
-
-        #region Public Properties
-
-        public int TotalSteps { get; set; }
-
-        #endregion Public Properties
+    public sealed class ProgressiveTaskCancelNotification : ProgressiveTaskNotification {
 
         #region Public Constructors
 
         public ProgressiveTaskCancelNotification() {
-            Message = "Tarefa cancelada.";
+            Message = Resources.Resources.ProgressiveTaskCancelNotification_Message;
         }
 
         #endregion Public Constructors
     }
 
-    public sealed class ProgressiveTaskCriticalErrorNotification : NotificationBase {
-
-        #region Public Properties
-
-        public int TotalSteps { get; set; }
-
-        #endregion Public Properties
+    public sealed class ProgressiveTaskErrorNotification : ProgressiveTaskNotification {
 
         #region Public Constructors
 
-        public ProgressiveTaskCriticalErrorNotification() {
-            Message = "ERRO IRRECUPERÁVEL!";
+        public ProgressiveTaskErrorNotification() {
+            Message = Resources.Resources.ProgressiveTaskErrorNotification_Message;
         }
 
         #endregion Public Constructors
     }
+
+    #endregion Task Execution Notifications
 }

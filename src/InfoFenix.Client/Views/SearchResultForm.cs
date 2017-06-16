@@ -98,7 +98,7 @@ namespace InfoFenix.Client.Views {
                     using (var doc = _wordApplication.Open(inputStream)) {
                         _currentText = doc.Text;
 
-                        doc.Highlight(outputStream, SearchTerms);
+                        doc.HighlightAsync(outputStream, SearchTerms);
                     }
                 }
             }

@@ -30,19 +30,19 @@ namespace InfoFenix.Core.Bootstrap {
             var lastOrder = new OrderAttribute(int.MaxValue);
             var actions = _actions.OrderBy(_ => _.GetType().GetCustomAttribute(fallback: lastOrder).Order).ToArray();
 
-            _publisherSubscriber.Publish(new ProgressiveTaskStartNotification {
+            _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
                 Message = "Iniciando aplicativo...",
                 TotalSteps = actions.Length
             });
             actions.Each((_, idx) => {
-                _publisherSubscriber.Publish(new ProgressiveTaskPerformStepNotification {
+                _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
                     Message = $"Tarefa: {_.Name}",
                     ActualStep = (idx + 1),
                     TotalSteps = actions.Length
                 });
                 _.Execute();
             });
-            _publisherSubscriber.Publish(new ProgressiveTaskCompleteNotification {
+            _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
                 Message = "Inicialização concluída! Por favor, aguarde...",
                 TotalSteps = actions.Length
             });

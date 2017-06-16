@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿namespace InfoFenix.Core.PubSub {
 
-namespace InfoFenix.Core.PubSub {
     /// <summary>
     /// Extension methods for <see cref="IPublisherSubscriber"/>
     /// </summary>
@@ -15,10 +14,10 @@ namespace InfoFenix.Core.PubSub {
         /// <typeparam name="TMessage">Type of the message.</typeparam>
         /// <param name="message">The message.</param>
         /// <returns>A <see cref="Task"/> for the process.</returns>
-        public static Task PublishAsync<TMessage>(this IPublisherSubscriber source, TMessage message) {
-            if (source == null) { return Task.FromResult(0); }
+        public static void Publish<TMessage>(this IPublisherSubscriber source, TMessage message) {
+            if (source == null) { return; }
 
-            return Task.Run(() => source.Publish(message));
+            source.PublishAsync(message).WaitForResult();
         }
 
         #endregion Public Static Methods

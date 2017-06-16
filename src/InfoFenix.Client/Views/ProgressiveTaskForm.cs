@@ -30,7 +30,7 @@ namespace InfoFenix.Client.Views {
         private ISubscription<ProgressiveTaskStartNotification> _progressiveTaskStartSubscription;
         private ISubscription<ProgressiveTaskPerformStepNotification> _progressiveTaskPerformStepSubscription;
         private ISubscription<ProgressiveTaskCompleteNotification> _progressiveTaskCompleteSubscription;
-        private ISubscription<ProgressiveTaskCriticalErrorNotification> _progressiveTaskCriticalErrorSubscription;
+        private ISubscription<ProgressiveTaskErrorNotification> _progressiveTaskCriticalErrorSubscription;
         private ISubscription<ProgressiveTaskCancelNotification> _progressiveTaskCancelSubscription;
 
         #endregion Private Fields
@@ -89,7 +89,7 @@ namespace InfoFenix.Client.Views {
             _progressiveTaskStartSubscription = _publisherSubscriber.Subscribe<ProgressiveTaskStartNotification>(ProgressiveTaskStartHandler);
             _progressiveTaskPerformStepSubscription = _publisherSubscriber.Subscribe<ProgressiveTaskPerformStepNotification>(ProgressiveTaskPerformStepHandler);
             _progressiveTaskCompleteSubscription = _publisherSubscriber.Subscribe<ProgressiveTaskCompleteNotification>(ProgressiveTaskCompleteHandler);
-            _progressiveTaskCriticalErrorSubscription = _publisherSubscriber.Subscribe<ProgressiveTaskCriticalErrorNotification>(ProgressiveTaskCriticalErrorHandler);
+            _progressiveTaskCriticalErrorSubscription = _publisherSubscriber.Subscribe<ProgressiveTaskErrorNotification>(ProgressiveTaskCriticalErrorHandler);
             _progressiveTaskCancelSubscription = _publisherSubscriber.Subscribe<ProgressiveTaskCancelNotification>(ProgressiveTaskCancelHandler);
         }
 
@@ -127,7 +127,7 @@ namespace InfoFenix.Client.Views {
             OnCompleteProgressiveTask(this, new ProgressiveTaskCompleteEventArgs());
         }
 
-        private void ProgressiveTaskCriticalErrorHandler(ProgressiveTaskCriticalErrorNotification message) {
+        private void ProgressiveTaskCriticalErrorHandler(ProgressiveTaskErrorNotification message) {
             titleLabel.SafeCall(() => titleLabel.Text = message.Title);
             messageLabel.SafeCall(() => messageLabel.Text = message.Message);
             progressLabel.SafeCall(() => progressLabel.Text = $"{message.TotalSteps} de {message.TotalSteps}");

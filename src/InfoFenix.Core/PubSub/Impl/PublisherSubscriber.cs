@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InfoFenix.Core.PubSub {
 
@@ -62,18 +64,19 @@ namespace InfoFenix.Core.PubSub {
         }
 
         /// <inheritdoc />
-        public void Publish<TMessage>(TMessage message) {
+        public Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken = default(CancellationToken)) {
             Prevent.ParameterNull(message, nameof(message));
 
-            var messageType = typeof(TMessage);
-            if (_subscriptions.ContainsKey(messageType)) {
-                foreach (var subscription in _subscriptions[messageType].OfType<ISubscription<TMessage>>()) {
-                    var handler = subscription.CreateHandler();
-                    if (handler != null) {
-                        handler.Invoke(message);
+            return Task.Run(() => {
+                var messageType = typeof(TMessage);
+                if (_subscriptions.ContainsKey(messageType)) {
+                    foreach (var subscription in _subscriptions[messageType].OfType<ISubscription<TMessage>>()) {
+                        if (cancellationToken.IsCancellationRequested) { break; }
+
+                        subscription.CreateHandler()?.Invoke(message);
                     }
                 }
-            }
+            }, cancellationToken);
         }
 
         #endregion IPublisherSubscriber Members

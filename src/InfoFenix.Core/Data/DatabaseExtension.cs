@@ -3,6 +3,7 @@ using System.Data;
 using System.Linq;
 
 namespace InfoFenix.Core.Data {
+
     /// <summary>
     /// Extension methods for <see cref="IDatabase"/>
     /// </summary>
@@ -23,7 +24,10 @@ namespace InfoFenix.Core.Data {
         /// <returns>A instance of <typeparamref name="TResult"/>.</returns>
         public static TResult ExecuteReaderSingle<TResult>(this IDatabase source, string commandText, Func<IDataReader, TResult> mapper, CommandType commandType = CommandType.Text, params Parameter[] parameters) {
             if (source == null) { return default(TResult); }
-            return source.ExecuteReader(commandText, mapper, commandType, parameters).SingleOrDefault();
+
+            return source
+                .ExecuteReader(commandText, mapper, commandType, parameters)
+                .SingleOrDefault();
         }
 
         #endregion Public Static Methods

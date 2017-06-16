@@ -9,6 +9,11 @@ namespace InfoFenix.Core.Search {
         #region Properties
 
         /// <summary>
+        /// Gets the document ID.
+        /// </summary>
+        string DocumentID { get; }
+
+        /// <summary>
         /// Whether some property have been added to this document, or otherwise if it's empty
         /// </summary>
         bool IsDirty { get; }

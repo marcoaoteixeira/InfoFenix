@@ -21,7 +21,12 @@ namespace InfoFenix.Core.Office {
         public IWordDocument Open(Stream stream) {
             Prevent.ParameterNull(stream, nameof(stream));
 
-            return new SpireDocWordDocument(stream, _log);
+            var path = string.Empty;
+            if (stream is FileStream fileStream) {
+                path = fileStream.Name;
+            }
+
+            return new SpireDocWordDocument(path, stream, _log);
         }
 
         public IWordDocument Open(string filePath) {

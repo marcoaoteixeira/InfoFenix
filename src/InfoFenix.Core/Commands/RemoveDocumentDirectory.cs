@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.Search;
+using InfoFenix.Core.PubSub;
 using SQL = InfoFenix.Core.Resources.Resources;
+
+using Strings = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -13,11 +18,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public int ID { get; set; }
-
-        public string Label { get; set; }
-
-        public string Code { get; set; }
+        public DocumentDirectoryDto DocumentDirectory { get; set; }
 
         #endregion Public Properties
     }
@@ -27,7 +28,7 @@ namespace InfoFenix.Core.Commands {
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
-        private readonly IIndexProvider _indexProvider;
+        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -44,30 +45,59 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public RemoveDocumentDirectoryCommandHandler(IDatabase database, IIndexProvider indexProvider) {
+        public RemoveDocumentDirectoryCommandHandler(IDatabase database, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(database, nameof(database));
-            Prevent.ParameterNull(indexProvider, nameof(indexProvider));
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
-            _indexProvider = indexProvider;
+            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
 
         #region ICommandHandler<RemoveDocumentDirectoryCommand> Members
 
-        public void Handle(RemoveDocumentDirectoryCommand command) {
-            using (var transaction = _database.Connection.BeginTransaction()) {
-                try {
-                    var id = _database.ExecuteScalar(SQL.RemoveDocumentDirectory, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.ID, DbType.Int32)
-                    });
-                    transaction.Commit();
-                } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
-            }
+        public Task HandleAsync(RemoveDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.Run(() => {
+                _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
+                    Title = Strings.RemoveDocumentDirectory_ProgressiveTask_Title,
+                    TotalSteps = 1
+                });
 
-            try { _indexProvider.Delete(command.Code); }
-            catch (Exception ex) { Log.Error(ex, $"Ocorreu um erro ao remover o índice \"{command.Label}\"."); }
+                try {
+                    using (var transaction = _database.Connection.BeginTransaction()) {
+                        _database.ExecuteScalar(SQL.RemoveDocumentDirectory, parameters: new[] {
+                            Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectory.DocumentDirectoryID, DbType.Int32)
+                        });
+
+                        if (!cancellationToken.IsCancellationRequested) {
+                            _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
+                                ActualStep = 1,
+                                TotalSteps = 1
+                            });
+
+                            transaction.Commit();
+                        } else {
+                            _publisherSubscriber.PublishAsync(new ProgressiveTaskCancelNotification {
+                                TotalSteps = 1
+                            });
+                        }
+                    }
+                } catch (Exception ex) {
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskErrorNotification {
+                        Error = ex.Message,
+                        TotalSteps = 1
+                    });
+
+                    Log.Error(ex, ex.Message);
+
+                    throw;
+                } finally {
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
+                        TotalSteps = 1
+                    });
+                }
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<RemoveDocumentDirectoryCommand> Members

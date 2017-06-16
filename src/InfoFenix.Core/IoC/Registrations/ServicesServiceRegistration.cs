@@ -9,21 +9,6 @@ namespace InfoFenix.Core.IoC {
 
         public override void Register() {
             Builder
-                .RegisterType<DocumentDirectoryService>()
-                .As<IDocumentDirectoryService>()
-                .SingleInstance();
-
-            Builder
-                .RegisterType<SearchIndexService>()
-                .As<ISearchIndexService>()
-                .SingleInstance();
-
-            Builder
-                .RegisterType<DocumentService>()
-                .As<IDocumentService>()
-                .SingleInstance();
-
-            Builder
                 .RegisterType<ManagementService>()
                 .As<IManagementService>()
                 .SingleInstance();

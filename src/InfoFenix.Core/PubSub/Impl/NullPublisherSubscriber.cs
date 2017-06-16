@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace InfoFenix.Core.PubSub {
+
     public sealed class NullPublisherSubscriber : IPublisherSubscriber {
 
         #region Public Static Read-Only Fields
@@ -18,7 +21,8 @@ namespace InfoFenix.Core.PubSub {
 
         #region IPublisherSubscriber Members
 
-        public void Publish<TMessage>(TMessage message) {
+        public Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.FromResult(0);
         }
 
         public ISubscription<TMessage> Subscribe<TMessage>(Action<TMessage> handler) {

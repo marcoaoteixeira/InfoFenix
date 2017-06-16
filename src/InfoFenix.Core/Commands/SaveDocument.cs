@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
@@ -60,10 +62,11 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<SaveDocumentCommand> Members
 
-        public void Handle(SaveDocumentCommand command) {
-            using (var transaction = _database.Connection.BeginTransaction()) {
-                try {
-                    var id = _database.ExecuteScalar(SQL.SaveDocument, parameters: new[] {
+        public Task HandleAsync(SaveDocumentCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.Run(() => {
+                using (var transaction = _database.Connection.BeginTransaction()) {
+                    try {
+                        var id = _database.ExecuteScalar(SQL.SaveDocument, parameters: new[] {
                         Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.ID > 0 ? (object)command.ID : DBNull.Value, DbType.Int32),
                         Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentDirectoryID), command.DocumentDirectoryID, DbType.Int32),
                         Parameter.CreateInputParameter(nameof(DocumentEntity.Path), command.Path),
@@ -72,10 +75,11 @@ namespace InfoFenix.Core.Commands {
                         Parameter.CreateInputParameter(nameof(DocumentEntity.Indexed), command.Indexed ? 1 : 0, DbType.Int32),
                         Parameter.CreateInputParameter(nameof(DocumentEntity.Payload), command.Payload != null ? (object)command.Payload : DBNull.Value, DbType.Binary)
                     });
-                    if (command.ID <= 0) { command.ID = Convert.ToInt32(id); }
-                    transaction.Commit();
-                } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
-            }
+                        if (command.ID <= 0) { command.ID = Convert.ToInt32(id); }
+                        transaction.Commit();
+                    } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
+                }
+            });
         }
 
         #endregion ICommandHandler<SaveDocumentCommand> Members

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Entities;
@@ -45,14 +47,16 @@ namespace InfoFenix.Core.Queries {
 
         #region IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryEntity>> Members
 
-        public IEnumerable<DocumentDirectoryEntity> Handle(ListDocumentDirectoriesQuery query) {
-            return _database.ExecuteReader(SQL.ListDocumentDirectories, DocumentDirectoryEntity.MapFromDataReader, parameters: new[] {
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), (object)query.Label ?? DBNull.Value),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), (object)query.Path ?? DBNull.Value),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), (object)query.Code ?? DBNull.Value),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), query.Watch.HasValue ? (object)(query.Watch.Value ? 1 : 0) : DBNull.Value , DbType.Int32),
-                Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), query.Index.HasValue ? (object)(query.Index.Value ? 1 : 0) : DBNull.Value , DbType.Int32)
-            });
+        public Task<IEnumerable<DocumentDirectoryEntity>> HandleAsync(ListDocumentDirectoriesQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+            return Task.Run(() => {
+                return _database.ExecuteReader(SQL.ListDocumentDirectories, DocumentDirectoryEntity.MapFromDataReader, parameters: new[] {
+                    Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), (object)query.Label ?? DBNull.Value),
+                    Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), (object)query.Path ?? DBNull.Value),
+                    Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), (object)query.Code ?? DBNull.Value),
+                    Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), query.Watch.HasValue ? (object)(query.Watch.Value ? 1 : 0) : DBNull.Value , DbType.Int32),
+                    Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), query.Index.HasValue ? (object)(query.Index.Value ? 1 : 0) : DBNull.Value , DbType.Int32)
+                });
+            }, cancellationToken);
         }
 
         #endregion IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryEntity>> Members

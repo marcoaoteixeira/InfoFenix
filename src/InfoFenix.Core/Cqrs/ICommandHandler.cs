@@ -1,9 +1,12 @@
-﻿namespace InfoFenix.Core.Cqrs {
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace InfoFenix.Core.Cqrs {
     public interface ICommandHandler<in TCommand> where TCommand : ICommand {
 
         #region Methods
 
-        void Handle(TCommand command);
+        Task HandleAsync(TCommand command, CancellationToken cancellationToken = default(CancellationToken));
 
         #endregion Methods
     }

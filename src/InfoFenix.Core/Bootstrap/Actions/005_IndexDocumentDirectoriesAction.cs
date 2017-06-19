@@ -1,5 +1,7 @@
 ﻿using System.Threading;
+using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Logging;
+using InfoFenix.Core.Queries;
 using InfoFenix.Core.Services;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
@@ -9,18 +11,16 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region Private Read-Only Fields
 
-        private readonly IDocumentDirectoryService _documentDirectoryService;
-        private readonly ILogger _log;
+        private readonly IMediator _mediator;
 
         #endregion Private Read-Only Fields
 
         #region Public Constructors
 
-        public IndexDocumentDirectoriesAction(IDocumentDirectoryService documentDirectoryService, ILogger log) {
-            Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
+        public IndexDocumentDirectoriesAction(IMediator mediator) {
+            Prevent.ParameterNull(mediator, nameof(mediator));
 
-            _documentDirectoryService = documentDirectoryService;
-            _log = log ?? NullLogger.Instance;
+            _mediator = mediator;
         }
 
         #endregion Public Constructors
@@ -30,12 +30,13 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         public override string Name => "Indexar Diretórios de Documentos";
 
         public override void Execute() {
-            var documentDirectories = _documentDirectoryService.List();
-            foreach (var documentDirectory in documentDirectories) {
-                _documentDirectoryService.CleanAsync(documentDirectory.ID, CancellationToken.None);
-                _documentDirectoryService.SaveDocumentsInsideDocumentDirectoryAsync(documentDirectory.ID, CancellationToken.None);
-                _documentDirectoryService.IndexAsync(documentDirectory.ID, CancellationToken.None);
-            }
+            _mediator
+                .Query(new ListDocumentDirectoriesQuery())
+                .Each(_ => {
+                    _mediator.CleanAsync(_.ID, CancellationToken.None);
+                    _mediator.SaveDocumentsInsideDocumentDirectoryAsync(documentDirectory.ID, CancellationToken.None);
+                    _mediator.IndexAsync(_.ID, CancellationToken.None);
+                });
         }
 
         #endregion IAction Members

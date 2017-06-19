@@ -1,5 +1,6 @@
-﻿using InfoFenix.Core.Logging;
-using InfoFenix.Core.Services;
+﻿using InfoFenix.Core.Commands;
+using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Queries;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
@@ -8,18 +9,16 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region Private Read-Only Fields
 
-        private readonly IDocumentDirectoryService _documentDirectoryService;
-        private readonly ILogger _log;
+        private readonly IMediator _mediator;
 
         #endregion Private Read-Only Fields
 
         #region Public Constructors
 
-        public WatchDocumentDirectoriesAction(IDocumentDirectoryService documentDirectoryService, ILogger log) {
-            Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
+        public WatchDocumentDirectoriesAction(IMediator mediator) {
+            Prevent.ParameterNull(mediator, nameof(mediator));
 
-            _documentDirectoryService = documentDirectoryService;
-            _log = log ?? NullLogger.Instance;
+            _mediator = mediator;
         }
 
         #endregion Public Constructors
@@ -29,10 +28,11 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         public override string Name => "Observar Diretórios de Documentos";
 
         public override void Execute() {
-            var documentDirectories = _documentDirectoryService.List();
-            foreach (var documentDirectory in documentDirectories) {
-                _documentDirectoryService.StartWatchForModification(documentDirectory.ID);
-            }
+            _mediator
+                .Query(new ListDocumentDirectoriesQuery())
+                .Each(_ => _mediator.Command(new StartWatchDocumentDirectoryCommand {
+                    DirectoryPath = _.Path
+                }));
         }
 
         #endregion IAction Members

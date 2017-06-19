@@ -3,7 +3,7 @@ using InfoFenix.Core.Search;
 
 namespace InfoFenix.Core.Dto {
 
-    public class DocumentIndexDto {
+    public sealed class DocumentIndexDto {
 
         #region Public Properties
 
@@ -11,6 +11,7 @@ namespace InfoFenix.Core.Dto {
         public int DocumentCode { get; set; }
         public string DocumentDirectoryCode { get; set; }
         public string Content { get; set; }
+        public string FileName { get; set; }
 
         #endregion Public Properties
 

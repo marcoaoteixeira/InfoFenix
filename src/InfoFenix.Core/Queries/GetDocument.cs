@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
-    public sealed class GetDocumentQuery : IQuery<DocumentEntity> {
+    public sealed class GetDocumentQuery : IQuery<DocumentDto> {
 
         #region Public Properties
 
@@ -20,7 +21,7 @@ namespace InfoFenix.Core.Queries {
         #endregion Public Properties
     }
 
-    public sealed class GetDocumentQueryHandler : IQueryHandler<GetDocumentQuery, DocumentEntity> {
+    public sealed class GetDocumentQueryHandler : IQueryHandler<GetDocumentQuery, DocumentDto> {
 
         #region Private Read-Only Fields
 
@@ -38,17 +39,17 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Public Constructors
 
-        #region IQueryHandler<GetDocumentQuery, DocumentEntity> Members
+        #region IQueryHandler<GetDocumentQuery, DocumentDto> Members
 
-        public Task<DocumentEntity> HandleAsync(GetDocumentQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task<DocumentDto> HandleAsync(GetDocumentQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReaderSingle(SQL.GetDocument, DocumentEntity.MapFromDataReader, parameters: new[] {
+                return _database.ExecuteReaderSingle(SQL.GetDocument, DocumentDto.Map, parameters: new[] {
                     Parameter.CreateInputParameter(nameof(DocumentEntity.ID), query.ID != 0 ? (object)query.ID : DBNull.Value, DbType.Int32),
                     Parameter.CreateInputParameter(nameof(DocumentEntity.Code), query.Code != 0 ? (object)query.Code : DBNull.Value, DbType.Int32)
                 });
             }, cancellationToken);
         }
 
-        #endregion IQueryHandler<GetDocumentQuery, DocumentEntity> Members
+        #endregion IQueryHandler<GetDocumentQuery, DocumentDto> Members
     }
 }

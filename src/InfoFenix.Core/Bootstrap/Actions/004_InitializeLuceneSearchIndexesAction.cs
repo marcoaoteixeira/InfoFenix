@@ -1,5 +1,6 @@
-﻿using InfoFenix.Core.Search;
-using InfoFenix.Core.Services;
+﻿using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Queries;
+using InfoFenix.Core.Search;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
@@ -8,19 +9,19 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region Private Read-Only Fields
 
-        private readonly IDocumentDirectoryService _documentDirectoryService;
         private readonly IIndexProvider _indexProvider;
+        private readonly IMediator _mediator;
 
         #endregion Private Read-Only Fields
 
         #region Public Constructors
 
-        public InitializeLuceneSearchIndexesAction(IDocumentDirectoryService documentDirectoryService, IIndexProvider indexProvider) {
-            Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
+        public InitializeLuceneSearchIndexesAction(IIndexProvider indexProvider, IMediator mediator) {
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
+            Prevent.ParameterNull(mediator, nameof(mediator));
 
-            _documentDirectoryService = documentDirectoryService;
             _indexProvider = indexProvider;
+            _mediator = mediator;
         }
 
         #endregion Public Constructors
@@ -30,10 +31,9 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         public override string Name => "Inicializar Motor de Pesquisa";
 
         public override void Execute() {
-            var documentDirectories = _documentDirectoryService.List();
-            foreach (var documentDirectory in documentDirectories) {
-                _indexProvider.GetOrCreate(documentDirectory.Code);
-            }
+            _mediator
+                .Query(new ListDocumentDirectoriesQuery())
+                .Each(_ => _indexProvider.GetOrCreate(_.Code));
         }
 
         #endregion IAction Members

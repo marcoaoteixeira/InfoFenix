@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using InfoFenix.Core.PubSub;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
@@ -14,7 +13,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region Public Constructors
 
-        public CreateAppDataDirectoryAction(IAppSettings appSettings, IPublisherSubscriber publisherSubscriber) {
+        public CreateAppDataDirectoryAction(IAppSettings appSettings) {
             Prevent.ParameterNull(appSettings, nameof(appSettings));
 
             _appSettings = appSettings;

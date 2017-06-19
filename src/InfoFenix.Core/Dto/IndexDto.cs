@@ -1,11 +1,15 @@
-﻿namespace InfoFenix.Core.Dto {
+﻿using System.Collections.Generic;
 
-    public class IndexDto {
+namespace InfoFenix.Core.Dto {
+
+    public sealed class IndexDto {
 
         #region Public Properties
 
         public string Name { get; set; }
         public string Label { get; set; }
+
+        public IList<DocumentIndexDto> Documents { get; } = new List<DocumentIndexDto>();
 
         #endregion Public Properties
 

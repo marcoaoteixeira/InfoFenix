@@ -1,13 +1,17 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
+using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
 using SQL = InfoFenix.Core.Resources.Resources;
+
+using Strings = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -15,11 +19,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public int ID { get; set; }
-
-        public string FileName { get; set; }
-
-        public string DocumentDirectoryCode { get; set; }
+        public DocumentDto Document { get; set; }
 
         #endregion Public Properties
     }
@@ -30,6 +30,7 @@ namespace InfoFenix.Core.Commands {
 
         private readonly IDatabase _database;
         private readonly IIndexProvider _indexProvider;
+        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -46,12 +47,14 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public RemoveDocumentCommandHandler(IDatabase database, IIndexProvider indexProvider) {
+        public RemoveDocumentCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
             _indexProvider = indexProvider;
+            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
@@ -59,21 +62,49 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<RemoveDocumentCommand> Members
 
         public Task HandleAsync(RemoveDocumentCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            return Task.Run(() => {
-                using (var transaction = _database.Connection.BeginTransaction()) {
-                    try {
-                        _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.ID, DbType.Int32)
-                        });
-                        transaction.Commit();
-                    } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
-                }
+            var actualStep = 0;
+            var totalSteps = 2;
 
-                try {
-                    _indexProvider
-                        .GetOrCreate(command.DocumentDirectoryCode)
-                        .DeleteDocuments(command.ID.ToString());
-                } catch (Exception ex) { Log.Error(ex, $"Erro ao remover o documento {command.FileName} do índice."); }
+            return Task.Run(() => {
+                _publisherSubscriber.ProgressiveTaskStartAsync(
+                    message: Strings.RemoveDocument_ProgressiveTaskStart_Title,
+                    actualStep: actualStep,
+                    totalSteps: totalSteps,
+                    log: Log
+                );
+
+                using (var transaction = _database.Connection.BeginTransaction()) {
+                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                        message: string.Format(Strings.RemoveDocument_ProgressiveTaskPerformStep_Database_Message, command.Document.FileName),
+                        actualStep: ++actualStep,
+                        totalSteps: totalSteps,
+                        log: Log
+                    );
+
+                    _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.Document.DocumentID, DbType.Int32)
+                    });
+
+                    if (!cancellationToken.IsCancellationRequested) {
+                        transaction.Commit();
+
+                        _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                            message: string.Format(Strings.RemoveDocument_ProgressiveTaskPerformStep_Index_Message, command.Document.FileName),
+                            actualStep: ++actualStep,
+                            totalSteps: totalSteps,
+                            log: Log
+                        );
+
+                        _indexProvider
+                            .GetOrCreate(command.Document.DocumentDirectory.Code)
+                            .DeleteDocuments(command.Document.DocumentID.ToString());
+                    }
+                }
+            }, cancellationToken)
+            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
+                ActualStep = actualStep,
+                TotalSteps = totalSteps,
+                Log = Log
             });
         }
 

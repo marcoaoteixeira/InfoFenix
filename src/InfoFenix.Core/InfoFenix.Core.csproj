@@ -98,12 +98,14 @@
     <Compile Include="Commands\IndexDocumentCollection.cs" />
     <Compile Include="Commands\RemoveDocumentCollection.cs" />
     <Compile Include="Commands\RemoveDocument.cs" />
+    <Compile Include="Commands\CleanDocumentDirectory.cs" />
     <Compile Include="Commands\RemoveDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocumentCollection.cs" />
     <Compile Include="Commands\SaveDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocument.cs" />
-    <Compile Include="Commands\StopWatchDocumentDirectory.cs" />
+    <Compile Include="Commands\StopWatchDocumentDirectory .cs" />
     <Compile Include="Commands\StartWatchDocumentDirectory.cs" />
+    <Compile Include="Cqrs\MediatorExtension.cs" />
     <Compile Include="Data\Impl\Database.cs" />
     <Compile Include="Data\DatabaseExtension.cs" />
     <Compile Include="Data\DatabaseSettings.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="Dto\DocumentDto.cs" />
     <Compile Include="Dto\DocumentIndexDto.cs" />
     <Compile Include="Dto\IndexDto.cs" />
+    <Compile Include="Dto\SearchDto.cs" />
     <Compile Include="Entities\DocumentDirectoryEntity.cs" />
     <Compile Include="Entities\DocumentEntity.cs" />
     <Compile Include="Expando.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TaskExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
+    <Compile Include="FatalException.cs" />
     <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="IoC\CompositionRoot.cs" />
     <Compile Include="IoC\CompositionRootState.cs" />

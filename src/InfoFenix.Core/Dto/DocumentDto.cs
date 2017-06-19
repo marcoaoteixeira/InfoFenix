@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using InfoFenix.Core.Entities;
 
 namespace InfoFenix.Core.Dto {
@@ -13,6 +14,10 @@ namespace InfoFenix.Core.Dto {
         public int Code { get; set; }
         public bool Indexed { get; set; }
         public byte[] Payload { get; set; }
+
+        public string FileName {
+            get { return Path != null ? System.IO.Path.GetFileNameWithoutExtension(Path) : null; }
+        }
 
         public DocumentDirectoryDto DocumentDirectory { get; set; }
 
@@ -32,6 +37,10 @@ namespace InfoFenix.Core.Dto {
                     DocumentDirectoryID = entity.DocumentDirectoryID
                 }
             };
+        }
+
+        public static DocumentDto Map(IDataReader reader) {
+            return Map(DocumentEntity.MapFromDataReader(reader));
         }
 
         #endregion Public Static Methods

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.IO;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
@@ -12,7 +12,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public string DirectoryPath { get; set; }
+        public DocumentDirectoryDto DocumentDirectory { get; set; }
 
         #endregion Public Properties
     }
@@ -52,31 +52,29 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<StopWatchDocumentDirectoryCommand> Members
 
         public Task HandleAsync(StopWatchDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+            var actualStep = 0;
+            var totalSteps = 1;
+
             return Task.Run(() => {
-                _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                    Title = Resources.Resources.StartWatchDocumentDirectory_ProgressiveTask_Title,
-                    TotalSteps = 1
-                });
+                _publisherSubscriber.ProgressiveTaskStartAsync(
+                    title: Resources.Resources.StopWatchDocumentDirectory_ProgressiveTaskStart_Title,
+                    actualStep: actualStep,
+                    totalSteps: totalSteps
+                );
 
-                try {
-                    _directoryWatcherManager.StopWatch(command.DirectoryPath);
+                _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    message: string.Format(Resources.Resources.StopWatchDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
+                    actualStep: actualStep,
+                    totalSteps: totalSteps
+                );
 
-                    _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                        ActualStep = 1,
-                        TotalSteps = 1
-                    });
-                } catch (Exception ex) {
-                    _publisherSubscriber.PublishAsync(new ProgressiveTaskErrorNotification {
-                        TotalSteps = 1
-                    });
-
-                    Log.Error(ex, ex.Message); throw;
-                } finally {
-                    _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                        TotalSteps = 1
-                    });
-                }
-            }, cancellationToken);
+                _directoryWatcherManager.StopWatch(command.DocumentDirectory.Path);
+            }, cancellationToken)
+            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
+                ActualStep = actualStep,
+                TotalSteps = totalSteps,
+                Log = Log
+            });
         }
 
         #endregion ICommandHandler<StopWatchDocumentDirectoryCommand> Members

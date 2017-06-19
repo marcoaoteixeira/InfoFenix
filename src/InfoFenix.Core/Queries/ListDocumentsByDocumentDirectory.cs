@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using InfoFenix.Core;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
-    public class ListDocumentsByDocumentDirectoryQuery : IQuery<IEnumerable<DocumentEntity>> {
+
+    public class ListDocumentsByDocumentDirectoryQuery : IQuery<IEnumerable<DocumentDto>> {
 
         #region Public Properties
 
@@ -19,7 +19,7 @@ namespace InfoFenix.Core.Queries {
         #endregion Public Properties
     }
 
-    public class ListDocumentsByDocumentDirectoryQueryHandler : IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentEntity>> {
+    public class ListDocumentsByDocumentDirectoryQueryHandler : IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentDto>> {
 
         #region Private Read-Only Fields
 
@@ -37,16 +37,16 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Public Constructors
 
-        #region IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentEntity>> Members
+        #region IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentDto>> Members
 
-        public Task<IEnumerable<DocumentEntity>> HandleAsync(ListDocumentsByDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task<IEnumerable<DocumentDto>> HandleAsync(ListDocumentsByDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentEntity.MapFromDataReader, parameters: new[] {
-                    Parameter.CreateInputParameter(nameof(query.DocumentDirectoryID), query.DocumentDirectoryID, DbType.Int32)
+                return _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectory, DocumentDto.Map, parameters: new[] {
+                    Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentDirectoryID), query.DocumentDirectoryID, DbType.Int32)
                 });
             }, cancellationToken);
         }
 
-        #endregion IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentEntity>> Members
+        #endregion IQueryHandler<ListDocumentsByDocumentDirectoryQuery, IEnumerable<DocumentDto>> Members
     }
 }

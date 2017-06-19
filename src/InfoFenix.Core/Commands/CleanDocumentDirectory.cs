@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,18 +17,16 @@ using Strings = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
-    public sealed class RemoveDocumentCollectionCommand : ICommand {
+    public sealed class CleanDocumentDirectoryCommand : ICommand {
 
         #region Public Properties
 
-        public string DocumentDirectoryCode { get; set; }
-
-        public IList<DocumentDto> Documents { get; set; } = new List<DocumentDto>();
+        public DocumentDirectoryDto DocumentDirectory { get; set; }
 
         #endregion Public Properties
     }
 
-    public sealed class RemoveDocumentCollectionCommandHandler : ICommandHandler<RemoveDocumentCollectionCommand> {
+    public sealed class CleanDocumentDirectoryCommandHandler : ICommandHandler<CleanDocumentDirectoryCommand> {
 
         #region Private Read-Only Fields
 
@@ -50,7 +49,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public RemoveDocumentCollectionCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
+        public CleanDocumentDirectoryCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
             Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
@@ -62,30 +61,41 @@ namespace InfoFenix.Core.Commands {
 
         #endregion Public Constructors
 
-        #region ICommandHandler<RemoveDocumentCollectionCommand> Members
+        #region ICommandHandler<CleanDocumentDirectoryCommand> Members
 
-        public Task HandleAsync(RemoveDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var documentIDs = command.Documents.Select(_ => _.DocumentID).ToArray();
+        public Task HandleAsync(CleanDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
             var actualStep = 0;
-            var totalSteps = documentIDs.Length + 1;
+            var totalSteps = 0;
 
             return Task.Run(() => {
+                var filesOnDatabase = command.DocumentDirectory.Documents.Select(_ => _.Path).ToArray();
+                var filesOnDisk = Common.GetDocFiles(command.DocumentDirectory.Path);
+                var toRemove = filesOnDatabase.Except(filesOnDisk).ToArray();
+                var documentsToRemove = new List<DocumentDto>();
+
+                totalSteps = toRemove.Length + 1;
+
                 _publisherSubscriber.ProgressiveTaskStartAsync(
-                    title: Strings.RemoveDocumentCollection_ProgressiveTaskStart_Title,
-                    totalSteps: totalSteps
+                    title: Strings.CleanDocumentDirectory_ProgressiveTaskStart_Title,
+                    actualStep: actualStep,
+                    totalSteps: totalSteps,
+                    log: Log
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
-                    foreach (var document in command.Documents) {
+                    foreach (var filePath in toRemove) {
                         _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                            message: string.Format(Strings.RemoveDocumentCollection_ProgressiveTaskPerformStep_Database_Message, document.Code),
+                            message: string.Format(Strings.CleanDocumentDirectory_ProgressiveTaskPerformStep_Database_Message, Path.GetFileName(filePath)),
                             actualStep: ++actualStep,
-                            totalSteps: totalSteps
+                            totalSteps: totalSteps,
+                            log: Log
                         );
 
-                        _database.ExecuteScalar(SQL.RemoveDocument, parameters: new[] {
+                        var document = command.DocumentDirectory.Documents.SingleOrDefault(_ => _.Path == filePath);
+                        _database.ExecuteNonQuery(SQL.RemoveDocument, parameters: new[] {
                             Parameter.CreateInputParameter(nameof(DocumentEntity.ID), document.DocumentID, DbType.Int32)
                         });
+                        documentsToRemove.Add(document);
 
                         if (cancellationToken.IsCancellationRequested) { break; }
                     }
@@ -94,14 +104,15 @@ namespace InfoFenix.Core.Commands {
                         transaction.Commit();
 
                         _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                            message: Strings.RemoveDocumentCollection_ProgressiveTaskPerformStep_Index_Message,
+                            message: string.Format(Strings.CleanDocumentDirectory_ProgressiveTaskPerformStep_Index_Message, command.DocumentDirectory.Label),
                             actualStep: ++actualStep,
-                            totalSteps: totalSteps
+                            totalSteps: totalSteps,
+                            log: Log
                         );
 
                         _indexProvider
-                            .GetOrCreate(command.DocumentDirectoryCode)
-                            .DeleteDocuments(command.Documents.Select(_ => _.DocumentID.ToString()).ToArray());
+                            .GetOrCreate(command.DocumentDirectory.Code)
+                            .DeleteDocuments(documentsToRemove.Select(_ => _.DocumentID.ToString()).ToArray());
                     }
                 }
             }, cancellationToken)
@@ -112,6 +123,6 @@ namespace InfoFenix.Core.Commands {
             });
         }
 
-        #endregion ICommandHandler<RemoveDocumentCollectionCommand> Members
+        #endregion ICommandHandler<CleanDocumentDirectoryCommand> Members
     }
 }

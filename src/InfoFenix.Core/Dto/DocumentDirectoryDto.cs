@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using InfoFenix.Core.Entities;
 
 namespace InfoFenix.Core.Dto {
@@ -29,6 +30,10 @@ namespace InfoFenix.Core.Dto {
                 Watch = entity.Watch,
                 Index = entity.Index
             };
+        }
+
+        public static DocumentDirectoryDto Map(IDataReader reader) {
+            return Map(DocumentDirectoryEntity.MapFromDataReader(reader));
         }
 
         #endregion Public Static Methods

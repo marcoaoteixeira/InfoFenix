@@ -4,9 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
+using InfoFenix.Core.PubSub;
 using SQL = InfoFenix.Core.Resources.Resources;
+using Strings = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -14,19 +17,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public int ID { get; set; }
-
-        public int DocumentDirectoryID { get; set; }
-
-        public string Path { get; set; }
-
-        public DateTime LastWriteTime { get; set; }
-
-        public int Code { get; set; }
-
-        public bool Indexed { get; set; }
-
-        public byte[] Payload { get; set; }
+        public DocumentDto Document { get; set; }
 
         #endregion Public Properties
     }
@@ -36,6 +27,7 @@ namespace InfoFenix.Core.Commands {
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
+        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -52,10 +44,12 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public SaveDocumentCommandHandler(IDatabase database) {
+        public SaveDocumentCommandHandler(IDatabase database, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(database, nameof(database));
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
+            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
@@ -63,22 +57,44 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<SaveDocumentCommand> Members
 
         public Task HandleAsync(SaveDocumentCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+            var actualStep = 0;
+            var totalSteps = 1;
+
             return Task.Run(() => {
+                _publisherSubscriber.ProgressiveTaskStartAsync(
+                    title: Strings.SaveDocument_ProgressiveTaskStart_Title,
+                    actualStep: actualStep,
+                    totalSteps: totalSteps
+                );
+
                 using (var transaction = _database.Connection.BeginTransaction()) {
-                    try {
-                        var id = _database.ExecuteScalar(SQL.SaveDocument, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.ID > 0 ? (object)command.ID : DBNull.Value, DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentDirectoryID), command.DocumentDirectoryID, DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.Path), command.Path),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.LastWriteTime), command.LastWriteTime, DbType.DateTime),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.Code), command.Code, DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.Indexed), command.Indexed ? 1 : 0, DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.Payload), command.Payload != null ? (object)command.Payload : DBNull.Value, DbType.Binary)
+                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                        title: string.Format(Strings.SaveDocument_ProgressiveTaskPerformStep_Message, command.Document.FileName),
+                        actualStep: ++actualStep,
+                        totalSteps: totalSteps
+                    );
+
+                    var result = _database.ExecuteScalar(SQL.SaveDocument, parameters: new[] {
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.ID), command.Document.DocumentID > 0 ? (object)command.Document.DocumentID : DBNull.Value, DbType.Int32),
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentDirectoryID), command.Document.DocumentDirectory.DocumentDirectoryID, DbType.Int32),
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.Path), command.Document.Path),
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.LastWriteTime), command.Document.LastWriteTime, DbType.DateTime),
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.Code), command.Document.Code, DbType.Int32),
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.Indexed), command.Document.Indexed ? 1 : 0, DbType.Int32),
+                        Parameter.CreateInputParameter(nameof(DocumentEntity.Payload), command.Document.Payload != null ? (object)command.Document.Payload : DBNull.Value, DbType.Binary)
                     });
-                        if (command.ID <= 0) { command.ID = Convert.ToInt32(id); }
+
+                    if (command.Document.DocumentID <= 0) { command.Document.DocumentID = Convert.ToInt32(result); }
+
+                    if (!cancellationToken.IsCancellationRequested) {
                         transaction.Commit();
-                    } catch (Exception ex) { Log.Error(ex, ex.Message); transaction.Rollback(); throw; }
+                    }
                 }
+            }, cancellationToken)
+            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
+                ActualStep = actualStep,
+                TotalSteps = totalSteps,
+                Log = Log
             });
         }
 

@@ -9,6 +9,7 @@ using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
 using SQL = InfoFenix.Core.Resources.Resources;
+using Strings = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -56,49 +57,41 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<SaveDocumentDirectoryCommand> Members
 
         public Task HandleAsync(SaveDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+            var actualStep = 0;
+            var totalSteps = 1;
+
             return Task.Run(() => {
-                _publisherSuscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                    Title = Resources.Resources.SaveDocumentDirectory_ProgressiveTask_Title,
-                    TotalSteps = 1
-                });
+                _publisherSuscriber.ProgressiveTaskStartAsync(
+                    title: Strings.SaveDocumentDirectory_ProgressiveTaskStart_Title,
+                    actualStep: actualStep,
+                    totalSteps: totalSteps
+                );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
-                    try {
-                        var result = _database.ExecuteScalar(SQL.SaveDocumentDirectory, parameters: new[] {
-                            Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
-                            Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), command.DocumentDirectory.Label),
-                            Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), command.DocumentDirectory.Path),
-                            Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), command.DocumentDirectory.Code),
-                            Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), command.DocumentDirectory.Watch ? 1 : 0, DbType.Int32),
-                            Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), command.DocumentDirectory.Index ? 1 : 0, DbType.Int32)
-                        });
-                        if (command.DocumentDirectory.DocumentDirectoryID <= 0) { command.DocumentDirectory.DocumentDirectoryID = Convert.ToInt32(result); }
+                    _publisherSuscriber.ProgressiveTaskStartAsync(
+                        title: string.Format(Strings.SaveDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
+                        actualStep: ++actualStep,
+                        totalSteps: totalSteps
+                    );
 
-                        if (!cancellationToken.IsCancellationRequested) {
-                            transaction.Commit();
+                    var result = _database.ExecuteScalar(SQL.SaveDocumentDirectory, parameters: new[] {
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), command.DocumentDirectory.Label),
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), command.DocumentDirectory.Path),
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), command.DocumentDirectory.Code),
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), command.DocumentDirectory.Watch ? 1 : 0, DbType.Int32),
+                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), command.DocumentDirectory.Index ? 1 : 0, DbType.Int32)
+                    });
+                    if (command.DocumentDirectory.DocumentDirectoryID <= 0) { command.DocumentDirectory.DocumentDirectoryID = Convert.ToInt32(result); }
 
-                            _publisherSuscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                                ActualStep = 1,
-                                TotalSteps = 1
-                            });
-                        } else {
-                            _publisherSuscriber.PublishAsync(new ProgressiveTaskCancelNotification {
-                                TotalSteps = 1
-                            });
-                        }
-                    } catch (Exception ex) {
-                        _publisherSuscriber.PublishAsync(new ProgressiveTaskErrorNotification {
-                            TotalSteps = 1
-                        });
-
-                        Log.Error(ex, ex.Message); transaction.Rollback(); throw;
-                    } finally {
-                        _publisherSuscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                            TotalSteps = 1
-                        });
-                    }
+                    if (!cancellationToken.IsCancellationRequested) { transaction.Commit(); }
                 }
-            }, cancellationToken);
+            }, cancellationToken)
+            .ContinueWith(_publisherSuscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
+                ActualStep = actualStep,
+                TotalSteps = totalSteps,
+                Log = Log
+            });
         }
 
         #endregion ICommandHandler<SaveDocumentDirectoryCommand> Members

@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.Dto;
+using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
 
 namespace InfoFenix.Core.Queries {
 
-    public class SearchDocumentIndexResult {
+    public class SearchDto {
 
         #region Public Properties
 
@@ -24,38 +24,36 @@ namespace InfoFenix.Core.Queries {
     }
 
     public class SearchDocumentIndexResultItem : Expando {
-
     }
 
-    public class SearchDocumentIndexQuery : IQuery<IEnumerable<SearchDocumentIndexResult>> {
+    public class SearchDocumentIndexQuery : IQuery<SearchDto> {
 
         #region Public Properties
 
         public string Term { get; set; }
 
-        public ISet<IndexDto> Indexes { get; set; } = new HashSet<IndexDto>();
+        public IDictionary<string, string> Indexes { get; } = new Dictionary<string, string>();
 
-        public IndexDto this[string name] {
-            get { return Indexes?.SingleOrDefault(_ => _.Name == name); }
-        }
-        
         #endregion Public Properties
     }
 
-    public class SearchDocumentIndexQueryHandler : IQueryHandler<SearchDocumentIndexQuery, IEnumerable<SearchDocumentIndexResult>> {
+    public class SearchDocumentIndexQueryHandler : IQueryHandler<SearchDocumentIndexQuery, SearchDto> {
 
         #region Private Read-Only Fields
 
         private readonly IIndexProvider _indexProvider;
+        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
         #region Public Constructors
 
-        public SearchDocumentIndexQueryHandler(IIndexProvider indexProvider) {
+        public SearchDocumentIndexQueryHandler(IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _indexProvider = indexProvider;
+            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
@@ -102,8 +100,8 @@ namespace InfoFenix.Core.Queries {
             }
         }
 
-        private SearchDocumentIndexResult ExecuteSearch(IIndex index, ISearchBuilder searchBuilder, string label) {
-            var searchIndexResult = new SearchDocumentIndexResult {
+        private SearchDto ExecuteSearch(IIndex index, ISearchBuilder searchBuilder, string label) {
+            var searchIndexResult = new SearchDto {
                 IndexName = index.Name,
                 Label = label,
                 TotalDocuments = index.TotalDocuments()
@@ -121,27 +119,37 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Private Methods
 
-        #region IQueryHandler<SearchDocumentIndexQuery, IEnumerable<SearchDocumentIndexResult>> Members
+        #region IQueryHandler<SearchDocumentIndexQuery, SearchDto> Members
 
-        public Task<IEnumerable<SearchDocumentIndexResult>> HandleAsync(SearchDocumentIndexQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task<SearchDto> HandleAsync(SearchDocumentIndexQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+            var actualStep = 0;
+            var totalSteps = query.Indexes.Count;
+
             return Task.Run(() => {
-                if (string.IsNullOrWhiteSpace(query.Term)) { return Enumerable.Empty<SearchDocumentIndexResult>(); }
+                _publisherSubscriber.ProgressiveTaskStartAsync(
+                    title: "",
+                    actualStep: actualStep,
+                    totalSteps: totalSteps
+                );
+
+                if (string.IsNullOrWhiteSpace(query.Term)) { return null; }
 
                 var criterions = query.Term.Split(' ');
                 var positiveTerms = criterions.Where(_ => !_.StartsWith("-")).ToArray();
                 var negativeTerms = criterions.Except(positiveTerms).ToArray();
 
-                var result = new List<SearchDocumentIndexResult>();
-                foreach (var index in GetIndexes(query.Indexes.Select(_ => _.Name))) {
-                    if (cancellationToken.IsCancellationRequested) { break; }
+                var result = new List<SearchDto>();
+                foreach (var index in GetIndexes(query.Indexes.Keys)) {
                     var searchBuilder = CreateSearchBuilder(index, positiveTerms, negativeTerms);
-                    var searchIndexResult = ExecuteSearch(index, searchBuilder, query[index.Name].Label);
+                    var searchIndexResult = ExecuteSearch(index, searchBuilder, query.Indexes[index.Name]);
                     result.Add(searchIndexResult);
+
+                    if (cancellationToken.IsCancellationRequested) { break; }
                 }
                 return result;
             }, cancellationToken);
         }
 
-        #endregion IQueryHandler<SearchDocumentIndexQuery, IEnumerable<SearchDocumentIndexResult>> Members
+        #endregion IQueryHandler<SearchDocumentIndexQuery, SearchDto> Members
     }
 }

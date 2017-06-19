@@ -3,12 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
-    public sealed class GetDocumentDirectoryQuery : IQuery<DocumentDirectoryEntity> {
+    public sealed class GetDocumentDirectoryQuery : IQuery<DocumentDirectoryDto> {
 
         #region Public Properties
 
@@ -17,7 +18,7 @@ namespace InfoFenix.Core.Queries {
         #endregion Public Properties
     }
 
-    public sealed class GetDocumentDirectoryQueryHandler : IQueryHandler<GetDocumentDirectoryQuery, DocumentDirectoryEntity> {
+    public sealed class GetDocumentDirectoryQueryHandler : IQueryHandler<GetDocumentDirectoryQuery, DocumentDirectoryDto> {
 
         #region Private Read-Only Fields
 
@@ -35,16 +36,16 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Public Constructors
 
-        #region IQueryHandler<GetDocumentDirectoryQuery, DocumentDirectoryEntity> Members
+        #region IQueryHandler<GetDocumentDirectoryQuery, DocumentDirectoryDto> Members
 
-        public Task<DocumentDirectoryEntity> HandleAsync(GetDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task<DocumentDirectoryDto> HandleAsync(GetDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReaderSingle(SQL.GetDocumentDirectory, DocumentDirectoryEntity.MapFromDataReader, parameters: new[] {
+                return _database.ExecuteReaderSingle(SQL.GetDocumentDirectory, DocumentDirectoryDto.Map, parameters: new[] {
                     Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), query.ID, DbType.Int32)
                 });
             }, cancellationToken);
         }
 
-        #endregion IQueryHandler<GetDocumentDirectoryQuery, DocumentDirectoryEntity> Members
+        #endregion IQueryHandler<GetDocumentDirectoryQuery, DocumentDirectoryDto> Members
     }
 }

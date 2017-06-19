@@ -5,12 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
-    public class ListDocumentDirectoriesQuery : IQuery<IEnumerable<DocumentDirectoryEntity>> {
+    public class ListDocumentDirectoriesQuery : IQuery<IEnumerable<DocumentDirectoryDto>> {
 
         #region Public Properties
 
@@ -27,7 +28,7 @@ namespace InfoFenix.Core.Queries {
         #endregion Public Properties
     }
 
-    public class ListDocumentDirectoriesQueryHandler : IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryEntity>> {
+    public class ListDocumentDirectoriesQueryHandler : IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryDto>> {
 
         #region Private Read-Only Fields
 
@@ -45,11 +46,11 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Public Constructors
 
-        #region IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryEntity>> Members
+        #region IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryDto>> Members
 
-        public Task<IEnumerable<DocumentDirectoryEntity>> HandleAsync(ListDocumentDirectoriesQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task<IEnumerable<DocumentDirectoryDto>> HandleAsync(ListDocumentDirectoriesQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReader(SQL.ListDocumentDirectories, DocumentDirectoryEntity.MapFromDataReader, parameters: new[] {
+                return _database.ExecuteReader(SQL.ListDocumentDirectories, DocumentDirectoryDto.Map, parameters: new[] {
                     Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), (object)query.Label ?? DBNull.Value),
                     Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), (object)query.Path ?? DBNull.Value),
                     Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), (object)query.Code ?? DBNull.Value),
@@ -59,6 +60,6 @@ namespace InfoFenix.Core.Queries {
             }, cancellationToken);
         }
 
-        #endregion IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryEntity>> Members
+        #endregion IQueryHandler<ListDocumentDirectoriesQuery, IEnumerable<DocumentDirectoryDto>> Members
     }
 }

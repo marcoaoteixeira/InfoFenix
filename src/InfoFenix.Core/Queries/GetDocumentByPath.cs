@@ -2,12 +2,13 @@
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Entities;
 using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
-    public sealed class GetDocumentByPathQuery : IQuery<DocumentEntity> {
+    public sealed class GetDocumentByPathQuery : IQuery<DocumentDto> {
 
         #region Public Properties
 
@@ -16,7 +17,7 @@ namespace InfoFenix.Core.Queries {
         #endregion Public Properties
     }
 
-    public sealed class GetDocumentByPathQueryHandler : IQueryHandler<GetDocumentByPathQuery, DocumentEntity> {
+    public sealed class GetDocumentByPathQueryHandler : IQueryHandler<GetDocumentByPathQuery, DocumentDto> {
 
         #region Private Read-Only Fields
 
@@ -34,16 +35,16 @@ namespace InfoFenix.Core.Queries {
 
         #endregion Public Constructors
 
-        #region IQueryHandler<GetDocumentByPathQuery, DocumentEntity> Members
+        #region IQueryHandler<GetDocumentByPathQuery, DocumentDto> Members
 
-        public Task<DocumentEntity> HandleAsync(GetDocumentByPathQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task<DocumentDto> HandleAsync(GetDocumentByPathQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReaderSingle(SQL.GetDocumentByPath, DocumentEntity.MapFromDataReader, parameters: new[] {
+                return _database.ExecuteReaderSingle(SQL.GetDocumentByPath, DocumentDto.Map, parameters: new[] {
                     Parameter.CreateInputParameter(nameof(DocumentEntity.Path), query.Path)
                 });
             }, cancellationToken);
         }
 
-        #endregion IQueryHandler<GetDocumentByPathQuery, DocumentEntity> Members
+        #endregion IQueryHandler<GetDocumentByPathQuery, DocumentDto> Members
     }
 }

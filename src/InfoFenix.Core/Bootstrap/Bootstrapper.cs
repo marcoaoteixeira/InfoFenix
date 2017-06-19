@@ -1,9 +1,12 @@
-﻿using InfoFenix.Core;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InfoFenix.Core;
+using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
 
 namespace InfoFenix.Core.Bootstrap {
+
     public sealed class Bootstrapper : IBootstrapper {
 
         #region Private Read-Only Fields
@@ -12,6 +15,16 @@ namespace InfoFenix.Core.Bootstrap {
         private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
+
+        #region Public Properties
+
+        private ILogger _log;
+        public ILogger Log {
+            get { return _log ?? NullLogger.Instance; }
+            set { _log = value ?? NullLogger.Instance; }
+        }
+
+        #endregion
 
         #region Public Constructors
 
@@ -31,19 +44,31 @@ namespace InfoFenix.Core.Bootstrap {
             var actions = _actions.OrderBy(_ => _.GetType().GetCustomAttribute(fallback: lastOrder).Order).ToArray();
 
             _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Message = "Iniciando aplicativo...",
+                Title = Resources.Resources.Bootstrapper_ProgressiveTaskStart_Title,
                 TotalSteps = actions.Length
             });
             actions.Each((_, idx) => {
                 _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                    Message = $"Tarefa: {_.Name}",
+                    Message = string.Format(Resources.Resources.Bootstrapper_ProgressiveTaskPerformStep_Message, _.Name),
                     ActualStep = (idx + 1),
                     TotalSteps = actions.Length
                 });
-                _.Execute();
+
+                try { _.Execute(); }
+                catch (Exception ex) {
+                    _publisherSubscriber.PublishAsync(new ProgressiveTaskErrorNotification {
+                        ActualStep = (idx + 1),
+                        Error = ex.Message,
+                        TotalSteps = actions.Length
+                    });
+
+                    Log.Error(ex, ex.Message);
+                    
+                    throw;
+                }
             });
             _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Message = "Inicialização concluída! Por favor, aguarde...",
+                Message = Resources.Resources.Bootstrapper_ProgressiveTaskComplete_Message,
                 TotalSteps = actions.Length
             });
         }

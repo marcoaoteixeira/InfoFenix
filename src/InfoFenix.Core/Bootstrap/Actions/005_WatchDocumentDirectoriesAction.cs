@@ -4,7 +4,7 @@ using InfoFenix.Core.Queries;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
-    [Order(6)]
+    [Order(5)]
     public class WatchDocumentDirectoriesAction : ActionBase {
 
         #region Private Read-Only Fields
@@ -30,9 +30,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         public override void Execute() {
             _mediator
                 .Query(new ListDocumentDirectoriesQuery())
-                .Each(_ => _mediator.Command(new StartWatchDocumentDirectoryCommand {
-                    DirectoryPath = _.Path
-                }));
+                .Each(_ => _mediator.Command(new StartWatchDocumentDirectoryCommand { DocumentDirectory = _ }));
         }
 
         #endregion IAction Members

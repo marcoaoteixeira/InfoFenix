@@ -8,8 +8,9 @@ namespace InfoFenix.Core.Dto {
 
         public string Name { get; set; }
         public string Label { get; set; }
+        public int TotalDocuments { get; set; }
 
-        public IList<DocumentIndexDto> Documents { get; } = new List<DocumentIndexDto>();
+        public IList<DocumentIndexDto> Documents { get; set; } = new List<DocumentIndexDto>();
 
         #endregion Public Properties
 

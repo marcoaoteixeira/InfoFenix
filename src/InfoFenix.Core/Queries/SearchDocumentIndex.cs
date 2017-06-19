@@ -3,36 +3,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
-
-    public class SearchDto {
-
-        #region Public Properties
-
-        public string IndexName { get; set; }
-
-        public string Label { get; set; }
-
-        public int TotalDocuments { get; set; }
-
-        public IList<SearchDocumentIndexResultItem> Documents { get; set; } = new List<SearchDocumentIndexResultItem>();
-
-        #endregion Public Properties
-    }
-
-    public class SearchDocumentIndexResultItem : Expando {
-    }
 
     public class SearchDocumentIndexQuery : IQuery<SearchDto> {
 
         #region Public Properties
 
-        public string Term { get; set; }
+        public string QueryTerm { get; set; }
 
-        public IDictionary<string, string> Indexes { get; } = new Dictionary<string, string>();
+        public IDictionary<string, string> Indexes { get; set; } = new Dictionary<string, string>();
 
         #endregion Public Properties
     }
@@ -100,21 +84,10 @@ namespace InfoFenix.Core.Queries {
             }
         }
 
-        private SearchDto ExecuteSearch(IIndex index, ISearchBuilder searchBuilder, string label) {
-            var searchIndexResult = new SearchDto {
-                IndexName = index.Name,
-                Label = label,
-                TotalDocuments = index.TotalDocuments()
-            };
+        private IEnumerable<DocumentIndexDto> ExecuteSearch(IIndex index, ISearchBuilder searchBuilder, string label) {
             foreach (var searchHit in searchBuilder.Search()) {
-                dynamic item = new SearchDocumentIndexResultItem();
-                item.ID = searchHit.DocumentID;
-                item.DocumentCode = searchHit.GetInt(Common.Index.DocumentFieldName.DocumentCode);
-                item.DocumentDirectoryCode = searchHit.GetString(Common.Index.DocumentFieldName.DocumentDirectoryCode);
-                item.Content = searchHit.GetString(Common.Index.DocumentFieldName.Content);
-                searchIndexResult.Documents.Add(item);
+                yield return DocumentIndexDto.Map(searchHit);
             }
-            return searchIndexResult;
         }
 
         #endregion Private Methods
@@ -123,30 +96,73 @@ namespace InfoFenix.Core.Queries {
 
         public Task<SearchDto> HandleAsync(SearchDocumentIndexQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             var actualStep = 0;
-            var totalSteps = query.Indexes.Count;
+            var totalSteps = query.Indexes.Count + 1;
 
             return Task.Run(() => {
                 _publisherSubscriber.ProgressiveTaskStartAsync(
-                    title: "",
+                    title: Resource.SearchDocumentIndex_ProgressiveTaskStart_Title,
                     actualStep: actualStep,
                     totalSteps: totalSteps
                 );
 
-                if (string.IsNullOrWhiteSpace(query.Term)) { return null; }
+                _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    message: Resource.SearchDocumentIndex_ProgressiveTaskPerformStep_Build_Message,
+                    actualStep: ++actualStep,
+                    totalSteps: totalSteps
+                );
 
-                var criterions = query.Term.Split(' ');
+                var indexes = GetIndexes(query.Indexes.Keys).ToArray();
+                var searchDto = new SearchDto {
+                    QueryTerm = query.QueryTerm,
+                    Indexes = indexes.Select(_ => new IndexDto {
+                        Label = query.Indexes[_.Name],
+                        Name = _.Name,
+                        TotalDocuments = _.TotalDocuments()
+                    }).ToList()
+                };
+
+                if (string.IsNullOrWhiteSpace(query.QueryTerm)) {
+                    _publisherSubscriber.ProgressiveTaskCompleteAsync(
+                        actualStep: actualStep,
+                        totalSteps: totalSteps
+                    );
+
+                    return searchDto;
+                }
+
+                var criterions = query.QueryTerm.Split(' ');
                 var positiveTerms = criterions.Where(_ => !_.StartsWith("-")).ToArray();
                 var negativeTerms = criterions.Except(positiveTerms).ToArray();
-
-                var result = new List<SearchDto>();
-                foreach (var index in GetIndexes(query.Indexes.Keys)) {
-                    var searchBuilder = CreateSearchBuilder(index, positiveTerms, negativeTerms);
-                    var searchIndexResult = ExecuteSearch(index, searchBuilder, query.Indexes[index.Name]);
-                    result.Add(searchIndexResult);
-
+                foreach (var index in indexes) {
                     if (cancellationToken.IsCancellationRequested) { break; }
+
+                    var indexDto = searchDto[index.Name];
+
+                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                        message: string.Format(Resource.SearchDocumentIndex_ProgressiveTaskPerformStep_Search_Message, indexDto.Label),
+                        actualStep: ++actualStep,
+                        totalSteps: totalSteps
+                    );
+
+                    var searchBuilder = CreateSearchBuilder(index, positiveTerms, negativeTerms);
+                    var documents = ExecuteSearch(index, searchBuilder, indexDto.Label);
+
+                    indexDto.Documents = documents.ToList();
                 }
-                return result;
+
+                if (cancellationToken.IsCancellationRequested) {
+                    _publisherSubscriber.ProgressiveTaskCancelAsync(
+                        actualStep: actualStep,
+                        totalSteps: totalSteps
+                    );
+                }
+
+                _publisherSubscriber.ProgressiveTaskCompleteAsync(
+                    actualStep: actualStep,
+                    totalSteps: totalSteps
+                );
+
+                return searchDto;
             }, cancellationToken);
         }
 

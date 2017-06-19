@@ -51,6 +51,43 @@ namespace InfoFenix.Core {
                 public static readonly string Content = nameof(Content);
                 public static readonly string DocumentDirectoryCode = nameof(DocumentDirectoryCode);
                 public static readonly string DocumentCode = nameof(DocumentCode);
+                public static readonly string FileName = nameof(FileName);
+
+                #endregion Public Static Read-Only Fields
+            }
+
+            #endregion Public Static Inner Classes
+        }
+
+        public static class DatabaseSchema {
+
+            #region Public Static Inner Classes
+
+            public static class Documents {
+
+                #region Public Static Read-Only Fields
+
+                public static readonly string DocumentID = "id";
+                public static readonly string DocumentDirectoryID = "document_diretory_id";
+                public static readonly string Path = "path";
+                public static readonly string LastWriteTime = "last_write_time";
+                public static readonly string Code = "code";
+                public static readonly string Indexed = "indexed";
+                public static readonly string Payload = "payload";
+
+                #endregion Public Static Read-Only Fields
+            }
+
+            public static class DocumentDirectories {
+
+                #region Public Static Read-Only Fields
+
+                public static readonly string DocumentDirectoryID = "id";
+                public static readonly string Label = "label";
+                public static readonly string Path = "path";
+                public static readonly string Code = "code";
+                public static readonly string Watch = "watch";
+                public static readonly string Index = "index";
 
                 #endregion Public Static Read-Only Fields
             }

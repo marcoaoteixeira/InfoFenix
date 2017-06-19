@@ -27,9 +27,9 @@
             this.searchTermTextBox = new System.Windows.Forms.TextBox();
             this.executeSearchButton = new System.Windows.Forms.Button();
             this.searchByLabel = new System.Windows.Forms.Label();
-            this.searchResultDataGridView = new System.Windows.Forms.DataGridView();
+            this.documentDirectoriesDataGridView = new System.Windows.Forms.DataGridView();
             this.labelDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.actualTotalDocumentsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDocumentsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.totalDocumentsFoundDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.informationLabel = new System.Windows.Forms.Label();
             this.titlePanel.SuspendLayout();
@@ -37,7 +37,7 @@
             this.contentPanel.SuspendLayout();
             this.actionPanel.SuspendLayout();
             this.searchTermPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.searchResultDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.documentDirectoriesDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // titlePanel
@@ -65,7 +65,7 @@
             // 
             // contentPanel
             // 
-            this.contentPanel.Controls.Add(this.searchResultDataGridView);
+            this.contentPanel.Controls.Add(this.documentDirectoriesDataGridView);
             this.contentPanel.Controls.Add(this.searchTermPanel);
             this.contentPanel.Padding = new System.Windows.Forms.Padding(0);
             this.contentPanel.Size = new System.Drawing.Size(634, 281);
@@ -136,25 +136,25 @@
             // 
             // searchResultDataGridView
             // 
-            this.searchResultDataGridView.AllowUserToAddRows = false;
-            this.searchResultDataGridView.AllowUserToDeleteRows = false;
-            this.searchResultDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.documentDirectoriesDataGridView.AllowUserToAddRows = false;
+            this.documentDirectoriesDataGridView.AllowUserToDeleteRows = false;
+            this.documentDirectoriesDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchResultDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.searchResultDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.documentDirectoriesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.documentDirectoriesDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.labelDataGridViewTextBoxColumn,
-            this.actualTotalDocumentsDataGridViewTextBoxColumn,
+            this.totalDocumentsDataGridViewTextBoxColumn,
             this.totalDocumentsFoundDataGridViewTextBoxColumn});
-            this.searchResultDataGridView.Location = new System.Drawing.Point(10, 73);
-            this.searchResultDataGridView.Margin = new System.Windows.Forms.Padding(10);
-            this.searchResultDataGridView.MultiSelect = false;
-            this.searchResultDataGridView.Name = "searchResultDataGridView";
-            this.searchResultDataGridView.ReadOnly = true;
-            this.searchResultDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.searchResultDataGridView.Size = new System.Drawing.Size(614, 197);
-            this.searchResultDataGridView.TabIndex = 1;
-            this.searchResultDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchResultDataGridView_CellDoubleClick);
+            this.documentDirectoriesDataGridView.Location = new System.Drawing.Point(10, 73);
+            this.documentDirectoriesDataGridView.Margin = new System.Windows.Forms.Padding(10);
+            this.documentDirectoriesDataGridView.MultiSelect = false;
+            this.documentDirectoriesDataGridView.Name = "searchResultDataGridView";
+            this.documentDirectoriesDataGridView.ReadOnly = true;
+            this.documentDirectoriesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.documentDirectoriesDataGridView.Size = new System.Drawing.Size(614, 197);
+            this.documentDirectoriesDataGridView.TabIndex = 1;
+            this.documentDirectoriesDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchResultDataGridView_CellDoubleClick);
             // 
             // labelDataGridViewTextBoxColumn
             // 
@@ -166,11 +166,11 @@
             // 
             // actualTotalDocumentsDataGridViewTextBoxColumn
             // 
-            this.actualTotalDocumentsDataGridViewTextBoxColumn.DataPropertyName = "TotalDocuments";
-            this.actualTotalDocumentsDataGridViewTextBoxColumn.HeaderText = "Total de documentos";
-            this.actualTotalDocumentsDataGridViewTextBoxColumn.Name = "actualTotalDocumentsDataGridViewTextBoxColumn";
-            this.actualTotalDocumentsDataGridViewTextBoxColumn.ReadOnly = true;
-            this.actualTotalDocumentsDataGridViewTextBoxColumn.Width = 200;
+            this.totalDocumentsDataGridViewTextBoxColumn.DataPropertyName = "TotalDocuments";
+            this.totalDocumentsDataGridViewTextBoxColumn.HeaderText = "Total de documentos";
+            this.totalDocumentsDataGridViewTextBoxColumn.Name = "actualTotalDocumentsDataGridViewTextBoxColumn";
+            this.totalDocumentsDataGridViewTextBoxColumn.ReadOnly = true;
+            this.totalDocumentsDataGridViewTextBoxColumn.Width = 200;
             // 
             // totalDocumentsFoundDataGridViewTextBoxColumn
             // 
@@ -205,7 +205,7 @@
             this.actionPanel.ResumeLayout(false);
             this.searchTermPanel.ResumeLayout(false);
             this.searchTermPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.searchResultDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.documentDirectoriesDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -213,13 +213,13 @@
         #endregion
 
         private System.Windows.Forms.Panel searchTermPanel;
-        private System.Windows.Forms.DataGridView searchResultDataGridView;
+        private System.Windows.Forms.DataGridView documentDirectoriesDataGridView;
         private System.Windows.Forms.TextBox searchTermTextBox;
         private System.Windows.Forms.Button executeSearchButton;
         private System.Windows.Forms.Label searchByLabel;
         private System.Windows.Forms.Label informationLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn labelDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn actualTotalDocumentsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn totalDocumentsDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalDocumentsFoundDataGridViewTextBoxColumn;
     }
 }

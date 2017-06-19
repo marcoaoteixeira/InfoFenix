@@ -61,7 +61,8 @@ namespace InfoFenix.Core.Office {
         #region Private Methods
 
         private void Initialize() {
-            try { _document = new Document(_stream); } catch (Exception) { _log.Error($"ERROR OPENING DOCUMENT: {_path}"); throw; }
+            try { _document = new Document(_stream); }
+            catch (Exception) { _log.Error($"ERROR OPENING DOCUMENT: {_path}"); throw; }
         }
 
         private void Dispose(bool disposing) {

@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
-using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
-using SQL = InfoFenix.Core.Resources.Resources;
-
-using Strings = InfoFenix.Core.Resources.Resources;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -61,46 +58,45 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<SaveDocumentCollectionCommand> Members
 
         public Task HandleAsync(SaveDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var actualStep = 0;
-            var totalSteps = command.Documents.Count;
+            var info = new ProgressiveTaskContinuationInfo {
+                Log = Log,
+                TotalSteps = command.Documents.Count
+            };
 
             return Task.Run(() => {
                 _publisherSubscriber.ProgressiveTaskStartAsync(
-                    title: Strings.SaveDocumentCollection_ProgressiveTaskStart_Title,
-                    actualStep: actualStep,
-                    totalSteps: totalSteps
+                    title: Resource.SaveDocumentCollection_ProgressiveTaskStart_Title,
+                    actualStep: info.ActualStep,
+                    totalSteps: info.TotalSteps
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
                     foreach (var document in command.Documents) {
                         _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                            message: string.Format(Strings.SaveDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
-                            actualStep: ++actualStep,
-                            totalSteps: totalSteps
+                            message: string.Format(Resource.SaveDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
+                            actualStep: ++info.ActualStep,
+                            totalSteps: info.TotalSteps
                         );
 
-                        var result = _database.ExecuteScalar(SQL.SaveDocument, parameters: new[] {
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.ID), document.DocumentID > 0 ? (object)document.DocumentID : DBNull.Value, DbType.Int32),
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.DocumentDirectoryID), command.DocumentDirectoryID, DbType.Int32),
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.Path), document.Path),
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.LastWriteTime), document.LastWriteTime, DbType.DateTime),
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.Code), document.Code, DbType.Int32),
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.Indexed), document.Indexed ? 1 : 0, DbType.Int32),
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.Payload), document.Payload != null ? (object)document.Payload : DBNull.Value, DbType.Binary)
+                        var result = _database.ExecuteScalar(Resource.SaveDocumentSQL, parameters: new[] {
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID > 0 ? (object)document.DocumentID : DBNull.Value, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Path, document.Path),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, document.LastWriteTime, DbType.DateTime),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, document.Code, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, document.Indexed ? 1 : 0, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, document.Payload != null ? (object)document.Payload : DBNull.Value, DbType.Binary)
                         });
                         if (document.DocumentID <= 0) { document.DocumentID = Convert.ToInt32(result); }
 
-                        if (cancellationToken.IsCancellationRequested) { break; }
+                        cancellationToken.ThrowIfCancellationRequested();
                     }
 
-                    if (!cancellationToken.IsCancellationRequested) { transaction.Commit(); }
+                    cancellationToken.ThrowIfCancellationRequested();
+                    transaction.Commit();
                 }
             }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
-                ActualStep = actualStep,
-                TotalSteps = totalSteps,
-                Log = Log
-            });
+            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
         }
 
         #endregion ICommandHandler<SaveDocumentCollectionCommand> Members

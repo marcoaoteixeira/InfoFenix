@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
-using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
-using SQL = InfoFenix.Core.Resources.Resources;
-using Strings = InfoFenix.Core.Resources.Resources;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -57,41 +55,40 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<SaveDocumentDirectoryCommand> Members
 
         public Task HandleAsync(SaveDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var actualStep = 0;
-            var totalSteps = 1;
+            var info = new ProgressiveTaskContinuationInfo {
+                Log = Log,
+                TotalSteps = 1
+            };
 
             return Task.Run(() => {
                 _publisherSuscriber.ProgressiveTaskStartAsync(
-                    title: Strings.SaveDocumentDirectory_ProgressiveTaskStart_Title,
-                    actualStep: actualStep,
-                    totalSteps: totalSteps
+                    title: Resource.SaveDocumentDirectory_ProgressiveTaskStart_Title,
+                    actualStep: info.ActualStep,
+                    totalSteps: info.TotalSteps
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
                     _publisherSuscriber.ProgressiveTaskStartAsync(
-                        title: string.Format(Strings.SaveDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
-                        actualStep: ++actualStep,
-                        totalSteps: totalSteps
+                        title: string.Format(Resource.SaveDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
+                        actualStep: ++info.ActualStep,
+                        totalSteps: info.TotalSteps
                     );
 
-                    var result = _database.ExecuteScalar(SQL.SaveDocumentDirectory, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Label), command.DocumentDirectory.Label),
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Path), command.DocumentDirectory.Path),
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Code), command.DocumentDirectory.Code),
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Watch), command.DocumentDirectory.Watch ? 1 : 0, DbType.Int32),
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.Index), command.DocumentDirectory.Index ? 1 : 0, DbType.Int32)
+                    var result = _database.ExecuteScalar(Resource.SaveDocumentDirectorySQL, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Label, command.DocumentDirectory.Label),
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Path, command.DocumentDirectory.Path),
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Code, command.DocumentDirectory.Code),
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Watch, command.DocumentDirectory.Watch ? 1 : 0, DbType.Int32),
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Index, command.DocumentDirectory.Index ? 1 : 0, DbType.Int32)
                     });
                     if (command.DocumentDirectory.DocumentDirectoryID <= 0) { command.DocumentDirectory.DocumentDirectoryID = Convert.ToInt32(result); }
 
-                    if (!cancellationToken.IsCancellationRequested) { transaction.Commit(); }
+                    cancellationToken.ThrowIfCancellationRequested();
+                    transaction.Commit();
                 }
             }, cancellationToken)
-            .ContinueWith(_publisherSuscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
-                ActualStep = actualStep,
-                TotalSteps = totalSteps,
-                Log = Log
-            });
+            .ContinueWith(_publisherSuscriber.TaskContinuation, info);
         }
 
         #endregion ICommandHandler<SaveDocumentDirectoryCommand> Members

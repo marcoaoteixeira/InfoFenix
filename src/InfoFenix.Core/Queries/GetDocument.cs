@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
-using InfoFenix.Core.Entities;
-using SQL = InfoFenix.Core.Resources.Resources;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
@@ -43,9 +42,9 @@ namespace InfoFenix.Core.Queries {
 
         public Task<DocumentDto> HandleAsync(GetDocumentQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReaderSingle(SQL.GetDocument, DocumentDto.Map, parameters: new[] {
-                    Parameter.CreateInputParameter(nameof(DocumentEntity.ID), query.ID != 0 ? (object)query.ID : DBNull.Value, DbType.Int32),
-                    Parameter.CreateInputParameter(nameof(DocumentEntity.Code), query.Code != 0 ? (object)query.Code : DBNull.Value, DbType.Int32)
+                return _database.ExecuteReaderSingle(Resource.GetDocumentSQL, DocumentDto.Map, parameters: new[] {
+                    Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, query.ID != 0 ? (object)query.ID : DBNull.Value, DbType.Int32),
+                    Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, query.Code != 0 ? (object)query.Code : DBNull.Value, DbType.Int32)
                 });
             }, cancellationToken);
         }

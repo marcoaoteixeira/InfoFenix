@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
-using InfoFenix.Core.Entities;
-using SQL = InfoFenix.Core.Resources.Resources;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
@@ -40,8 +39,8 @@ namespace InfoFenix.Core.Queries {
 
         public Task<DocumentDirectoryDto> HandleAsync(GetDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReaderSingle(SQL.GetDocumentDirectory, DocumentDirectoryDto.Map, parameters: new[] {
-                    Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), query.ID, DbType.Int32)
+                return _database.ExecuteReaderSingle(Resource.GetDocumentDirectorySQL, DocumentDirectoryDto.Map, parameters: new[] {
+                    Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, query.ID, DbType.Int32)
                 });
             }, cancellationToken);
         }

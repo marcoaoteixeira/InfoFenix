@@ -32,8 +32,11 @@
             this.goToNextButton = new System.Windows.Forms.Button();
             this.goToPreviousButton = new System.Windows.Forms.Button();
             this.goToFirstButton = new System.Windows.Forms.Button();
-            this.webBrowserPanel = new System.Windows.Forms.Panel();
-            this.documentDocumentViewer = new Spire.DocViewer.Forms.DocDocumentViewer();
+            this.documentViewerPanel = new System.Windows.Forms.Panel();
+            this.spacerPanel = new System.Windows.Forms.Panel();
+            this.documentViewerRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.documentViewerContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.documentPathLabel = new System.Windows.Forms.Label();
             this.titlePanel.SuspendLayout();
@@ -42,7 +45,9 @@
             this.actionPanel.SuspendLayout();
             this.controlPanel.SuspendLayout();
             this.informationPanel.SuspendLayout();
-            this.webBrowserPanel.SuspendLayout();
+            this.documentViewerPanel.SuspendLayout();
+            this.spacerPanel.SuspendLayout();
+            this.documentViewerContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // titlePanel
@@ -70,7 +75,7 @@
             // contentPanel
             // 
             this.contentPanel.BackColor = System.Drawing.SystemColors.Control;
-            this.contentPanel.Controls.Add(this.webBrowserPanel);
+            this.contentPanel.Controls.Add(this.documentViewerPanel);
             this.contentPanel.Controls.Add(this.controlPanel);
             this.contentPanel.Padding = new System.Windows.Forms.Padding(0);
             this.contentPanel.Size = new System.Drawing.Size(634, 281);
@@ -194,29 +199,57 @@
             this.goToFirstButton.UseVisualStyleBackColor = true;
             this.goToFirstButton.Click += new System.EventHandler(this.firstResultButton_Click);
             // 
-            // webBrowserPanel
+            // documentViewerPanel
             // 
-            this.webBrowserPanel.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.webBrowserPanel.Controls.Add(this.documentDocumentViewer);
-            this.webBrowserPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowserPanel.Location = new System.Drawing.Point(0, 80);
-            this.webBrowserPanel.Name = "webBrowserPanel";
-            this.webBrowserPanel.Padding = new System.Windows.Forms.Padding(100, 10, 100, 10);
-            this.webBrowserPanel.Size = new System.Drawing.Size(634, 201);
-            this.webBrowserPanel.TabIndex = 2;
+            this.documentViewerPanel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.documentViewerPanel.Controls.Add(this.spacerPanel);
+            this.documentViewerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentViewerPanel.Location = new System.Drawing.Point(0, 80);
+            this.documentViewerPanel.Name = "documentViewerPanel";
+            this.documentViewerPanel.Padding = new System.Windows.Forms.Padding(100, 10, 100, 10);
+            this.documentViewerPanel.Size = new System.Drawing.Size(634, 201);
+            this.documentViewerPanel.TabIndex = 2;
             // 
-            // documentDocumentViewer
+            // spacerPanel
             // 
-            this.documentDocumentViewer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.documentDocumentViewer.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.documentDocumentViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.documentDocumentViewer.EnableHandTools = false;
-            this.documentDocumentViewer.Location = new System.Drawing.Point(100, 10);
-            this.documentDocumentViewer.Name = "documentDocumentViewer";
-            this.documentDocumentViewer.Size = new System.Drawing.Size(434, 181);
-            this.documentDocumentViewer.TabIndex = 0;
-            this.documentDocumentViewer.ToPdfParameterList = null;
-            this.documentDocumentViewer.ZoomMode = Spire.DocViewer.Forms.ZoomMode.Default;
+            this.spacerPanel.BackColor = System.Drawing.SystemColors.Window;
+            this.spacerPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.spacerPanel.Controls.Add(this.documentViewerRichTextBox);
+            this.spacerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spacerPanel.Location = new System.Drawing.Point(100, 10);
+            this.spacerPanel.Name = "spacerPanel";
+            this.spacerPanel.Padding = new System.Windows.Forms.Padding(15);
+            this.spacerPanel.Size = new System.Drawing.Size(434, 181);
+            this.spacerPanel.TabIndex = 0;
+            // 
+            // documentViewerRichTextBox
+            // 
+            this.documentViewerRichTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.documentViewerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.documentViewerRichTextBox.ContextMenuStrip = this.documentViewerContextMenuStrip;
+            this.documentViewerRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentViewerRichTextBox.Font = new System.Drawing.Font("Courier New", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.documentViewerRichTextBox.Location = new System.Drawing.Point(15, 15);
+            this.documentViewerRichTextBox.Name = "documentViewerRichTextBox";
+            this.documentViewerRichTextBox.ReadOnly = true;
+            this.documentViewerRichTextBox.Size = new System.Drawing.Size(400, 147);
+            this.documentViewerRichTextBox.TabIndex = 0;
+            this.documentViewerRichTextBox.Text = "";
+            // 
+            // documentViewerContextMenuStrip
+            // 
+            this.documentViewerContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem});
+            this.documentViewerContextMenuStrip.Name = "documentViewerContextMenuStrip";
+            this.documentViewerContextMenuStrip.Size = new System.Drawing.Size(110, 26);
+            // 
+            // copyTextToolStripMenuItem
+            // 
+            this.copyTextToolStripMenuItem.Image = global::InfoFenix.Client.Properties.Resources.copy_text_16x16;
+            this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
+            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.copyTextToolStripMenuItem.Text = "Copiar";
+            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
             // 
             // documentPathLabel
             // 
@@ -236,22 +269,28 @@
             this.Text = "Resultado da Pesquisa";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SearchResultForm_FormClosing);
             this.Load += new System.EventHandler(this.SearchResultForm_Load);
+            this.Controls.SetChildIndex(this.titlePanel, 0);
+            this.Controls.SetChildIndex(this.topSeparator, 0);
+            this.Controls.SetChildIndex(this.actionPanel, 0);
+            this.Controls.SetChildIndex(this.bottomSeparator, 0);
+            this.Controls.SetChildIndex(this.contentPanel, 0);
             this.titlePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
             this.contentPanel.ResumeLayout(false);
             this.actionPanel.ResumeLayout(false);
             this.controlPanel.ResumeLayout(false);
             this.informationPanel.ResumeLayout(false);
-            this.webBrowserPanel.ResumeLayout(false);
+            this.documentViewerPanel.ResumeLayout(false);
+            this.spacerPanel.ResumeLayout(false);
+            this.documentViewerContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel webBrowserPanel;
+        private System.Windows.Forms.Panel documentViewerPanel;
         private System.Windows.Forms.Panel controlPanel;
-        private Spire.DocViewer.Forms.DocDocumentViewer documentDocumentViewer;
         private System.Windows.Forms.Button goToFirstButton;
         private System.Windows.Forms.Button copyTextButton;
         private System.Windows.Forms.Button goToLastButton;
@@ -261,5 +300,9 @@
         private System.Windows.Forms.Label informationLabel;
         private System.Windows.Forms.ToolTip mainToolTip;
         private System.Windows.Forms.Label documentPathLabel;
+        private System.Windows.Forms.Panel spacerPanel;
+        private System.Windows.Forms.RichTextBox documentViewerRichTextBox;
+        private System.Windows.Forms.ContextMenuStrip documentViewerContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem;
     }
 }

@@ -6,8 +6,9 @@ using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
-using InfoFenix.Core.Entities;
-using InfoFenix.Core.Services;
+using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Dto;
+using InfoFenix.Core.Queries;
 
 namespace InfoFenix.Client.Views {
 
@@ -31,8 +32,8 @@ namespace InfoFenix.Client.Views {
 
         #region Private Read-Only Fields
 
-        private readonly IDocumentDirectoryService _documentDirectoryService;
         private readonly IFormManager _formManager;
+        private readonly IMediator _mediator;
         private readonly ProgressiveTaskExecutor _progressiveTaskExecutor;
 
         #endregion Private Read-Only Fields
@@ -40,30 +41,30 @@ namespace InfoFenix.Client.Views {
         #region Private Fields
 
         private int _currentDocumentDirectory;
-        private IEnumerable<DocumentEntity> _currentDocuments = Enumerable.Empty<DocumentEntity>();
+        private IEnumerable<DocumentDto> _currentDocuments = Enumerable.Empty<DocumentDto>();
 
         #endregion Private Fields
 
         #region Private Properties
 
-        private IEnumerable<DocumentEntity> _currentDocumentDirectoryItems;
+        private IEnumerable<DocumentDto> _currentDocumentDirectoryItems;
 
-        private IEnumerable<DocumentEntity> CurrentDocumentDirectoryItems {
-            get { return _currentDocumentDirectoryItems ?? Enumerable.Empty<DocumentEntity>(); }
-            set { _currentDocumentDirectoryItems = value ?? Enumerable.Empty<DocumentEntity>(); }
+        private IEnumerable<DocumentDto> CurrentDocumentDirectoryItems {
+            get { return _currentDocumentDirectoryItems ?? Enumerable.Empty<DocumentDto>(); }
+            set { _currentDocumentDirectoryItems = value ?? Enumerable.Empty<DocumentDto>(); }
         }
 
         #endregion Private Properties
 
         #region Public Constructors
 
-        public ManageDocumentDirectoryForm(IDocumentDirectoryService documentDirectoryService, IFormManager formManager, ProgressiveTaskExecutor progressiveTaskExecutor) {
-            Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
+        public ManageDocumentDirectoryForm(IFormManager formManager, IMediator mediator, ProgressiveTaskExecutor progressiveTaskExecutor) {
             Prevent.ParameterNull(formManager, nameof(formManager));
+            Prevent.ParameterNull(mediator, nameof(mediator));
             Prevent.ParameterNull(progressiveTaskExecutor, nameof(progressiveTaskExecutor));
 
-            _documentDirectoryService = documentDirectoryService;
             _formManager = formManager;
+            _mediator = mediator;
             _progressiveTaskExecutor = progressiveTaskExecutor;
 
             InitializeComponent();
@@ -78,10 +79,10 @@ namespace InfoFenix.Client.Views {
             documentListView.LargeImageList = manageDocumentDirectoryImageList;
             documentListView.SmallImageList = manageDocumentDirectoryImageList;
 
-            _documentDirectoryService.List().Each(InsertTreeViewEntry);
+            _mediator.Query(new ListDocumentDirectoriesQuery()).Each(InsertTreeViewEntry);
         }
 
-        private void InsertTreeViewEntry(DocumentDirectoryEntity documentDirectory) {
+        private void InsertTreeViewEntry(DocumentDirectoryDto documentDirectory) {
             var currentNode = documentDirectoryTreeView.Nodes.Find(key: documentDirectory.Code, searchAllChildren: false).SingleOrDefault();
 
             // Insert or update node
@@ -105,16 +106,16 @@ namespace InfoFenix.Client.Views {
             documentDirectoryTreeView.Nodes.Insert(index, currentNode);
         }
 
-        private void FillListView(DocumentDirectoryEntity documentDirectory) {
-            if (_currentDocumentDirectory == documentDirectory.ID) { return; }
+        private void FillListView(DocumentDirectoryDto documentDirectory) {
+            if (_currentDocumentDirectory == documentDirectory.DocumentDirectoryID) { return; }
 
-            _currentDocumentDirectory = documentDirectory.ID;
-            _currentDocuments = _documentDirectoryService.GetDocuments(documentDirectory.ID);
+            _currentDocumentDirectory = documentDirectory.DocumentDirectoryID;
+            _currentDocuments = _mediator.Query(new ListDocumentsByDocumentDirectoryQuery { DocumentDirectoryID = documentDirectory.DocumentDirectoryID });
 
             BindListView(_currentDocuments);
         }
 
-        private void BindListView(IEnumerable<DocumentEntity> documents) {
+        private void BindListView(IEnumerable<DocumentDto> documents) {
             documentListView.Clear();
 
             foreach (var document in documents) {
@@ -136,7 +137,7 @@ namespace InfoFenix.Client.Views {
             Cursor = Cursors.Default;
         }
 
-        private void InsertListViewEntry(DocumentEntity document) {
+        private void InsertListViewEntry(DocumentDto document) {
             var name = Path.GetFileNameWithoutExtension(document.FileName);
             var currentItem = documentListView.Items.Find(key: name, searchAllSubItems: false).SingleOrDefault();
             var toolTip = document.Indexed ? "Indexado" : "Não indexado";
@@ -162,14 +163,14 @@ namespace InfoFenix.Client.Views {
             documentListView.Items.Insert(index, currentItem);
         }
 
-        private int GetImageListIndex(DocumentEntity document) {
+        private int GetImageListIndex(DocumentDto document) {
             var extension = Path.GetExtension(document.Path).ToLower();
             return document.Indexed
                 ? extension == "docx" ? WORD_DOCX_BLUE_ICON_INDEX : WORD_DOC_BLUE_ICON_INDEX
                 : extension == "doc" ? WORD_DOCX_GRAY_ICON_INDEX : WORD_DOC_GRAY_ICON_INDEX;
         }
 
-        private void EditDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
+        private void EditDocumentDirectory(DocumentDirectoryDto documentDirectory) {
             using (var dialog = _formManager.Get<DocumentDirectoryForm>()) {
                 dialog.ViewModel = documentDirectory;
                 if (dialog.ShowDialog() != DialogResult.OK) { return; }
@@ -178,26 +179,26 @@ namespace InfoFenix.Client.Views {
             }
         }
 
-        private void IndexDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.IndexAsync(documentDirectory.ID, cancellationToken));
+        private void IndexDocumentDirectory(DocumentDirectoryDto documentDirectory) {
+            //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.IndexAsync(documentDirectory.ID, cancellationToken));
         }
 
-        private void StartWatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _progressiveTaskExecutor.Execute(() => _documentDirectoryService.StartWatchForModification(documentDirectory.ID));
+        private void StartWatchDocumentDirectory(DocumentDirectoryDto documentDirectory) {
+            //_progressiveTaskExecutor.Execute(() => _mediator.StartWatchForModification(documentDirectory.ID));
         }
 
-        private void StopWatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _progressiveTaskExecutor.Execute(() => _documentDirectoryService.StopWatchForModification(documentDirectory.ID));
+        private void StopWatchDocumentDirectory(DocumentDirectoryDto documentDirectory) {
+            //_progressiveTaskExecutor.Execute(() => _mediator.StopWatchForModification(documentDirectory.ID));
         }
 
-        private void RemoveDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _progressiveTaskExecutor.Execute(() => _documentDirectoryService.Remove(documentDirectory.ID));
+        private void RemoveDocumentDirectory(DocumentDirectoryDto documentDirectory) {
+            //_progressiveTaskExecutor.Execute(() => _mediator.Remove(documentDirectory.ID));
         }
 
-        private void IndexDocument(DocumentEntity document) {
+        private void IndexDocument(DocumentDto document) {
         }
 
-        private void RemoveDocument(DocumentEntity document) {
+        private void RemoveDocument(DocumentDto document) {
         }
 
         #endregion Private Methods
@@ -232,7 +233,7 @@ namespace InfoFenix.Client.Views {
             if (sender is ToolStripMenuItem menu) {
                 var node = documentDirectoryTreeView.SelectedNode;
                 if (node == null) { return; }
-                var documentDirectory = node.Tag as DocumentDirectoryEntity;
+                var documentDirectory = node.Tag as DocumentDirectoryDto;
 
                 switch ((string)menu.Tag) {
                     case CONTEXT_MENU_TAG_EDIT:
@@ -262,7 +263,7 @@ namespace InfoFenix.Client.Views {
             if (sender is ToolStripMenuItem menu) {
                 var item = documentListView.SelectedItems.OfType<ListViewItem>().SingleOrDefault();
                 if (item == null) { return; }
-                var document = item.Tag as DocumentEntity;
+                var document = item.Tag as DocumentDto;
 
                 switch ((string)menu.Tag) {
                     case CONTEXT_MENU_TAG_INDEX:
@@ -277,7 +278,7 @@ namespace InfoFenix.Client.Views {
         }
 
         private void documentDirectoryTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e) {
-            if (e.Node.Tag is DocumentDirectoryEntity documentDirectory) {
+            if (e.Node.Tag is DocumentDirectoryDto documentDirectory) {
                 FillListView(documentDirectory);
             }
         }

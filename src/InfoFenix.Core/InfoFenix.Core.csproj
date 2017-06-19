@@ -85,8 +85,8 @@
     <Compile Include="Bootstrap\ActionBase.cs" />
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
-    <Compile Include="Bootstrap\Actions\005_IndexDocumentDirectoriesAction.cs" />
-    <Compile Include="Bootstrap\Actions\006_WatchDocumentDirectoriesAction.cs" />
+    <Compile Include="Bootstrap\Actions\999_IndexDocumentDirectoriesAction.cs" />
+    <Compile Include="Bootstrap\Actions\005_WatchDocumentDirectoriesAction.cs" />
     <Compile Include="Bootstrap\Actions\004_InitializeLuceneSearchIndexesAction.cs" />
     <Compile Include="Bootstrap\Actions\003_InitializeServicesAction.cs" />
     <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
@@ -126,8 +126,6 @@
     <Compile Include="Dto\DocumentIndexDto.cs" />
     <Compile Include="Dto\IndexDto.cs" />
     <Compile Include="Dto\SearchDto.cs" />
-    <Compile Include="Entities\DocumentDirectoryEntity.cs" />
-    <Compile Include="Entities\DocumentEntity.cs" />
     <Compile Include="Expando.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
@@ -198,11 +196,13 @@
     <Compile Include="PubSub\Impl\PublisherSubscriber.cs" />
     <Compile Include="PubSub\PublisherSubscriberExtension.cs" />
     <Compile Include="PubSub\Impl\Subscription.cs" />
+    <Compile Include="Queries\DocumentDirectoryPath.cs" />
     <Compile Include="Queries\GetDocumentByPath.cs" />
     <Compile Include="Queries\GetDocument.cs" />
     <Compile Include="Queries\GetDocumentDirectoryByPath.cs" />
     <Compile Include="Queries\GetDocumentDirectory.cs" />
     <Compile Include="Queries\ListDocumentDirectories.cs" />
+    <Compile Include="Queries\ListDocumentsByDocumentDirectoryFromDisk.cs" />
     <Compile Include="Queries\ListDocumentsByDocumentDirectory.cs" />
     <Compile Include="Queries\SearchDocumentIndex.cs" />
     <Compile Include="Resources\Resources.Designer.cs">
@@ -248,18 +248,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\SQLs\CreateSchema.sql" />
-    <Content Include="Resources\SQLs\DocumentDirectory\GetDocumentDirectoryByPath.sql" />
-    <Content Include="Resources\SQLs\DocumentDirectory\GetDocumentDirectory.sql" />
-    <Content Include="Resources\SQLs\DocumentDirectory\ListDocumentDirectories.sql" />
-    <Content Include="Resources\SQLs\DocumentDirectory\RemoveDocumentDirectory.sql" />
-    <Content Include="Resources\SQLs\DocumentDirectory\SaveDocumentDirectory.sql" />
-    <Content Include="Resources\SQLs\Document\GetDocumentByPath.sql" />
-    <Content Include="Resources\SQLs\Document\GetDocument.sql" />
-    <Content Include="Resources\SQLs\Document\ListDocumentsByDocumentDirectory.sql" />
-    <Content Include="Resources\SQLs\Document\RemoveDocument.sql" />
-    <Content Include="Resources\SQLs\Document\SetDocumentIndex.sql" />
-    <Content Include="Resources\SQLs\Document\SaveDocument.sql" />
+    <Content Include="Resources\SQLs\CreateSchemaSQL.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\GetDocumentDirectoryByPathSQL.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\GetDocumentDirectorySQL.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\ListDocumentDirectoriesSQL.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\RemoveDocumentDirectorySQL.sql" />
+    <Content Include="Resources\SQLs\DocumentDirectory\SaveDocumentDirectorySQL.sql" />
+    <Content Include="Resources\SQLs\Document\GetDocumentByPathSQL.sql" />
+    <Content Include="Resources\SQLs\Document\GetDocumentSQL.sql" />
+    <Content Include="Resources\SQLs\Document\ListDocumentsByDocumentDirectorySQL.sql" />
+    <Content Include="Resources\SQLs\Document\RemoveDocumentSQL.sql" />
+    <Content Include="Resources\SQLs\Document\SetDocumentIndexSQL.sql" />
+    <Content Include="Resources\SQLs\Document\SaveDocumentSQL.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

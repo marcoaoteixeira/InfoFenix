@@ -1,6 +1,6 @@
 ﻿using System.Data.SQLite;
 using System.IO;
-using SQL = InfoFenix.Core.Resources.Resources;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
@@ -35,7 +35,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
                 using (var connection = new SQLiteConnection($"Data Source={databaseFilePath}; Version=3;")) {
                     connection.Open();
                     using (var command = new SQLiteCommand(connection)) {
-                        command.CommandText = SQL.CreateSchema;
+                        command.CommandText = Resource.CreateSchemaSQL;
                         command.ExecuteNonQuery();
                     }
                 }

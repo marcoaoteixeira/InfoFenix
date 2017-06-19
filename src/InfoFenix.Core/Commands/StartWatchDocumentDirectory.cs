@@ -5,6 +5,7 @@ using InfoFenix.Core.Dto;
 using InfoFenix.Core.IO;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -52,29 +53,28 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<StartWatchDocumentDirectoryCommand> Members
 
         public Task HandleAsync(StartWatchDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var actualStep = 0;
-            var totalSteps = 1;
+            var info = new ProgressiveTaskContinuationInfo {
+                Log = Log,
+                TotalSteps = 1
+            };
 
             return Task.Run(() => {
                 _publisherSubscriber.ProgressiveTaskStartAsync(
-                    title: Resources.Resources.StartWatchDocumentDirectory_ProgressiveTaskStart_Title,
-                    actualStep: actualStep,
-                    totalSteps: totalSteps
+                    title: Resource.StartWatchDocumentDirectory_ProgressiveTaskStart_Title,
+                    actualStep: info.ActualStep,
+                    totalSteps: info.TotalSteps
                 );
 
                 _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                    message: string.Format(Resources.Resources.StartWatchDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
-                    actualStep: actualStep,
-                    totalSteps: totalSteps
+                    message: string.Format(Resource.StartWatchDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
+                    actualStep: ++info.ActualStep,
+                    totalSteps: info.TotalSteps
                 );
 
+                cancellationToken.ThrowIfCancellationRequested();
                 _directoryWatcherManager.StartWatch(command.DocumentDirectory.Path);
             }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
-                ActualStep = actualStep,
-                TotalSteps = totalSteps,
-                Log = Log
-            });
+            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
         }
 
         #endregion ICommandHandler<StartWatchDocumentDirectoryCommand> Members

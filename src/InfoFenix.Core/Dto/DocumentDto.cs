@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using InfoFenix.Core.Entities;
+using InfoFenix.Core.Data;
 
 namespace InfoFenix.Core.Dto {
 
@@ -16,7 +16,7 @@ namespace InfoFenix.Core.Dto {
         public byte[] Payload { get; set; }
 
         public string FileName {
-            get { return Path != null ? System.IO.Path.GetFileNameWithoutExtension(Path) : null; }
+            get { return Path != null ? System.IO.Path.GetFileName(Path) : null; }
         }
 
         public DocumentDirectoryDto DocumentDirectory { get; set; }
@@ -25,40 +25,40 @@ namespace InfoFenix.Core.Dto {
 
         #region Public Static Methods
 
-        public static DocumentDto Map(DocumentEntity entity) {
-            return new DocumentDto {
-                DocumentID = entity.ID,
-                Path = entity.Path,
-                LastWriteTime = entity.LastWriteTime,
-                Code = entity.Code,
-                Indexed = entity.Indexed,
-                Payload = entity.Payload,
-                DocumentDirectory = new DocumentDirectoryDto {
-                    DocumentDirectoryID = entity.DocumentDirectoryID
-                }
-            };
-        }
-
         public static DocumentDto Map(IDataReader reader) {
-            return Map(DocumentEntity.MapFromDataReader(reader));
+            return new DocumentDto {
+                DocumentID = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.DocumentID),
+                DocumentDirectory = new DocumentDirectoryDto {
+                    DocumentDirectoryID = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.DocumentDirectoryID)
+                },
+                Path = reader.GetStringOrDefault(Common.DatabaseSchema.Documents.Path),
+                Code = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.Code),
+                LastWriteTime = reader.GetDateTimeOrDefault(Common.DatabaseSchema.Documents.LastWriteTime, DateTime.MinValue),
+                Indexed = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.Indexed) > 0,
+                Payload = reader.GetBlobOrDefault(Common.DatabaseSchema.Documents.Payload)
+            };
         }
 
         #endregion Public Static Methods
 
         #region Public Methods
 
-        public DocumentEntity Map() {
-            return new DocumentEntity {
-                ID = DocumentID,
-                Path = Path,
-                LastWriteTime = LastWriteTime,
-                Code = Code,
-                Indexed = Indexed,
-                Payload = Payload,
-                DocumentDirectoryID = DocumentDirectory != null ? DocumentDirectory.DocumentDirectoryID : 0
-            };
+        public bool Equals(DocumentDto obj) {
+            return obj != null && obj.DocumentID == DocumentID;
         }
 
         #endregion Public Methods
+
+        #region Public Override Methods
+
+        public override bool Equals(object obj) {
+            return Equals(obj as DocumentDto);
+        }
+
+        public override int GetHashCode() {
+            return DocumentID.GetHashCode();
+        }
+
+        #endregion Public Override Methods
     }
 }

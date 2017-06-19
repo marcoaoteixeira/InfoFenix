@@ -8,7 +8,9 @@ namespace InfoFenix.Client.Code {
 
         internal static void SafeCall<TControl>(this TControl source, MethodInvoker action) where TControl : Control {
             if (source == null) { return; }
-            if (source.InvokeRequired) { source.Invoke(action); } else { action(); }
+            if (source.IsDisposed) { return; }
+            if (source.InvokeRequired) { source.Invoke(action); }
+            else { action(); }
         }
 
         #endregion Internal Static Methods

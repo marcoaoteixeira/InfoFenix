@@ -4,10 +4,11 @@ using System.Linq;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Core;
-using InfoFenix.Core.Entities;
+using InfoFenix.Core.Commands;
+using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Infrastructure;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.Services;
 
 namespace InfoFenix.Client.Views {
 
@@ -15,7 +16,7 @@ namespace InfoFenix.Client.Views {
 
         #region Private Read-Only Fields
 
-        private readonly IDocumentDirectoryService _documentDirectoryService;
+        private readonly IMediator _mediator;
         private readonly ProgressiveTaskExecutor _progressiveTaskExecutor;
 
         #endregion Private Read-Only Fields
@@ -29,17 +30,17 @@ namespace InfoFenix.Client.Views {
             set { _log = value ?? NullLogger.Instance; }
         }
 
-        public DocumentDirectoryEntity ViewModel { get; set; }
+        public DocumentDirectoryDto ViewModel { get; set; }
 
         #endregion Public Properties
 
         #region Public Constructors
 
-        public DocumentDirectoryForm(IDocumentDirectoryService documentDirectoryService, ProgressiveTaskExecutor progressiveTaskExecutor) {
-            Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
+        public DocumentDirectoryForm(IMediator mediator, ProgressiveTaskExecutor progressiveTaskExecutor) {
+            Prevent.ParameterNull(mediator, nameof(mediator));
             Prevent.ParameterNull(progressiveTaskExecutor, nameof(progressiveTaskExecutor));
 
-            _documentDirectoryService = documentDirectoryService;
+            _mediator = mediator;
             _progressiveTaskExecutor = progressiveTaskExecutor;
 
             InitializeComponent();
@@ -50,7 +51,7 @@ namespace InfoFenix.Client.Views {
         #region Private Methods
 
         private void Initialize() {
-            ViewModel = ViewModel ?? new DocumentDirectoryEntity();
+            ViewModel = ViewModel ?? new DocumentDirectoryDto();
         }
 
         private void UpdateViewModel() {
@@ -69,18 +70,18 @@ namespace InfoFenix.Client.Views {
         }
 
         private void SaveDocumentDirectory() {
-            _progressiveTaskExecutor.Execute(() => _documentDirectoryService.Save(ViewModel));
+            _progressiveTaskExecutor.Execute((cancellationToken) => _mediator.CommandAsync(new SaveDocumentDirectoryCommand { DocumentDirectory = ViewModel }, cancellationToken));
         }
 
         private void SaveDocumentsInsideDirectoryDocuments() {
             if (Directory.GetFiles(ViewModel.Path).Length > 0) {
-                _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.SaveDocumentsInsideDocumentDirectoryAsync(ViewModel.ID, cancellationToken));
+                //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.SaveDocumentsInsideDocumentDirectoryAsync(ViewModel.ID, cancellationToken));
             }
         }
 
         private void CleanDocumentDirectory() {
             if (Directory.GetFiles(ViewModel.Path).Length > 0) {
-                _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.CleanAsync(ViewModel.ID, cancellationToken));
+                //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.CleanAsync(ViewModel.ID, cancellationToken));
             }
         }
 
@@ -91,14 +92,14 @@ namespace InfoFenix.Client.Views {
             }
         }
 
-        private void IndexDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
+        private void IndexDocumentDirectory(DocumentDirectoryDto documentDirectory) {
             if (Directory.GetFiles(ViewModel.Path).Length > 0) {
-                _progressiveTaskExecutor.Execute((cancellationToken) => _documentDirectoryService.IndexAsync(ViewModel.ID, cancellationToken));
+                //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.IndexAsync(ViewModel.ID, cancellationToken));
             }
         }
 
-        private void WatchDocumentDirectory(DocumentDirectoryEntity documentDirectory) {
-            _progressiveTaskExecutor.Execute(() => _documentDirectoryService.StartWatchForModification(documentDirectory.ID));
+        private void WatchDocumentDirectory(DocumentDirectoryDto documentDirectory) {
+            //_progressiveTaskExecutor.Execute(() => _mediator.StartWatchForModification(documentDirectory.ID));
         }
 
         #endregion Private Methods

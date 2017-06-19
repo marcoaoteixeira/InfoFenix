@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using InfoFenix.Client.Models;
 using InfoFenix.Client.Views.Shared;
-using InfoFenix.Core;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.Office;
-using Spire.Doc;
 using Spire.DocViewer.Forms;
+using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views {
 
@@ -31,7 +29,7 @@ namespace InfoFenix.Client.Views {
 
         public string[] SearchTerms { get; set; }
 
-        public SearchDocumentDirectoryViewModel SearchResult { get; set; }
+        public IndexDto SearchResult { get; set; }
 
         #endregion Public Properties
 
@@ -41,34 +39,6 @@ namespace InfoFenix.Client.Views {
             _wordApplication = wordApplication;
 
             InitializeComponent();
-
-            /*
-            SearchTerms = new[] { "AÇÃO" };
-            SearchResult = new SearchDocumentDirectoryViewModel {
-                Documents = new List<SearchDocumentViewModel> {
-                    new SearchDocumentViewModel {
-                        Path = @"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8700.doc",
-                        Payload = File.ReadAllBytes(@"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8700.doc")
-                    },
-                    new SearchDocumentViewModel {
-                        Path=@"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8702.doc",
-                        Payload = File.ReadAllBytes(@"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8702.doc")
-                    },
-                    new SearchDocumentViewModel {
-                        Path=@"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8703.doc",
-                        Payload = File.ReadAllBytes(@"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8703.doc")
-                    },
-                    new SearchDocumentViewModel {
-                        Path = @"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8705.doc",
-                        Payload = File.ReadAllBytes(@"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8705.docx")
-                    },
-                    new SearchDocumentViewModel {
-                        Path = @"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8706.doc",
-                        Payload = File.ReadAllBytes(@"C:\Workspace\VS2017\InfoFenix\resources\votos\DrRenatoSartorelli\512\256\128\rs8706.doc")
-                    }
-                }
-            };
-            */
         }
 
         #endregion Public Constructors
@@ -78,9 +48,6 @@ namespace InfoFenix.Client.Views {
         private void Initialize() {
             informationLabel.Text = string.Empty;
 
-            documentDocumentViewer.ZoomMode = ZoomMode.FitWidth;
-            documentDocumentViewer.EnableHandTools = true;
-
             ShowDocument(0); // Show first document.
         }
 
@@ -89,21 +56,21 @@ namespace InfoFenix.Client.Views {
 
             var document = SearchResult.Documents[index];
 
-            informationLabel.Text = $"Documento: {index + 1} de {SearchResult.Documents.Count}";
-            documentPathLabel.Text = $"Nome do documento: {Path.GetFileNameWithoutExtension(document.Path)}";
+            documentViewerRichTextBox.Text = document.Content;
 
-            using (var inputStream = new MemoryStream(document.Payload))
-            using (var outputStream = new FileStream(_tempFilePath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite)) {
-                if (!SearchTerms.IsNullOrEmpty()) {
-                    using (var doc = _wordApplication.Open(inputStream)) {
-                        _currentText = doc.Text;
+            informationLabel.Text = string.Format(Resource.SearchResultForm_InformationLabel, index + 1, SearchResult.Documents.Count);
+            documentPathLabel.Text = string.Format(Resource.SearchResultForm_DocumentPathLabel, document.FileName);
+        }
 
-                        doc.HighlightAsync(outputStream, SearchTerms);
-                    }
-                }
-            }
+        private void CopyTextToClipboard(string text) {
+            if (string.IsNullOrWhiteSpace(text)) { return; }
 
-            documentDocumentViewer.LoadFromFile(_tempFilePath, FileFormat.Doc);
+            Clipboard.SetText(text);
+
+            MessageBox.Show(Resource.TextCopiedToClipboard
+                , Resource.Copy
+                , MessageBoxButtons.OK
+                , MessageBoxIcon.Information);
         }
 
         #endregion Private Methods
@@ -112,6 +79,8 @@ namespace InfoFenix.Client.Views {
 
         private void SearchResultForm_Load(object sender, EventArgs e) {
             Initialize();
+
+            documentViewerRichTextBox.Text = "It works!";
         }
 
         private void SearchResultForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -168,14 +137,15 @@ namespace InfoFenix.Client.Views {
 
             if (string.IsNullOrWhiteSpace(_currentText)) { return; }
 
-            Clipboard.SetText(_currentText);
+            CopyTextToClipboard(_currentText);
+        }
 
-            MessageBox.Show("Texto selecionado foi copiado para a área de transferência"
-                , "Copiar"
-                , MessageBoxButtons.OK
-                , MessageBoxIcon.Information);
+        private void copyTextToolStripMenuItem_Click(object sender, EventArgs e) {
+            CopyTextToClipboard(documentViewerRichTextBox.SelectedText);
         }
 
         #endregion Event Handlers
+
+
     }
 }

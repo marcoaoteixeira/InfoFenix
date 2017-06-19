@@ -136,20 +136,20 @@
     <value>Limpar Diretório de Documentos</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CreateSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\createschema.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="CreateSchemaSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\createschemasql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\getdocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="GetDocumentByPathSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\getdocumentbypathsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetDocumentByPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\getdocumentbypath.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="GetDocumentDirectoryByPathSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\documentdirectory\getdocumentdirectorybypathsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\getdocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="GetDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\documentdirectory\getdocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetDocumentDirectoryByPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\getdocumentdirectorybypath.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="GetDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\getdocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="IndexDocumentCollection_ProgressiveTaskPerformStep_Message" xml:space="preserve">
     <value>Indexando documento: {0}</value>
@@ -157,11 +157,11 @@
   <data name="IndexDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
     <value>Indexar Documentos</value>
   </data>
-  <data name="ListDocumentDirectories" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\listdocumentdirectories.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="ListDocumentDirectoriesSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\documentdirectory\listdocumentdirectoriessql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="ListDocumentsByDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\listdocumentsbydocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="ListDocumentsByDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\listdocumentsbydocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="ProgressiveTaskCancelNotification_Message" xml:space="preserve">
     <value>Tarefa cancelada!</value>
@@ -175,9 +175,6 @@
   <data name="ProgressiveTaskStartNotification_Message" xml:space="preserve">
     <value>Iniciando tarefa...</value>
   </data>
-  <data name="RemoveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\removedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="RemoveDocumentCollection_ProgressiveTaskPerformStep_Database_Message" xml:space="preserve">
     <value>Removendo documento da base de dados: {0}</value>
   </data>
@@ -187,8 +184,8 @@
   <data name="RemoveDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
     <value>Remover Documentos</value>
   </data>
-  <data name="RemoveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\removedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="RemoveDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\documentdirectory\removedocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="RemoveDocumentDirectory_ProgressiveTaskPerformStep_Database_Message" xml:space="preserve">
     <value>Removendo diretório de documentos "{0}" da base de dados.</value>
@@ -202,6 +199,9 @@
   <data name="RemoveDocumentDirectory_ProgressiveTask_Title" xml:space="preserve">
     <value>Remover Diretório de Documentos</value>
   </data>
+  <data name="RemoveDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\removedocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="RemoveDocument_ProgressiveTaskPerformStep_Database_Message" xml:space="preserve">
     <value>Removendo documento da base de dados: {0}</value>
   </data>
@@ -211,17 +211,14 @@
   <data name="RemoveDocument_ProgressiveTaskStart_Title" xml:space="preserve">
     <value>Remover Documento</value>
   </data>
-  <data name="SaveDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\savedocument.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="SaveDocumentCollection_ProgressiveTaskPerformStep_Message" xml:space="preserve">
     <value>Salvando documento: {0}</value>
   </data>
   <data name="SaveDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
     <value>Salvar Documentos</value>
   </data>
-  <data name="SaveDocumentDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\savedocumentdirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="SaveDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\documentdirectory\savedocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="SaveDocumentDirectory_ProgressiveTaskPerformStep_Message" xml:space="preserve">
     <value>Salvando diretório de documentos: {0}</value>
@@ -229,14 +226,26 @@
   <data name="SaveDocumentDirectory_ProgressiveTaskStart_Title" xml:space="preserve">
     <value>Salvar Diretório de Documentos</value>
   </data>
+  <data name="SaveDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\savedocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="SaveDocument_ProgressiveTaskPerformStep_Message" xml:space="preserve">
     <value>Salvando documento: {0}</value>
   </data>
   <data name="SaveDocument_ProgressiveTaskStart_Title" xml:space="preserve">
     <value>Salvar Documento</value>
   </data>
-  <data name="SetDocumentIndex" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\setdocumentindex.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="SearchDocumentIndex_ProgressiveTaskPerformStep_Build_Message" xml:space="preserve">
+    <value>Construíndo pesquisa...</value>
+  </data>
+  <data name="SearchDocumentIndex_ProgressiveTaskPerformStep_Search_Message" xml:space="preserve">
+    <value>Pesquisando índice: {0}</value>
+  </data>
+  <data name="SearchDocumentIndex_ProgressiveTaskStart_Title" xml:space="preserve">
+    <value>Pesquisar Índices</value>
+  </data>
+  <data name="SetDocumentIndexSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\setdocumentindexsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="StartWatchDocumentDirectory_ProgressiveTaskPerformStep_Message" xml:space="preserve">
     <value>Observando diretório de documentos: {0}</value>

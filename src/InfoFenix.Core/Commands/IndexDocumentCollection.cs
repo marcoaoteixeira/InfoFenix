@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
-using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -63,17 +63,6 @@ namespace InfoFenix.Core.Commands {
 
         #region Private Methods
 
-        private void StartNotification(int totalSteps) {
-            
-        }
-
-        private void PerformStepNotification(int actualStep, int totalSteps) {
-            _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                actualStep: actualStep,
-                totalSteps: totalSteps
-            );
-        }
-
         private void Flush(IIndex index, int batchSize, int step, IList<IDocumentIndex> documents, bool force = false) {
             if (step % batchSize == 0 || force) {
                 index.StoreDocuments(documents.ToArray());
@@ -87,11 +76,10 @@ namespace InfoFenix.Core.Commands {
         private void MarkAsIndexed(IEnumerable<IDocumentIndex> documents) {
             using (var transaction = _database.Connection.BeginTransaction()) {
                 foreach (var document in documents) {
-                    _database.ExecuteNonQuery(Resources.Resources.SetDocumentIndex, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentEntity.ID), int.Parse(document.DocumentID), DbType.Int32)
+                    _database.ExecuteNonQuery(Resource.SetDocumentIndexSQL, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, int.Parse(document.DocumentID), DbType.Int32)
                     });
                 }
-
                 transaction.Commit();
             }
         }
@@ -101,42 +89,39 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<IndexDocumentCollectionCommand> Members
 
         public Task HandleAsync(IndexDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var actualStep = 0;
-            var totalDocuments = command.Documents.Count;
+            var info = new ProgressiveTaskContinuationInfo {
+                Log = Log,
+                TotalSteps = command.Documents.Count
+            };
 
             return Task.Run(() => {
                 _publisherSubscriber.ProgressiveTaskStartAsync(
-                    title: Resources.Resources.IndexDocumentCollection_ProgressiveTaskStart_Title,
-                    actualStep: actualStep,
-                    totalSteps: totalDocuments
+                    title: Resource.IndexDocumentCollection_ProgressiveTaskStart_Title,
+                    actualStep: info.ActualStep,
+                    totalSteps: info.TotalSteps
                 );
 
                 // Gets the Lucene Index
                 var index = _indexProvider.GetOrCreate(command.IndexName);
                 var documentIndexList = new List<IDocumentIndex>();
                 foreach (var document in command.Documents) {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                        message: string.Format(Resources.Resources.IndexDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
-                        actualStep: ++actualStep,
-                        totalSteps: totalDocuments
+                        message: string.Format(Resource.IndexDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
+                        actualStep: ++info.ActualStep,
+                        totalSteps: info.TotalSteps
                     );
 
                     documentIndexList.Add(document.Map());
 
-                    Flush(index, command.BatchSize, actualStep, documentIndexList);
-
-                    // Exits the foreach loops if task is cancelled.
-                    if (cancellationToken.IsCancellationRequested) { break; }
+                    Flush(index, command.BatchSize, info.ActualStep, documentIndexList);
                 }
 
                 // Flush to Lucene Index the last documents.
-                Flush(index, command.BatchSize, actualStep, documentIndexList, force: true);
+                Flush(index, command.BatchSize, info.ActualStep, documentIndexList, force: true);
             }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
-                ActualStep = actualStep,
-                TotalSteps = totalDocuments,
-                Log = Log
-            });
+            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
         }
 
         #endregion ICommandHandler<IndexDocumentCollectionCommand> Members

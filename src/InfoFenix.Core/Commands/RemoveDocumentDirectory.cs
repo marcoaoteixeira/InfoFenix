@@ -4,13 +4,10 @@ using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
-using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
-using SQL = InfoFenix.Core.Resources.Resources;
-
-using Strings = InfoFenix.Core.Resources.Resources;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -61,46 +58,43 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<RemoveDocumentDirectoryCommand> Members
 
         public Task HandleAsync(RemoveDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var actualStep = 0;
-            var totalSteps = 2;
+            var info = new ProgressiveTaskContinuationInfo {
+                Log = Log,
+                TotalSteps = 2
+            };
 
             return Task.Run(() => {
                 _publisherSubscriber.ProgressiveTaskStartAsync(
-                    title: Strings.RemoveDocumentDirectory_ProgressiveTask_Title,
-                    actualStep: actualStep,
-                    totalSteps: totalSteps
+                    title: Resource.RemoveDocumentDirectory_ProgressiveTask_Title,
+                    actualStep: info.ActualStep,
+                    totalSteps: info.TotalSteps
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
                     _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                        message: string.Format(Strings.RemoveDocumentDirectory_ProgressiveTaskPerformStep_Database_Message, command.DocumentDirectory.Code),
-                        actualStep: ++actualStep,
-                        totalSteps: totalSteps
+                        message: string.Format(Resource.RemoveDocumentDirectory_ProgressiveTaskPerformStep_Database_Message, command.DocumentDirectory.Code),
+                        actualStep: ++info.ActualStep,
+                        totalSteps: info.TotalSteps
                     );
 
-                    _database.ExecuteScalar(SQL.RemoveDocumentDirectory, parameters: new[] {
-                        Parameter.CreateInputParameter(nameof(DocumentDirectoryEntity.ID), command.DocumentDirectory.DocumentDirectoryID, DbType.Int32)
+                    _database.ExecuteScalar(Resource.RemoveDocumentDirectorySQL, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID, DbType.Int32)
                     });
 
-                    if (!cancellationToken.IsCancellationRequested) {
-                        transaction.Commit();
+                    cancellationToken.ThrowIfCancellationRequested();
+                    transaction.Commit();
 
-                        _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                            message: string.Format(Strings.RemoveDocumentDirectory_ProgressiveTaskPerformStep_Index_Message, command.DocumentDirectory.Code),
-                            actualStep: ++actualStep,
-                            totalSteps: totalSteps
-                        );
+                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                        message: string.Format(Resource.RemoveDocumentDirectory_ProgressiveTaskPerformStep_Index_Message, command.DocumentDirectory.Code),
+                        actualStep: ++info.ActualStep,
+                        totalSteps: info.TotalSteps
+                    );
 
-                        _indexProvider
-                            .Delete(command.DocumentDirectory.Code);
-                    }
+                    _indexProvider
+                        .Delete(command.DocumentDirectory.Code);
                 }
             }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
-                ActualStep = actualStep,
-                TotalSteps = totalSteps,
-                Log = Log
-            });
+            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
         }
 
         #endregion ICommandHandler<RemoveDocumentDirectoryCommand> Members

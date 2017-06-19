@@ -118,35 +118,92 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="starting_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\starting_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="settings_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\settings_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="info_fenix_113x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\info-fenix_113x128.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="forward_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\forward_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="fast_rewind_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\fast-rewind-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SearchForm_EmptyResultSet" xml:space="preserve">
+    <value>Não foi possível retornar resultados para o(s) termo(s) pesquisado(s).</value>
   </data>
-  <data name="index_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\index_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SplashScreen_Version" xml:space="preserve">
+    <value>ver.{0}.{1}.{2}</value>
   </data>
-  <data name="fast_forward_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\fast-forward-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="TextCopiedToClipboard" xml:space="preserve">
+    <value>Texto selecionado foi copiado para a área de transferência</value>
   </data>
-  <data name="exit_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\exit_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="forward_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\forward-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="goto_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\goto-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="settings_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settings_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="word_document_doc_blue_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\word-document-doc_blue_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fast_forward_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fast-forward_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SearchResultForm_InformationLabel" xml:space="preserve">
+    <value>Documento {0} de {1}</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="word_document_docx_gray_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\word-document-docx_gray_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="exit_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\exit-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="forward_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\forward-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="folder_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\folder_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="search_result_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search_result_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fast_rewind_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fast-rewind_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="word_document_doc_gray_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\word-document-doc_gray_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SplashScreen_ActualStep_TotalSteps" xml:space="preserve">
+    <value>{0} de {1}</value>
+  </data>
+  <data name="SearchResultForm_DocumentPathLabel" xml:space="preserve">
+    <value>Nome do documento: {0}</value>
+  </data>
+  <data name="fast_rewind_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fast-rewind-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="starting_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\starting_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="help_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\help_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="exit_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\exit_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="copy_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\copy_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="goto_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\goto_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="info_fenix_113x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\info-fenix_113x128.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hourglass_20x20" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hourglass_20x20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fast_forward_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fast-forward-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="index_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\index_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="rewind_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rewind_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -154,58 +211,25 @@
   <data name="document_directory_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\document_directory_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="help_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\help_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="copy_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\copy_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="forward_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\forward_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="info_fenix_84x95" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\info-fenix_84x95.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="copy_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\copy-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="search_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\search_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="goto_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\goto_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="rewind_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rewind-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="fast_rewind_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\fast-rewind_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="fast_forward_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\fast-forward_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="search_result_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\search_result_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="add_folder_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\add-folder_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="folder_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\folder_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="word_document_docx_blue_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\word-document-docx_blue_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="word_document_docx_gray_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\word-document-docx_gray_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="search_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="word_document_doc_blue_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\word-document-doc_blue_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="add_folder_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\add-folder_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="word_document_doc_gray_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\word-document-doc_gray_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="hourglass_20x20" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hourglass_20x20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="copy-text_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\copy-text_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

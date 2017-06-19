@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Views;
 using InfoFenix.Core;
 using InfoFenix.Core.PubSub;
-using InfoFenix.Core.Services;
 
 namespace InfoFenix.Client {
 
@@ -13,7 +11,6 @@ namespace InfoFenix.Client {
 
         #region Private Read-Only Fields
 
-        private readonly IDocumentService _documentService;
         private readonly IFormManager _formManager;
         private readonly IPublisherSubscriber _publisherSubscriber;
 
@@ -22,19 +19,15 @@ namespace InfoFenix.Client {
         #region Private Fields
 
         private ISubscription<DirectoryContentChangeNotification> _directoryContentChangeSubscription;
-        private ISubscription<ProcessDocumentInitializeNotification> _processDocumentInitializeSubscription;
-        private ISubscription<ProcessDocumentCompleteNotification> _processDocumentCompleteSubscription;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public MainForm(IDocumentService documentService, IFormManager formManager, IPublisherSubscriber publisherSubscriber) {
-            Prevent.ParameterNull(documentService, nameof(documentService));
+        public MainForm(IFormManager formManager, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(formManager, nameof(formManager));
             Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
-            _documentService = documentService;
             _formManager = formManager;
             _publisherSubscriber = publisherSubscriber;
 
@@ -47,8 +40,6 @@ namespace InfoFenix.Client {
 
         private void SubscribeForNotifications() {
             _directoryContentChangeSubscription = _publisherSubscriber.Subscribe<DirectoryContentChangeNotification>(DirectoryContentChangeHandler);
-            _processDocumentInitializeSubscription = _publisherSubscriber.Subscribe<ProcessDocumentInitializeNotification>(ProcessDocumentInitializeHandler);
-            _processDocumentCompleteSubscription = _publisherSubscriber.Subscribe<ProcessDocumentCompleteNotification>(ProcessDocumentCompleteHandler);
         }
 
         private void UnsubscribeFromNotifications() {
@@ -56,15 +47,6 @@ namespace InfoFenix.Client {
         }
 
         private void DirectoryContentChangeHandler(DirectoryContentChangeNotification message) {
-            Task.Run(() => _documentService.Process(message.WatchingPath, message.FullPath));
-        }
-
-        private void ProcessDocumentInitializeHandler(ProcessDocumentInitializeNotification message) {
-            informationToolStripStatusLabel.Text = $"Processando: {message.FileName}";
-        }
-
-        private void ProcessDocumentCompleteHandler(ProcessDocumentCompleteNotification message) {
-            informationToolStripStatusLabel.Text = string.Empty;
         }
 
         #endregion Private Methods
@@ -84,11 +66,11 @@ namespace InfoFenix.Client {
                 return;
             }
 
-            //UnsubscribeFromNotifications();
+            UnsubscribeFromNotifications();
         }
 
         private void searchToolStripMenuItem_Click(object sender, EventArgs e) {
-            _formManager.Get<SearchForm>(mdi: this, multipleInstance: false).Show();
+            _formManager.Get<SearchResultForm>(mdi: this, multipleInstance: false).Show();
         }
 
         private void documentDirectoryToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -99,6 +81,12 @@ namespace InfoFenix.Client {
             using (var form = _formManager.Get<ConfigurationForm>(mdi: null, multipleInstance: false)) {
                 form.ShowDialog();
             }
+        }
+
+        private void createBackupToolStripMenuItem_Click(object sender, EventArgs e) {
+        }
+
+        private void restoreBackupToolStripMenuItem_Click(object sender, EventArgs e) {
         }
 
         private void helpInformationToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -114,7 +102,5 @@ namespace InfoFenix.Client {
         }
 
         #endregion Event Handlers
-
-        
     }
 }

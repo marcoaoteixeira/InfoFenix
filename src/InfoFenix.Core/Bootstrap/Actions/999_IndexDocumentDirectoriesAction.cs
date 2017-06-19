@@ -1,12 +1,8 @@
-﻿using System.Threading;
-using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.Logging;
-using InfoFenix.Core.Queries;
-using InfoFenix.Core.Services;
+﻿using InfoFenix.Core.Cqrs;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
-    [Order(5)]
+    [Order(999)]
     public class IndexDocumentDirectoriesAction : ActionBase {
 
         #region Private Read-Only Fields
@@ -30,13 +26,6 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         public override string Name => "Indexar Diretórios de Documentos";
 
         public override void Execute() {
-            _mediator
-                .Query(new ListDocumentDirectoriesQuery())
-                .Each(_ => {
-                    _mediator.CleanAsync(_.ID, CancellationToken.None);
-                    _mediator.SaveDocumentsInsideDocumentDirectoryAsync(documentDirectory.ID, CancellationToken.None);
-                    _mediator.IndexAsync(_.ID, CancellationToken.None);
-                });
         }
 
         #endregion IAction Members

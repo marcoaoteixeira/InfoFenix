@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
-using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
-using SQL = InfoFenix.Core.Resources.Resources;
-
-using Strings = InfoFenix.Core.Resources.Resources;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -64,8 +61,7 @@ namespace InfoFenix.Core.Commands {
         #region ICommandHandler<CleanDocumentDirectoryCommand> Members
 
         public Task HandleAsync(CleanDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var actualStep = 0;
-            var totalSteps = 0;
+            var info = new ProgressiveTaskContinuationInfo { Log = Log };
 
             return Task.Run(() => {
                 var filesOnDatabase = command.DocumentDirectory.Documents.Select(_ => _.Path).ToArray();
@@ -73,54 +69,49 @@ namespace InfoFenix.Core.Commands {
                 var toRemove = filesOnDatabase.Except(filesOnDisk).ToArray();
                 var documentsToRemove = new List<DocumentDto>();
 
-                totalSteps = toRemove.Length + 1;
+                info.TotalSteps = toRemove.Length + 1;
 
                 _publisherSubscriber.ProgressiveTaskStartAsync(
-                    title: Strings.CleanDocumentDirectory_ProgressiveTaskStart_Title,
-                    actualStep: actualStep,
-                    totalSteps: totalSteps,
+                    title: Resource.CleanDocumentDirectory_ProgressiveTaskStart_Title,
+                    actualStep: info.ActualStep,
+                    totalSteps: info.TotalSteps,
                     log: Log
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
                     foreach (var filePath in toRemove) {
+                        cancellationToken.ThrowIfCancellationRequested();
+
                         _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                            message: string.Format(Strings.CleanDocumentDirectory_ProgressiveTaskPerformStep_Database_Message, Path.GetFileName(filePath)),
-                            actualStep: ++actualStep,
-                            totalSteps: totalSteps,
+                            message: string.Format(Resource.CleanDocumentDirectory_ProgressiveTaskPerformStep_Database_Message, Path.GetFileName(filePath)),
+                            actualStep: ++info.ActualStep,
+                            totalSteps: info.TotalSteps,
                             log: Log
                         );
 
                         var document = command.DocumentDirectory.Documents.SingleOrDefault(_ => _.Path == filePath);
-                        _database.ExecuteNonQuery(SQL.RemoveDocument, parameters: new[] {
-                            Parameter.CreateInputParameter(nameof(DocumentEntity.ID), document.DocumentID, DbType.Int32)
+                        _database.ExecuteNonQuery(Resource.RemoveDocumentSQL, parameters: new[] {
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID, DbType.Int32)
                         });
                         documentsToRemove.Add(document);
-
-                        if (cancellationToken.IsCancellationRequested) { break; }
                     }
 
-                    if (!cancellationToken.IsCancellationRequested) {
-                        transaction.Commit();
+                    cancellationToken.ThrowIfCancellationRequested();
+                    transaction.Commit();
 
-                        _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                            message: string.Format(Strings.CleanDocumentDirectory_ProgressiveTaskPerformStep_Index_Message, command.DocumentDirectory.Label),
-                            actualStep: ++actualStep,
-                            totalSteps: totalSteps,
-                            log: Log
-                        );
+                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                        message: string.Format(Resource.CleanDocumentDirectory_ProgressiveTaskPerformStep_Index_Message, command.DocumentDirectory.Label),
+                        actualStep: ++info.ActualStep,
+                        totalSteps: info.TotalSteps,
+                        log: Log
+                    );
 
-                        _indexProvider
-                            .GetOrCreate(command.DocumentDirectory.Code)
-                            .DeleteDocuments(documentsToRemove.Select(_ => _.DocumentID.ToString()).ToArray());
-                    }
+                    _indexProvider
+                        .GetOrCreate(command.DocumentDirectory.Code)
+                        .DeleteDocuments(documentsToRemove.Select(_ => _.DocumentID.ToString()).ToArray());
                 }
             }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, new ProgressiveTaskContinuationInfo {
-                ActualStep = actualStep,
-                TotalSteps = totalSteps,
-                Log = Log
-            });
+            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
         }
 
         #endregion ICommandHandler<CleanDocumentDirectoryCommand> Members

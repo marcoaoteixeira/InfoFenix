@@ -19,12 +19,13 @@ namespace InfoFenix.Core.Bootstrap {
         #region Public Properties
 
         private ILogger _log;
+
         public ILogger Log {
             get { return _log ?? NullLogger.Instance; }
             set { _log = value ?? NullLogger.Instance; }
         }
 
-        #endregion
+        #endregion Public Properties
 
         #region Public Constructors
 
@@ -42,35 +43,37 @@ namespace InfoFenix.Core.Bootstrap {
         public void Run() {
             var lastOrder = new OrderAttribute(int.MaxValue);
             var actions = _actions.OrderBy(_ => _.GetType().GetCustomAttribute(fallback: lastOrder).Order).ToArray();
+            var actualStep = 0;
 
-            _publisherSubscriber.PublishAsync(new ProgressiveTaskStartNotification {
-                Title = Resources.Resources.Bootstrapper_ProgressiveTaskStart_Title,
-                TotalSteps = actions.Length
-            });
+            _publisherSubscriber.ProgressiveTaskStartAsync(
+                title: Resources.Resources.Bootstrapper_ProgressiveTaskStart_Title,
+                totalSteps: actions.Length
+            );
+
             actions.Each((_, idx) => {
-                _publisherSubscriber.PublishAsync(new ProgressiveTaskPerformStepNotification {
-                    Message = string.Format(Resources.Resources.Bootstrapper_ProgressiveTaskPerformStep_Message, _.Name),
-                    ActualStep = (idx + 1),
-                    TotalSteps = actions.Length
-                });
+                _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    message: string.Format(Resources.Resources.Bootstrapper_ProgressiveTaskPerformStep_Message, _.Name),
+                    actualStep: ++actualStep,
+                    totalSteps: actions.Length
+                );
 
-                try { _.Execute(); }
-                catch (Exception ex) {
-                    _publisherSubscriber.PublishAsync(new ProgressiveTaskErrorNotification {
-                        ActualStep = (idx + 1),
-                        Error = ex.Message,
-                        TotalSteps = actions.Length
-                    });
+                try { _.Execute(); } catch (Exception ex) {
+                    _publisherSubscriber.ProgressiveTaskErrorAsync(
+                        actualStep: actualStep,
+                        error: ex.Message,
+                        totalSteps: actions.Length
+                    );
 
                     Log.Error(ex, ex.Message);
-                    
+
                     throw;
                 }
             });
-            _publisherSubscriber.PublishAsync(new ProgressiveTaskCompleteNotification {
-                Message = Resources.Resources.Bootstrapper_ProgressiveTaskComplete_Message,
-                TotalSteps = actions.Length
-            });
+            _publisherSubscriber.ProgressiveTaskCompleteAsync(
+                message: Resources.Resources.Bootstrapper_ProgressiveTaskComplete_Message,
+                actualStep: actualStep,
+                totalSteps: actions.Length
+            );
         }
 
         #endregion IBootstrapper Members

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using InfoFenix.Core.Logging;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.PubSub {
 
@@ -88,7 +90,7 @@ namespace InfoFenix.Core.PubSub {
         #region Public Constructors
 
         public ProgressiveTaskStartNotification() {
-            Arguments.Message = Resources.Resources.ProgressiveTaskStartNotification_Message;
+            Arguments.Message = Resource.ProgressiveTaskStartNotification_Message;
         }
 
         #endregion Public Constructors
@@ -102,7 +104,7 @@ namespace InfoFenix.Core.PubSub {
         #region Public Constructors
 
         public ProgressiveTaskCompleteNotification() {
-            Arguments.Message = Resources.Resources.ProgressiveTaskCompleteNotification_Message;
+            Arguments.Message = Resource.ProgressiveTaskCompleteNotification_Message;
         }
 
         #endregion Public Constructors
@@ -113,7 +115,7 @@ namespace InfoFenix.Core.PubSub {
         #region Public Constructors
 
         public ProgressiveTaskCancelNotification() {
-            Arguments.Message = Resources.Resources.ProgressiveTaskCancelNotification_Message;
+            Arguments.Message = Resource.ProgressiveTaskCancelNotification_Message;
         }
 
         #endregion Public Constructors
@@ -176,17 +178,23 @@ namespace InfoFenix.Core.PubSub {
             if (continuation == null) { return; }
             if (state == null) { return; }
 
+            var error = string.Empty;
             var info = (state as ProgressiveTaskContinuationInfo) ?? new ProgressiveTaskContinuationInfo();
 
-            if (continuation.Exception != null) {
-                source.ProgressiveTaskErrorAsync(error: continuation.Exception.Message, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
+            if (continuation.Exception is AggregateException aggregateException) {
+                var stringBuilder = new StringBuilder();
+                foreach (var exception in aggregateException.InnerExceptions) {
+                    stringBuilder.AppendLine(exception.Message);
+                }
+                error = stringBuilder.ToString();
+                source.ProgressiveTaskErrorAsync(error: error, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
             }
 
             if (continuation.IsCanceled) {
                 source.ProgressiveTaskCancelAsync(actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
             }
 
-            source.ProgressiveTaskCompleteAsync(error: continuation.Exception.Message, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
+            source.ProgressiveTaskCompleteAsync(error: error, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
         }
 
         #endregion Public Static Methos

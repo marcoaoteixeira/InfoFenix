@@ -102,43 +102,43 @@ namespace InfoFenix.Client.Views {
         }
 
         private void ProgressiveTaskStartHandler(ProgressiveTaskStartNotification message) {
-            titleLabel.SafeCall(() => titleLabel.Text = message.Title);
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"1 de {message.TotalSteps}");
+            titleLabel.SafeCall(() => titleLabel.Text = message.Arguments.Title);
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = $"1 de {message.Arguments.TotalSteps}");
             mainProgressBar.SafeCall(() => {
                 mainProgressBar.Step = 1;
                 mainProgressBar.Minimum = 1;
-                mainProgressBar.Maximum = message.TotalSteps;
+                mainProgressBar.Maximum = message.Arguments.TotalSteps;
             });
         }
 
         private void ProgressiveTaskPerformStepHandler(ProgressiveTaskPerformStepNotification message) {
-            titleLabel.SafeCall(() => titleLabel.Text = message.Title);
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"{message.ActualStep} de {message.TotalSteps}");
+            titleLabel.SafeCall(() => titleLabel.Text = message.Arguments.Title);
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = $"{message.Arguments.ActualStep} de {message.Arguments.TotalSteps}");
             mainProgressBar.SafeCall(() => mainProgressBar.PerformStep());
         }
 
         private void ProgressiveTaskCompleteHandler(ProgressiveTaskCompleteNotification message) {
-            titleLabel.SafeCall(() => titleLabel.Text = message.Title);
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"{message.TotalSteps} de {message.TotalSteps}");
+            titleLabel.SafeCall(() => titleLabel.Text = message.Arguments.Title);
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = $"{message.Arguments.TotalSteps} de {message.Arguments.TotalSteps}");
 
             OnCompleteProgressiveTask(this, new ProgressiveTaskCompleteEventArgs());
         }
 
         private void ProgressiveTaskCriticalErrorHandler(ProgressiveTaskErrorNotification message) {
-            titleLabel.SafeCall(() => titleLabel.Text = message.Title);
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"{message.TotalSteps} de {message.TotalSteps}");
+            titleLabel.SafeCall(() => titleLabel.Text = message.Arguments.Title);
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = $"{message.Arguments.TotalSteps} de {message.Arguments.TotalSteps}");
 
             OnCancelProgressiveTask(this, new ProgressiveTaskCancelEventArgs { Force = true });
         }
 
         private void ProgressiveTaskCancelHandler(ProgressiveTaskCancelNotification message) {
-            titleLabel.SafeCall(() => titleLabel.Text = message.Title);
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"{message.TotalSteps} de {message.TotalSteps}");
+            titleLabel.SafeCall(() => titleLabel.Text = message.Arguments.Title);
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = $"{message.Arguments.TotalSteps} de {message.Arguments.TotalSteps}");
 
             OnCancelProgressiveTask(this, new ProgressiveTaskCancelEventArgs { Force = true });
         }

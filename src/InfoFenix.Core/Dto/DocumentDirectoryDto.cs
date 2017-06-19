@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using InfoFenix.Core.Entities;
+using InfoFenix.Core.Data;
 
 namespace InfoFenix.Core.Dto {
 
@@ -21,37 +21,17 @@ namespace InfoFenix.Core.Dto {
 
         #region Public Static Methods
 
-        public static DocumentDirectoryDto Map(DocumentDirectoryEntity entity) {
-            return new DocumentDirectoryDto {
-                DocumentDirectoryID = entity.ID,
-                Label = entity.Label,
-                Path = entity.Path,
-                Code = entity.Code,
-                Watch = entity.Watch,
-                Index = entity.Index
-            };
-        }
-
         public static DocumentDirectoryDto Map(IDataReader reader) {
-            return Map(DocumentDirectoryEntity.MapFromDataReader(reader));
+            return new DocumentDirectoryDto {
+                DocumentDirectoryID = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID),
+                Label = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Label),
+                Path = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Path),
+                Code = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Code),
+                Watch = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.Watch) > 0,
+                Index = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.Index) > 0
+            };
         }
 
         #endregion Public Static Methods
-
-        #region Public Methods
-
-        public DocumentDirectoryEntity Map() {
-            return new DocumentDirectoryEntity {
-                ID = DocumentDirectoryID,
-                Label = Label,
-                Path = Path,
-                Code = Code,
-                Watch = Watch,
-                Index = Index,
-                TotalDocuments = Documents.Count
-            };
-        }
-
-        #endregion Public Methods
     }
 }

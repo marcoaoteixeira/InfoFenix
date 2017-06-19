@@ -5,6 +5,7 @@ using InfoFenix.Client.Code;
 using InfoFenix.Core;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
+using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client {
 
@@ -53,21 +54,20 @@ namespace InfoFenix.Client {
             using (var form = factory()) {
                 Task
                     .Run(action)
-                    .ContinueWith(continuationTask => {
-                        form.DialogResult = DialogResult.OK;
-                    });
+                    .ContinueWith(continuationTask => form.DialogResult = DialogResult.OK);
+
                 form.ShowDialog();
             }
         }
 
-        #endregion Public Methods
+        #endregion Public Static Methods
 
         #region Private Methods
 
         private void Initialize() {
             messageLabel.Text = string.Empty;
             progressLabel.Text = string.Empty;
-            versionLabel.Text = $"ver. {EntryPoint.ApplicationVersion.Major}.{EntryPoint.ApplicationVersion.Minor}.{EntryPoint.ApplicationVersion.Revision}";
+            versionLabel.Text = string.Format(Resource.SplashScreen_Version, EntryPoint.ApplicationVersion.Major, EntryPoint.ApplicationVersion.Minor, EntryPoint.ApplicationVersion.Revision);
         }
 
         private void SubscribeForNotifications() {
@@ -83,18 +83,18 @@ namespace InfoFenix.Client {
         }
 
         private void ProgressiveTaskStartHandler(ProgressiveTaskStartNotification message) {
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"0 de {message.TotalSteps}");
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = string.Format(Resource.SplashScreen_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
         }
 
         private void ProgressiveTaskPerformStepHandler(ProgressiveTaskPerformStepNotification message) {
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"{message.ActualStep} de {message.TotalSteps}");
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = string.Format(Resource.SplashScreen_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
         }
 
         private void ProgressiveTaskCompleteHandler(ProgressiveTaskCompleteNotification message) {
-            messageLabel.SafeCall(() => messageLabel.Text = message.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = $"{message.TotalSteps} de {message.TotalSteps}");
+            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
+            progressLabel.SafeCall(() => progressLabel.Text = string.Format(Resource.SplashScreen_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
         }
 
         #endregion Private Methods

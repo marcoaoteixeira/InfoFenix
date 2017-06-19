@@ -71,6 +71,15 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copiar.
+        /// </summary>
+        internal static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap copy_128x128 {
@@ -86,6 +95,16 @@ namespace InfoFenix.Client.Properties {
         internal static System.Drawing.Bitmap copy_64x64 {
             get {
                 object obj = ResourceManager.GetObject("copy_64x64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap copy_text_16x16 {
+            get {
+                object obj = ResourceManager.GetObject("copy-text_16x16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -301,6 +320,33 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Não foi possível retornar resultados para o(s) termo(s) pesquisado(s)..
+        /// </summary>
+        internal static string SearchForm_EmptyResultSet {
+            get {
+                return ResourceManager.GetString("SearchForm_EmptyResultSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nome do documento: {0}.
+        /// </summary>
+        internal static string SearchResultForm_DocumentPathLabel {
+            get {
+                return ResourceManager.GetString("SearchResultForm_DocumentPathLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Documento {0} de {1}.
+        /// </summary>
+        internal static string SearchResultForm_InformationLabel {
+            get {
+                return ResourceManager.GetString("SearchResultForm_InformationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap settings_128x128 {
@@ -311,12 +357,39 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} de {1}.
+        /// </summary>
+        internal static string SplashScreen_ActualStep_TotalSteps {
+            get {
+                return ResourceManager.GetString("SplashScreen_ActualStep_TotalSteps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ver.{0}.{1}.{2}.
+        /// </summary>
+        internal static string SplashScreen_Version {
+            get {
+                return ResourceManager.GetString("SplashScreen_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap starting_128x128 {
             get {
                 object obj = ResourceManager.GetObject("starting_128x128", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Texto selecionado foi copiado para a área de transferência.
+        /// </summary>
+        internal static string TextCopiedToClipboard {
+            get {
+                return ResourceManager.GetString("TextCopiedToClipboard", resourceCulture);
             }
         }
         

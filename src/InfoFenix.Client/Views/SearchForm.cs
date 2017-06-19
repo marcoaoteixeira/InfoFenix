@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
-using InfoFenix.Client.Models;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
-using InfoFenix.Core.Services;
+using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Dto;
+using InfoFenix.Core.Queries;
+using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views {
 
@@ -13,28 +16,31 @@ namespace InfoFenix.Client.Views {
 
         #region Private Read-Only Fields
 
-        private readonly IDocumentDirectoryService _documentDirectoryService;
         private readonly IFormManager _formManager;
-        private readonly ISearchIndexService _searchIndexService;
+        private readonly IMediator _mediator;
 
         #endregion Private Read-Only Fields
 
         #region Private Properties
 
-        private SearchViewModel ViewModel { get; set; }
+        private SearchDto ViewModel { get; set; }
 
         #endregion Private Properties
 
+        #region Private Fields
+
+        private IDictionary<string, string> _currentIndexes = new Dictionary<string, string>();
+
+        #endregion Private Fields
+
         #region Public Constructors
 
-        public SearchForm(IDocumentDirectoryService documentDirectoryService, IFormManager formManager, ISearchIndexService searchIndexService) {
-            Prevent.ParameterNull(documentDirectoryService, nameof(documentDirectoryService));
+        public SearchForm(IFormManager formManager, IMediator mediator) {
             Prevent.ParameterNull(formManager, nameof(formManager));
-            Prevent.ParameterNull(searchIndexService, nameof(searchIndexService));
+            Prevent.ParameterNull(mediator, nameof(mediator));
 
-            _documentDirectoryService = documentDirectoryService;
             _formManager = formManager;
-            _searchIndexService = searchIndexService;
+            _mediator = mediator;
 
             InitializeComponent();
         }
@@ -44,53 +50,44 @@ namespace InfoFenix.Client.Views {
         #region Private Methods
 
         private void Initialize() {
-            ViewModel = new SearchViewModel();
-            searchResultDataGridView.AutoGenerateColumns = false;
-            foreach (var documentDirectory in _documentDirectoryService.List()) {
-                ViewModel.Items.Add(new SearchDocumentDirectoryViewModel {
-                    Code = documentDirectory.Code,
-                    Label = documentDirectory.Label,
-                    TotalDocuments = documentDirectory.TotalDocuments
-                });
-            }
-            searchResultDataGridView.DataSource = ViewModel.Items.ToArray();
+            documentDirectoriesDataGridView.AutoGenerateColumns = false;
+
+            _currentIndexes = _mediator
+                .Query(new ListDocumentDirectoriesQuery())
+                .ToDictionary(_ => _.Code, _ => _.Label);
+
+            ViewModel = _mediator.Query(new SearchDocumentIndexQuery {
+                QueryTerm = string.Empty,
+                Indexes = _currentIndexes
+            });
+
+            documentDirectoriesDataGridView.DataSource = ViewModel.Indexes.ToArray();
         }
 
         private void DoSearch() {
             try {
                 Cursor = Cursors.WaitCursor;
-                ViewModel.SearchTerm = searchTermTextBox.Text.Trim();
 
-                var result = _searchIndexService.Search(ViewModel.SearchTerm, ViewModel.Items.Select(_ => _.Code).ToArray());
-                foreach (var set in result) {
-                    var documentDirectory = ViewModel.Items.SingleOrDefault(_ => _.Code == set.IndexName);
-                    if (documentDirectory == null) { continue; }
+                ViewModel = _mediator.Query(new SearchDocumentIndexQuery {
+                    QueryTerm = searchTermTextBox.Text,
+                    Indexes = _currentIndexes
+                });
 
-                    documentDirectory.Documents.Clear();
-                    foreach (dynamic item in set) {
-                        documentDirectory.Documents.Add(new SearchDocumentViewModel {
-                            ID = item.ID,
-                            Code = item.Code,
-                            Path = item.Path,
-                            Payload = item.Payload
-                        });
-                    }
-                }
-                searchResultDataGridView.DataSource = ViewModel.Items.ToArray();
+                documentDirectoriesDataGridView.DataSource = ViewModel.Indexes.ToArray();
 
                 informationLabel.Text = string.Empty;
-                if (ViewModel.Items.SelectMany(_ => _.Documents).Count() == 0) {
-                    informationLabel.Text = "A pesquisa não retornou resultados.";
+                if (ViewModel.Indexes.SelectMany(_ => _.Documents).Count() == 0) {
+                    informationLabel.Text = Resource.SearchForm_EmptyResultSet;
                 }
             } finally { Cursor = Cursors.Default; }
         }
 
-        private void ShowSearchResult(SearchDocumentDirectoryViewModel searchDocumentDirectory) {
-            if (searchDocumentDirectory.TotalDocumentsFound == 0) { return; }
+        private void ShowSearchResult(IndexDto index) {
+            if (index.Documents.Count == 0) { return; }
 
             var form = _formManager.Get<SearchResultForm>(mdi: MdiParent, multipleInstance: true);
-            form.SearchTerms = ViewModel.SearchTerm.Split(' ');
-            form.SearchResult = searchDocumentDirectory;
+            form.SearchTerms = ViewModel.QueryTerm.Split(' ');
+            form.SearchResult = index;
             form.Show();
         }
 
@@ -116,8 +113,8 @@ namespace InfoFenix.Client.Views {
         }
 
         private void searchResultDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
-            if (sender is DataGridView view) {
-                ShowSearchResult(view.Rows[e.RowIndex].DataBoundItem as SearchDocumentDirectoryViewModel);
+            if (sender is DataGridView dataGridView) {
+                ShowSearchResult(dataGridView.Rows[e.RowIndex].DataBoundItem as IndexDto);
             }
         }
 

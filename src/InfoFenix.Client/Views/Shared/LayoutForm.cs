@@ -25,6 +25,17 @@ namespace InfoFenix.Client.Views.Shared {
 
         #endregion Private Fields
 
+        #region Public Properties
+
+        private bool _showHeader = true;
+        [Browsable(true)]
+        public bool ShowHeader {
+            get { return _showHeader; }
+            set { InnerShowHeader(value); }
+        }
+
+        #endregion
+
         #region Public Constructors
 
         public LayoutForm() {
@@ -52,6 +63,13 @@ namespace InfoFenix.Client.Views.Shared {
 
         #region Private Methods
 
+        private void InnerShowHeader(bool show) {
+            titlePanel.Visible = show;
+            topSeparator.Visible = show;
+
+            _showHeader = show;
+        }
+
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -70,9 +88,9 @@ namespace InfoFenix.Client.Views.Shared {
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.actionPanel.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // titlePanel
-            //
+            // 
             this.titlePanel.BackColor = System.Drawing.SystemColors.Window;
             this.titlePanel.Controls.Add(this.subTitleLabel);
             this.titlePanel.Controls.Add(this.titleLabel);
@@ -84,9 +102,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.titlePanel.Name = "titlePanel";
             this.titlePanel.Size = new System.Drawing.Size(784, 96);
             this.titlePanel.TabIndex = 0;
-            //
+            // 
             // subTitleLabel
-            //
+            // 
             this.subTitleLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.subTitleLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subTitleLabel.Location = new System.Drawing.Point(96, 56);
@@ -97,9 +115,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.subTitleLabel.TabIndex = 2;
             this.subTitleLabel.Text = "###";
             this.subTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // titleLabel
-            //
+            // 
             this.titleLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.titleLabel.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.titleLabel.Location = new System.Drawing.Point(96, 0);
@@ -110,9 +128,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.titleLabel.TabIndex = 1;
             this.titleLabel.Text = "###";
             this.titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // iconPictureBox
-            //
+            // 
             this.iconPictureBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.iconPictureBox.Location = new System.Drawing.Point(0, 0);
             this.iconPictureBox.Margin = new System.Windows.Forms.Padding(4, 4, 12, 4);
@@ -122,9 +140,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.iconPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.iconPictureBox.TabIndex = 0;
             this.iconPictureBox.TabStop = false;
-            //
+            // 
             // topSeparator
-            //
+            // 
             this.topSeparator.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.topSeparator.Dock = System.Windows.Forms.DockStyle.Top;
             this.topSeparator.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -133,9 +151,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.topSeparator.Name = "topSeparator";
             this.topSeparator.Size = new System.Drawing.Size(784, 2);
             this.topSeparator.TabIndex = 1;
-            //
+            // 
             // contentPanel
-            //
+            // 
             this.contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contentPanel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.contentPanel.Location = new System.Drawing.Point(0, 98);
@@ -144,9 +162,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.contentPanel.Padding = new System.Windows.Forms.Padding(10);
             this.contentPanel.Size = new System.Drawing.Size(784, 381);
             this.contentPanel.TabIndex = 2;
-            //
+            // 
             // bottomSeparator
-            //
+            // 
             this.bottomSeparator.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.bottomSeparator.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bottomSeparator.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -155,9 +173,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.bottomSeparator.Name = "bottomSeparator";
             this.bottomSeparator.Size = new System.Drawing.Size(784, 2);
             this.bottomSeparator.TabIndex = 3;
-            //
+            // 
             // actionPanel
-            //
+            // 
             this.actionPanel.BackColor = System.Drawing.SystemColors.Window;
             this.actionPanel.Controls.Add(this.closeButton);
             this.actionPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -167,9 +185,10 @@ namespace InfoFenix.Client.Views.Shared {
             this.actionPanel.Padding = new System.Windows.Forms.Padding(20);
             this.actionPanel.Size = new System.Drawing.Size(784, 80);
             this.actionPanel.TabIndex = 4;
-            //
+            // 
             // closeButton
-            //
+            // 
+            this.closeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.closeButton.Dock = System.Windows.Forms.DockStyle.Right;
             this.closeButton.Location = new System.Drawing.Point(644, 20);
             this.closeButton.Name = "closeButton";
@@ -177,9 +196,9 @@ namespace InfoFenix.Client.Views.Shared {
             this.closeButton.TabIndex = 0;
             this.closeButton.Text = "&Fechar";
             this.closeButton.UseVisualStyleBackColor = true;
-            //
-            // Layout
-            //
+            // 
+            // LayoutForm
+            // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.contentPanel);
@@ -189,13 +208,14 @@ namespace InfoFenix.Client.Views.Shared {
             this.Controls.Add(this.titlePanel);
             this.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "Layout";
+            this.Name = "LayoutForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "###";
             this.titlePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
             this.actionPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
 
         #endregion Private Methods

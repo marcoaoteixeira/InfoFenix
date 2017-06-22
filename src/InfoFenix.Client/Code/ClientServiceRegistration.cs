@@ -36,11 +36,12 @@ namespace InfoFenix.Client.Code {
                 .RegisterInstance(new CancellationTokenIssuer())
                 .As<CancellationTokenIssuer>()
                 .SingleInstance();
-
+            /*
             Builder
                 .RegisterType<ProgressiveTaskExecutor>()
                 .AsSelf()
                 .SingleInstance();
+            */
         }
 
         #endregion Public Override Methods

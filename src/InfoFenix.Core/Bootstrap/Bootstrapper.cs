@@ -42,26 +42,36 @@ namespace InfoFenix.Core.Bootstrap {
 
         public void Run() {
             var lastOrder = new OrderAttribute(int.MaxValue);
-            var actions = _actions.OrderBy(_ => _.GetType().GetCustomAttribute(fallback: lastOrder).Order).ToArray();
-            var actualStep = 0;
+            var actions = _actions
+                .Where(_ => !_.GetType().GetCustomAttribute(fallback: lastOrder).Ignore)
+                .OrderBy(_ => _.GetType().GetCustomAttribute(fallback: lastOrder).Order)
+                .ToArray();
 
-            _publisherSubscriber.ProgressiveTaskStartAsync(
+            var arguments = new ProgressiveTaskArguments {
+                ActualStep = 0,
+                TotalSteps = actions.Length
+            };
+
+            _publisherSubscriber.ProgressiveTaskStart(
                 title: Resources.Resources.Bootstrapper_ProgressiveTaskStart_Title,
-                totalSteps: actions.Length
+                actualStep: arguments.ActualStep,
+                totalSteps: arguments.TotalSteps
             );
 
             actions.Each((_, idx) => {
-                _publisherSubscriber.ProgressiveTaskPerformStepAsync(
-                    message: string.Format(Resources.Resources.Bootstrapper_ProgressiveTaskPerformStep_Message, _.Name),
-                    actualStep: ++actualStep,
-                    totalSteps: actions.Length
-                );
+                try {
+                    _publisherSubscriber.ProgressiveTaskPerformStep(
+                        message: string.Format(Resources.Resources.Bootstrapper_ProgressiveTaskPerformStep_Message, _.Name),
+                        actualStep: ++arguments.ActualStep,
+                        totalSteps: arguments.TotalSteps
+                    );
 
-                try { _.Execute(); } catch (Exception ex) {
-                    _publisherSubscriber.ProgressiveTaskErrorAsync(
-                        actualStep: actualStep,
+                    _.Execute();
+                } catch (Exception ex) {
+                    _publisherSubscriber.ProgressiveTaskError(
+                        actualStep: arguments.ActualStep,
                         error: ex.Message,
-                        totalSteps: actions.Length
+                        totalSteps: arguments.TotalSteps
                     );
 
                     Log.Error(ex, ex.Message);
@@ -69,10 +79,11 @@ namespace InfoFenix.Core.Bootstrap {
                     throw;
                 }
             });
-            _publisherSubscriber.ProgressiveTaskCompleteAsync(
+
+            _publisherSubscriber.ProgressiveTaskComplete(
                 message: Resources.Resources.Bootstrapper_ProgressiveTaskComplete_Message,
-                actualStep: actualStep,
-                totalSteps: actions.Length
+                actualStep: arguments.ActualStep,
+                totalSteps: arguments.TotalSteps
             );
         }
 

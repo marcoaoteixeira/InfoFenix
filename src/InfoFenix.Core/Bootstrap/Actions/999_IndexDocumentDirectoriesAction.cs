@@ -2,7 +2,7 @@
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
-    [Order(999)]
+    [Order(999, Ignore = true)]
     public class IndexDocumentDirectoriesAction : ActionBase {
 
         #region Private Read-Only Fields

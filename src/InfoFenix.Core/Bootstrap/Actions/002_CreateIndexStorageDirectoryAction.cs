@@ -23,7 +23,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region IAction Members
 
-        public override string Name => "Criar Base de Índices do Aplicativo";
+        public override string Name => "Criar Diretório de Índices";
 
         public override void Execute() {
             var indexStoragePath = Path.Combine(_appSettings.ApplicationDataDirectoryPath, Common.IndexStorageDirectoryName);

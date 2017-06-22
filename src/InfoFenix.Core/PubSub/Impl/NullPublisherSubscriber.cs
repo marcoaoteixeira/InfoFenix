@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace InfoFenix.Core.PubSub {
 
@@ -21,8 +19,8 @@ namespace InfoFenix.Core.PubSub {
 
         #region IPublisherSubscriber Members
 
-        public Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken = default(CancellationToken)) {
-            return Task.FromResult(0);
+        public void Publish<TMessage>(TMessage message) {
+
         }
 
         public ISubscription<TMessage> Subscribe<TMessage>(Action<TMessage> handler) {

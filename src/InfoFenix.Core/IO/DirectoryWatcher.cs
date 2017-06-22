@@ -47,7 +47,7 @@ namespace InfoFenix.Core.IO {
             // Ignore error files.
             if (!File.Exists(e.FullPath)) { return; }
 
-            _publisherSubscriber.PublishAsync(new DirectoryContentChangeNotification {
+            _publisherSubscriber.Publish(new DirectoryContentChangeNotification {
                 WatchingPath = _path,
                 FullPath = e.FullPath,
                 Changes = (DirectoryContentChangeNotification.ChangeTypes)(int)e.ChangeType

@@ -64,14 +64,14 @@ namespace InfoFenix.Core.Commands {
             };
 
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStartAsync(
+                _publisherSubscriber.ProgressiveTaskStart(
                     title: Resource.RemoveDocumentDirectory_ProgressiveTask_Title,
                     actualStep: info.ActualStep,
                     totalSteps: info.TotalSteps
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
-                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    _publisherSubscriber.ProgressiveTaskPerformStep(
                         message: string.Format(Resource.RemoveDocumentDirectory_ProgressiveTaskPerformStep_Database_Message, command.DocumentDirectory.Code),
                         actualStep: ++info.ActualStep,
                         totalSteps: info.TotalSteps
@@ -84,7 +84,7 @@ namespace InfoFenix.Core.Commands {
                     cancellationToken.ThrowIfCancellationRequested();
                     transaction.Commit();
 
-                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    _publisherSubscriber.ProgressiveTaskPerformStep(
                         message: string.Format(Resource.RemoveDocumentDirectory_ProgressiveTaskPerformStep_Index_Message, command.DocumentDirectory.Code),
                         actualStep: ++info.ActualStep,
                         totalSteps: info.TotalSteps

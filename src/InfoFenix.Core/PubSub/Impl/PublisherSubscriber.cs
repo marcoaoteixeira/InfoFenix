@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace InfoFenix.Core.PubSub {
 
@@ -41,11 +39,8 @@ namespace InfoFenix.Core.PubSub {
             var messageType = typeof(TMessage);
             var action = new Subscription<TMessage>(handler, this);
             lock (SyncLock) {
-                if (!_subscriptions.TryGetValue(messageType, out IList list)) {
-                    _subscriptions.Add(messageType, new List<ISubscription<TMessage>> { action });
-                } else {
-                    _subscriptions[messageType].Add(action);
-                }
+                if (!_subscriptions.TryGetValue(messageType, out IList list)) { _subscriptions.Add(messageType, new List<ISubscription<TMessage>> { action }); }
+                else { _subscriptions[messageType].Add(action); }
             }
             return action;
         }
@@ -64,19 +59,17 @@ namespace InfoFenix.Core.PubSub {
         }
 
         /// <inheritdoc />
-        public Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken = default(CancellationToken)) {
+        public void Publish<TMessage>(TMessage message) {
             Prevent.ParameterNull(message, nameof(message));
 
-            return Task.Run(() => {
-                var messageType = typeof(TMessage);
-                if (_subscriptions.ContainsKey(messageType)) {
-                    foreach (var subscription in _subscriptions[messageType].OfType<ISubscription<TMessage>>()) {
-                        if (cancellationToken.IsCancellationRequested) { break; }
-
-                        subscription.CreateHandler()?.Invoke(message);
-                    }
+            var messageType = typeof(TMessage);
+            if (_subscriptions.ContainsKey(messageType)) {
+                foreach (var subscription in _subscriptions[messageType].OfType<ISubscription<TMessage>>()) {
+                    var handler = subscription.CreateHandler();
+                    if (handler == null) { continue; }
+                    handler(message);
                 }
-            }, cancellationToken);
+            }
         }
 
         #endregion IPublisherSubscriber Members

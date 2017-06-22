@@ -1,12 +1,15 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Bootstrap {
+
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class OrderAttribute : Attribute {
 
         #region Public Properties
 
         public int Order { get; }
+
+        public bool Ignore { get; set; }
 
         #endregion Public Properties
 

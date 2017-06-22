@@ -25,7 +25,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #region IAction Members
 
-        public override string Name => "Criar Banco de Dados do Aplicativo";
+        public override string Name => "Criar Banco de Dados";
 
         public override void Execute() {
             var databaseFilePath = Path.Combine(_appSettings.ApplicationDataDirectoryPath, Common.DatabaseFileName);

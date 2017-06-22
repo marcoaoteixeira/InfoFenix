@@ -71,7 +71,7 @@ namespace InfoFenix.Core.Commands {
 
                 info.TotalSteps = toRemove.Length + 1;
 
-                _publisherSubscriber.ProgressiveTaskStartAsync(
+                _publisherSubscriber.ProgressiveTaskStart(
                     title: Resource.CleanDocumentDirectory_ProgressiveTaskStart_Title,
                     actualStep: info.ActualStep,
                     totalSteps: info.TotalSteps,
@@ -82,7 +82,7 @@ namespace InfoFenix.Core.Commands {
                     foreach (var filePath in toRemove) {
                         cancellationToken.ThrowIfCancellationRequested();
 
-                        _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                        _publisherSubscriber.ProgressiveTaskPerformStep(
                             message: string.Format(Resource.CleanDocumentDirectory_ProgressiveTaskPerformStep_Database_Message, Path.GetFileName(filePath)),
                             actualStep: ++info.ActualStep,
                             totalSteps: info.TotalSteps,
@@ -99,7 +99,7 @@ namespace InfoFenix.Core.Commands {
                     cancellationToken.ThrowIfCancellationRequested();
                     transaction.Commit();
 
-                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    _publisherSubscriber.ProgressiveTaskPerformStep(
                         message: string.Format(Resource.CleanDocumentDirectory_ProgressiveTaskPerformStep_Index_Message, command.DocumentDirectory.Label),
                         actualStep: ++info.ActualStep,
                         totalSteps: info.TotalSteps,

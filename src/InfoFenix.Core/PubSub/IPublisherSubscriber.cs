@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace InfoFenix.Core.PubSub {
+
     /// <summary>
     /// Defines methods to implement a topic based publisher/subscriber.
     /// </summary>
@@ -31,7 +30,7 @@ namespace InfoFenix.Core.PubSub {
         /// </summary>
         /// <typeparam name="TMessage">Type of the message.</typeparam>
         /// <param name="message">The message.</param>
-		Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken = default(CancellationToken));
+		void Publish<TMessage>(TMessage message);
 
         #endregion Methods
     }

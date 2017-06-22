@@ -72,7 +72,7 @@ namespace InfoFenix.Core.PubSub {
 
         #region Public Properties
 
-        public ProgressiveTaskArguments Arguments { get; }
+        public ProgressiveTaskArguments Arguments { get; set; }
 
         #endregion Public Properties
 
@@ -153,24 +153,24 @@ namespace InfoFenix.Core.PubSub {
 
         #region Public Static Methos
 
-        public static Task ProgressiveTaskStartAsync(this IPublisherSubscriber source, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
-            return InnerPublishAsync<ProgressiveTaskStartNotification>(source, title, message, null, actualStep, totalSteps, log);
+        public static void ProgressiveTaskStart(this IPublisherSubscriber source, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
+            InnerPublish<ProgressiveTaskStartNotification>(source, title, message, null, actualStep, totalSteps, log);
         }
 
-        public static Task ProgressiveTaskPerformStepAsync(this IPublisherSubscriber source, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
-            return InnerPublishAsync<ProgressiveTaskPerformStepNotification>(source, title, message, null, actualStep, totalSteps, log);
+        public static void ProgressiveTaskPerformStep(this IPublisherSubscriber source, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
+            InnerPublish<ProgressiveTaskPerformStepNotification>(source, title, message, null, actualStep, totalSteps, log);
         }
 
-        public static Task ProgressiveTaskCompleteAsync(this IPublisherSubscriber source, string title = null, string message = null, string error = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
-            return InnerPublishAsync<ProgressiveTaskCompleteNotification>(source, title, message, null, actualStep, totalSteps, log);
+        public static void ProgressiveTaskComplete(this IPublisherSubscriber source, string title = null, string message = null, string error = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
+            InnerPublish<ProgressiveTaskCompleteNotification>(source, title, message, null, actualStep, totalSteps, log);
         }
 
-        public static Task ProgressiveTaskCancelAsync(this IPublisherSubscriber source, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
-            return InnerPublishAsync<ProgressiveTaskCancelNotification>(source, title, message, null, actualStep, totalSteps, log);
+        public static void ProgressiveTaskCancel(this IPublisherSubscriber source, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
+            InnerPublish<ProgressiveTaskCancelNotification>(source, title, message, null, actualStep, totalSteps, log);
         }
 
-        public static Task ProgressiveTaskErrorAsync(this IPublisherSubscriber source, string error, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
-            return InnerPublishAsync<ProgressiveTaskErrorNotification>(source, title, message, null, actualStep, totalSteps, log);
+        public static void ProgressiveTaskError(this IPublisherSubscriber source, string error, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
+            InnerPublish<ProgressiveTaskErrorNotification>(source, title, message, null, actualStep, totalSteps, log);
         }
 
         public static void TaskContinuation(this IPublisherSubscriber source, Task continuation, object state) {
@@ -181,27 +181,29 @@ namespace InfoFenix.Core.PubSub {
             var error = string.Empty;
             var info = (state as ProgressiveTaskContinuationInfo) ?? new ProgressiveTaskContinuationInfo();
 
-            if (continuation.Exception is AggregateException aggregateException) {
+            if (continuation.Exception is AggregateException ex) {
                 var stringBuilder = new StringBuilder();
-                foreach (var exception in aggregateException.InnerExceptions) {
+                foreach (var exception in ex.InnerExceptions) {
                     stringBuilder.AppendLine(exception.Message);
                 }
                 error = stringBuilder.ToString();
-                source.ProgressiveTaskErrorAsync(error: error, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
+                source.ProgressiveTaskError(error: error, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
+                return;
             }
 
             if (continuation.IsCanceled) {
-                source.ProgressiveTaskCancelAsync(actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
+                source.ProgressiveTaskCancel(actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
+                return;
             }
 
-            source.ProgressiveTaskCompleteAsync(error: error, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
+            source.ProgressiveTaskComplete(error: error, actualStep: info.ActualStep, totalSteps: info.TotalSteps, log: info.Log);
         }
 
         #endregion Public Static Methos
 
         #region Private Static Methods
 
-        private static Task InnerPublishAsync<TNotification>(IPublisherSubscriber publisherSubscriber, string title, string message, string error, int actualStep, int totalSteps, ILogger log)
+        private static void InnerPublish<TNotification>(IPublisherSubscriber publisherSubscriber, string title, string message, string error, int actualStep, int totalSteps, ILogger log)
             where TNotification : ProgressiveTaskNotification, new() {
             var notification = new TNotification();
 
@@ -215,7 +217,7 @@ namespace InfoFenix.Core.PubSub {
 
             notification.Arguments.Error = error;
 
-            return publisherSubscriber.PublishAsync(notification);
+            publisherSubscriber.Publish(notification);
         }
 
         #endregion Private Static Methods

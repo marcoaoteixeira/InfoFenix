@@ -61,14 +61,14 @@ namespace InfoFenix.Core.Commands {
             };
 
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStartAsync(
+                _publisherSubscriber.ProgressiveTaskStart(
                     title: Resource.SaveDocument_ProgressiveTaskStart_Title,
                     actualStep: info.ActualStep,
                     totalSteps: info.TotalSteps
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
-                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    _publisherSubscriber.ProgressiveTaskPerformStep(
                         title: string.Format(Resource.SaveDocument_ProgressiveTaskPerformStep_Message, command.Document.FileName),
                         actualStep: ++info.ActualStep,
                         totalSteps: info.TotalSteps

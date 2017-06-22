@@ -5,7 +5,7 @@
 
         #region IAction Members
 
-        public override string Name => "Inicializar Serviços do Aplicativo";
+        public override string Name => "Inicializar Serviços";
 
         public override void Execute() {
         }

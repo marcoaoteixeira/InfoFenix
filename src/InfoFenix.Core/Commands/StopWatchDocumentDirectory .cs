@@ -59,13 +59,13 @@ namespace InfoFenix.Core.Commands {
             };
 
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStartAsync(
+                _publisherSubscriber.ProgressiveTaskStart(
                     title: Resource.StopWatchDocumentDirectory_ProgressiveTaskStart_Title,
                     actualStep: info.ActualStep,
                     totalSteps: info.TotalSteps
                 );
 
-                _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                _publisherSubscriber.ProgressiveTaskPerformStep(
                     message: string.Format(Resource.StopWatchDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
                     actualStep: ++info.ActualStep,
                     totalSteps: info.TotalSteps

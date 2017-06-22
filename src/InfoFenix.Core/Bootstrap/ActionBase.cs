@@ -1,17 +1,19 @@
 ﻿using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Core.Bootstrap {
+
     public abstract class ActionBase : IAction {
 
         #region Public Properties
 
         private ILogger _log;
+
         public ILogger Log {
             get { return _log ?? NullLogger.Instance; }
             set { _log = value ?? NullLogger.Instance; }
         }
 
-        #endregion
+        #endregion Public Properties
 
         #region IAction Members
 

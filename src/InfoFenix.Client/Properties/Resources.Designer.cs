@@ -71,6 +71,42 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to É obrigatório selecionar a pasta da base de dados remota, se utilizar o modo remoto..
+        /// </summary>
+        internal static string ConfigurationForm_MustSelectApplicationDataDirectory {
+            get {
+                return ResourceManager.GetString("ConfigurationForm_MustSelectApplicationDataDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecionar diretório de dados do aplicativo.
+        /// </summary>
+        internal static string ConfigurationForm_SelectApplicationDataDirectory {
+            get {
+                return ResourceManager.GetString("ConfigurationForm_SelectApplicationDataDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecionar diretório de destino.
+        /// </summary>
+        internal static string ConfigurationForm_SelectDatabaseBackupDirectory {
+            get {
+                return ResourceManager.GetString("ConfigurationForm_SelectDatabaseBackupDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecionar arquivo de restauração.
+        /// </summary>
+        internal static string ConfigurationForm_SelectDatabaseRestoreFile {
+            get {
+                return ResourceManager.GetString("ConfigurationForm_SelectDatabaseRestoreFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copiar.
         /// </summary>
         internal static string Copy {
@@ -112,10 +148,57 @@ namespace InfoFenix.Client.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap database_backup_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("database-backup_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap database_restore_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("database-restore_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ver.{0}.{1}.{2}.
+        /// </summary>
+        internal static string Display_Version {
+            get {
+                return ResourceManager.GetString("Display_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap document_directory_128x128 {
             get {
                 object obj = ResourceManager.GetObject("document_directory_128x128", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erro.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sair.
+        /// </summary>
+        internal static string Exit {
+            get {
+                return ResourceManager.GetString("Exit", resourceCulture);
             }
         }
         
@@ -252,6 +335,16 @@ namespace InfoFenix.Client.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap hourglass_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("hourglass_32x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap index_128x128 {
             get {
                 object obj = ResourceManager.GetObject("index_128x128", resourceCulture);
@@ -276,6 +369,69 @@ namespace InfoFenix.Client.Properties {
             get {
                 object obj = ResourceManager.GetObject("info_fenix_84x95", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deseja realmente sair do aplicativo?.
+        /// </summary>
+        internal static string MainForm_Exit_Message {
+            get {
+                return ResourceManager.GetString("MainForm_Exit_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to É necessário reiniciar o aplicativo..
+        /// </summary>
+        internal static string MustRebootApplication {
+            get {
+                return ResourceManager.GetString("MustRebootApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Cancelar.
+        /// </summary>
+        internal static string ProgressiveTaskForm_ActionButton_Cancel {
+            get {
+                return ResourceManager.GetString("ProgressiveTaskForm_ActionButton_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &amp;Fechar.
+        /// </summary>
+        internal static string ProgressiveTaskForm_ActionButton_Close {
+            get {
+                return ResourceManager.GetString("ProgressiveTaskForm_ActionButton_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deseja realmente cancelar a tarefa?.
+        /// </summary>
+        internal static string ProgressiveTaskForm_Cancellation_Message {
+            get {
+                return ResourceManager.GetString("ProgressiveTaskForm_Cancellation_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancelar Tarefa.
+        /// </summary>
+        internal static string ProgressiveTaskForm_Cancellation_Title {
+            get {
+                return ResourceManager.GetString("ProgressiveTaskForm_Cancellation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reiniciar.
+        /// </summary>
+        internal static string Reboot {
+            get {
+                return ResourceManager.GetString("Reboot", resourceCulture);
             }
         }
         
@@ -359,18 +515,9 @@ namespace InfoFenix.Client.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} de {1}.
         /// </summary>
-        internal static string SplashScreen_ActualStep_TotalSteps {
+        internal static string SplashScreenForm_ActualStep_TotalSteps {
             get {
-                return ResourceManager.GetString("SplashScreen_ActualStep_TotalSteps", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ver.{0}.{1}.{2}.
-        /// </summary>
-        internal static string SplashScreen_Version {
-            get {
-                return ResourceManager.GetString("SplashScreen_Version", resourceCulture);
+                return ResourceManager.GetString("SplashScreenForm_ActualStep_TotalSteps", resourceCulture);
             }
         }
         
@@ -385,11 +532,38 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sucesso.
+        /// </summary>
+        internal static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Texto selecionado foi copiado para a área de transferência.
         /// </summary>
         internal static string TextCopiedToClipboard {
             get {
                 return ResourceManager.GetString("TextCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erro: {0}.
+        /// </summary>
+        internal static string WaitForForm_Error_Message {
+            get {
+                return ResourceManager.GetString("WaitForForm_Error_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ação concluída com sucesso!.
+        /// </summary>
+        internal static string WaitForForm_Success_Message {
+            get {
+                return ResourceManager.GetString("WaitForForm_Success_Message", resourceCulture);
             }
         }
         

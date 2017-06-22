@@ -3,10 +3,10 @@
     public interface IManagementService {
 
         #region Methods
-
+        
         void BackupDatabase(string outputPath);
 
-        void RestoreDatabase(string path);
+        void RestoreDatabase(string inputPath);
 
         #endregion Methods
     }

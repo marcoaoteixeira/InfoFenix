@@ -19,10 +19,10 @@ namespace InfoFenix.Core.Dto {
 
         public IDocumentIndex Map() {
             return new DocumentIndex(DocumentID.ToString())
-                .Add(Common.Index.DocumentFieldName.DocumentCode, DocumentCode).Store()
-                .Add(Common.Index.DocumentFieldName.DocumentDirectoryCode, DocumentDirectoryCode).Store()
-                .Add(Common.Index.DocumentFieldName.FileName, FileName).Store()
-                .Add(Common.Index.DocumentFieldName.Content, Content).Store().Analyze();
+                .Add(Common.DocumentIndex.FieldNames.DocumentCode, DocumentCode).Store()
+                .Add(Common.DocumentIndex.FieldNames.DocumentDirectoryCode, DocumentDirectoryCode).Store()
+                .Add(Common.DocumentIndex.FieldNames.FileName, FileName).Store()
+                .Add(Common.DocumentIndex.FieldNames.Content, Content).Store().Analyze();
         }
 
         #endregion Public Methods
@@ -32,10 +32,10 @@ namespace InfoFenix.Core.Dto {
         public static DocumentIndexDto Map(ISearchHit searchHit) {
             return new DocumentIndexDto {
                 DocumentID = int.Parse(searchHit.DocumentID),
-                DocumentCode = searchHit.GetInt(Common.Index.DocumentFieldName.DocumentCode),
-                DocumentDirectoryCode = searchHit.GetString(Common.Index.DocumentFieldName.DocumentDirectoryCode),
-                FileName = searchHit.GetString(Common.Index.DocumentFieldName.FileName),
-                Content = searchHit.GetString(Common.Index.DocumentFieldName.Content)
+                DocumentCode = searchHit.GetInt(Common.DocumentIndex.FieldNames.DocumentCode),
+                DocumentDirectoryCode = searchHit.GetString(Common.DocumentIndex.FieldNames.DocumentDirectoryCode),
+                FileName = searchHit.GetString(Common.DocumentIndex.FieldNames.FileName),
+                Content = searchHit.GetString(Common.DocumentIndex.FieldNames.Content)
             };
         }
 

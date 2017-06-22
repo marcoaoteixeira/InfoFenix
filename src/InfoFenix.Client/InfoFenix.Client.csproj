@@ -47,22 +47,6 @@
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Spire.Doc, Version=5.3.36.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.Doc.dll</HintPath>
-    </Reference>
-    <Reference Include="Spire.DocViewer.Forms, Version=1.8.4.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\build\Spire.DocViewer.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="Spire.License, Version=1.3.3.40, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.License.dll</HintPath>
-    </Reference>
-    <Reference Include="Spire.Pdf, Version=3.2.74.59040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FreeSpire.DocViewer.1.8\lib\net40\Spire.Pdf.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -76,106 +60,79 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ClientServiceRegistration.cs" />
-    <Compile Include="Code\Jobs\JobExecutor.cs" />
-    <Compile Include="Code\PowerListView.cs">
+    <Compile Include="Code\Controls\PowerListView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Code\Extensions\ControlExtension.cs" />
     <Compile Include="Code\Extensions\RichTextBoxExtension.cs" />
     <Compile Include="Code\FormManager.cs" />
-    <Compile Include="Code\DialogHelper.cs" />
+    <Compile Include="Code\Helpers\DialogHelper.cs" />
     <Compile Include="Code\IFormManager.cs" />
-    <Compile Include="Code\ProgressiveTaskCompleteEventArgs.cs" />
-    <Compile Include="Code\ProgressiveTaskCancelEventArgs.cs" />
     <Compile Include="Code\ProgressiveTaskExecutor.cs" />
     <Compile Include="Code\RichTextBoxAppender.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Code\WaitFor.cs" />
+    <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Views\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SplashScreenForm.cs">
+    <Compile Include="Views\Home\SplashScreenForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SplashScreenForm.Designer.cs">
+    <Compile Include="Views\Home\SplashScreenForm.Designer.cs">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\AboutForm.cs">
+    <Compile Include="Views\Home\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\AboutForm.Designer.cs">
+    <Compile Include="Views\Home\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ConfigurationForm.cs">
+    <Compile Include="Views\Manage\ConfigurationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\ConfigurationForm.Designer.cs">
+    <Compile Include="Views\Manage\ConfigurationForm.Designer.cs">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\DocumentDirectoryForm.cs">
+    <Compile Include="Views\DocumentDirectory\DocumentDirectoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\DocumentDirectoryForm.Designer.cs">
+    <Compile Include="Views\DocumentDirectory\DocumentDirectoryForm.Designer.cs">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\HelpForm.cs">
+    <Compile Include="Views\Home\HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HelpForm.Designer.cs">
+    <Compile Include="Views\Home\HelpForm.Designer.cs">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ManageDocumentDirectoryForm.cs">
+    <Compile Include="Views\DocumentDirectory\ManageDocumentDirectoryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\ManageDocumentDirectoryForm.Designer.cs">
+    <Compile Include="Views\DocumentDirectory\ManageDocumentDirectoryForm.Designer.cs">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProgressiveTaskForm.cs">
+    <Compile Include="Views\Search\SearchResultForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\ProgressiveTaskForm.Designer.cs">
-      <DependentUpon>ProgressiveTaskForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SearchResultForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\SearchResultForm.Designer.cs">
+    <Compile Include="Views\Search\SearchResultForm.Designer.cs">
       <DependentUpon>SearchResultForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\SearchForm.cs">
+    <Compile Include="Views\Search\SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\SearchForm.Designer.cs">
+    <Compile Include="Views\Search\SearchForm.Designer.cs">
       <DependentUpon>SearchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Shared\LayoutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Shared\TaskForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\TaskForm.Designer.cs">
-      <DependentUpon>TaskForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\TaskItemUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\TaskItemUserControl.Designer.cs">
-      <DependentUpon>TaskItemUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WaitForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\WaitForm.Designer.cs">
-      <DependentUpon>WaitForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -186,41 +143,32 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SplashScreenForm.resx">
+    <EmbeddedResource Include="Views\Home\SplashScreenForm.resx">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\AboutForm.resx">
+    <EmbeddedResource Include="Views\Home\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ConfigurationForm.resx">
+    <EmbeddedResource Include="Views\Manage\ConfigurationForm.resx">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\DocumentDirectoryForm.resx">
+    <EmbeddedResource Include="Views\DocumentDirectory\DocumentDirectoryForm.resx">
       <DependentUpon>DocumentDirectoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HelpForm.resx">
+    <EmbeddedResource Include="Views\Home\HelpForm.resx">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ManageDocumentDirectoryForm.resx">
+    <EmbeddedResource Include="Views\DocumentDirectory\ManageDocumentDirectoryForm.resx">
       <DependentUpon>ManageDocumentDirectoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ProgressiveTaskForm.resx">
-      <DependentUpon>ProgressiveTaskForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\SearchForm.resx">
+    <EmbeddedResource Include="Views\Search\SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\SearchResultForm.resx">
+    <EmbeddedResource Include="Views\Search\SearchResultForm.resx">
       <DependentUpon>SearchResultForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Shared\LayoutForm.resx">
       <DependentUpon>LayoutForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Shared\TaskItemUserControl.resx">
-      <DependentUpon>TaskItemUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\WaitForm.resx">
-      <DependentUpon>WaitForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Help\fonts\OpenSans-Bold.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -444,13 +392,13 @@
     <Content Include="Help\js\respond.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\database-restore_32x32.png" />
+    <None Include="Resources\database-backup_32x32.png" />
+    <None Include="Resources\hourglass_32x32.gif" />
     <None Include="Resources\copy-text_16x16.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Help\img\" />
-    <Folder Include="Views\DocumentDirectory\" />
-    <Folder Include="Views\Manage\" />
-    <Folder Include="Views\Search\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

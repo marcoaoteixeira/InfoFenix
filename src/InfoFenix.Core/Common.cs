@@ -34,7 +34,7 @@ namespace InfoFenix.Core {
 
         #region Public Static Internal Classes
 
-        public static class Index {
+        public static class DocumentIndex {
 
             #region Public Static Read-Only Fields
 
@@ -44,7 +44,7 @@ namespace InfoFenix.Core {
 
             #region Public Static Inner Classes
 
-            public static class DocumentFieldName {
+            public static class FieldNames {
 
                 #region Public Static Read-Only Fields
 

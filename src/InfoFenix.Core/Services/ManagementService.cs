@@ -61,12 +61,12 @@ namespace InfoFenix.Core.Services {
             Directory.Delete(tempDirectory, recursive: true);
         }
 
-        public void RestoreDatabase(string path) {
+        public void RestoreDatabase(string inputPath) {
             if (_appSettings.UseRemoteSearchDatabase) {
                 throw new InvalidOperationException("Não é possível realizar a restauração a partir da máquina cliente.");
             }
 
-            if (!IOHelper.IsFile(path)) {
+            if (!IOHelper.IsFile(inputPath)) {
                 throw new InvalidOperationException("O caminho selecionado deve apontar para um arquivo válido.");
             }
 
@@ -81,7 +81,7 @@ namespace InfoFenix.Core.Services {
             // Delete all current files
             Directory.Delete(_appSettings.ApplicationDataDirectoryPath, recursive: true);
 
-            ZipFile.ExtractToDirectory(path, _appSettings.ApplicationDataDirectoryPath);
+            ZipFile.ExtractToDirectory(inputPath, _appSettings.ApplicationDataDirectoryPath);
         }
 
         #endregion IManagementService Members

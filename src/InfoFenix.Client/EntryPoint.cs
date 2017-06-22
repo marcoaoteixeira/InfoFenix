@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
+using InfoFenix.Client.Views;
+using InfoFenix.Client.Views.Home;
 using InfoFenix.Core;
 using InfoFenix.Core.Bootstrap;
 using InfoFenix.Core.IoC;
@@ -19,10 +21,6 @@ namespace InfoFenix.Client {
         #endregion Private Static Fields
 
         #region Internal Static Properties
-
-        internal static CancellationTokenIssuer CancellationTokenIssuer {
-            get { return _compositionRoot.Resolver.Resolve<CancellationTokenIssuer>(); }
-        }
 
         internal static bool IgnoreExitRoutine { get; set; }
 
@@ -53,7 +51,8 @@ namespace InfoFenix.Client {
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.ApplicationExit += (sender, e) => TearDown();
+            Application.ApplicationExit += TearDown;
+            Application.ThreadException += Error;
 
             ConfigureCompositionRoot();
 
@@ -96,10 +95,19 @@ namespace InfoFenix.Client {
             _compositionRoot.Resolver.Resolve<IBootstrapper>().Run();
         }
 
-        private static void TearDown() {
-            var logger = _compositionRoot.Resolver.Resolve<ILoggerFactory>().CreateLogger(typeof(EntryPoint));
+        private static void Error(object sender, ThreadExceptionEventArgs e) {
+            if (e.Exception != null) {
+                var logger = _compositionRoot.Resolver.Resolve<ILoggerFactory>().CreateLogger(typeof(EntryPoint));
+                logger.Error(e.Exception, e.Exception.Message);
+                MessageBox.Show($"Ocorreu um erro inesperado: {e.Exception.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-            try { CancellationTokenIssuer.CancelAll(); } catch (Exception ex) { logger.Error(ex, ex.Message); }
+        private static void TearDown(object sender, EventArgs e) {
+            var logger = _compositionRoot.Resolver.Resolve<ILoggerFactory>().CreateLogger(typeof(EntryPoint));
+            var cancellationTokenIssuer = _compositionRoot.Resolver.Resolve<CancellationTokenIssuer>();
+
+            try { cancellationTokenIssuer.CancelAll(); } catch (Exception ex) { logger.Error(ex, ex.Message); }
 
             _compositionRoot.TearDown();
             _compositionRoot = null;

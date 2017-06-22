@@ -50,11 +50,11 @@ namespace InfoFenix.Core.Queries {
             foreach (var item in positiveTerms) {
                 if (item.IndexOf("-") > 0 || item.IndexOf("-") == (item.Length - 1)) {
                     searchBuilder = searchBuilder
-                        .WithField(Common.Index.DocumentFieldName.Content, item, item.Contains("*"))
+                        .WithField(Common.DocumentIndex.FieldNames.Content, item, item.Contains("*"))
                         .NotAnalyzed();
                 } else {
                     searchBuilder = searchBuilder
-                        .WithField(Common.Index.DocumentFieldName.Content, item, item.Contains("*"))
+                        .WithField(Common.DocumentIndex.FieldNames.Content, item, item.Contains("*"))
                         .ExactMatch()
                         .Mandatory();
                 }
@@ -62,12 +62,12 @@ namespace InfoFenix.Core.Queries {
             // Search negative terms
             foreach (var item in negativeTerms) {
                 searchBuilder = searchBuilder
-                    .WithField(Common.Index.DocumentFieldName.Content, item, false)
+                    .WithField(Common.DocumentIndex.FieldNames.Content, item, false)
                     .Forbidden();
             }
 
             searchBuilder
-                .SortByInteger(Common.Index.DocumentFieldName.DocumentCode)
+                .SortByInteger(Common.DocumentIndex.FieldNames.DocumentCode)
                 .Ascending();
 
             return searchBuilder;
@@ -99,13 +99,13 @@ namespace InfoFenix.Core.Queries {
             var totalSteps = query.Indexes.Count + 1;
 
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStartAsync(
+                _publisherSubscriber.ProgressiveTaskStart(
                     title: Resource.SearchDocumentIndex_ProgressiveTaskStart_Title,
                     actualStep: actualStep,
                     totalSteps: totalSteps
                 );
 
-                _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                _publisherSubscriber.ProgressiveTaskPerformStep(
                     message: Resource.SearchDocumentIndex_ProgressiveTaskPerformStep_Build_Message,
                     actualStep: ++actualStep,
                     totalSteps: totalSteps
@@ -122,7 +122,7 @@ namespace InfoFenix.Core.Queries {
                 };
 
                 if (string.IsNullOrWhiteSpace(query.QueryTerm)) {
-                    _publisherSubscriber.ProgressiveTaskCompleteAsync(
+                    _publisherSubscriber.ProgressiveTaskComplete(
                         actualStep: actualStep,
                         totalSteps: totalSteps
                     );
@@ -138,7 +138,7 @@ namespace InfoFenix.Core.Queries {
 
                     var indexDto = searchDto[index.Name];
 
-                    _publisherSubscriber.ProgressiveTaskPerformStepAsync(
+                    _publisherSubscriber.ProgressiveTaskPerformStep(
                         message: string.Format(Resource.SearchDocumentIndex_ProgressiveTaskPerformStep_Search_Message, indexDto.Label),
                         actualStep: ++actualStep,
                         totalSteps: totalSteps
@@ -151,13 +151,13 @@ namespace InfoFenix.Core.Queries {
                 }
 
                 if (cancellationToken.IsCancellationRequested) {
-                    _publisherSubscriber.ProgressiveTaskCancelAsync(
+                    _publisherSubscriber.ProgressiveTaskCancel(
                         actualStep: actualStep,
                         totalSteps: totalSteps
                     );
                 }
 
-                _publisherSubscriber.ProgressiveTaskCompleteAsync(
+                _publisherSubscriber.ProgressiveTaskComplete(
                     actualStep: actualStep,
                     totalSteps: totalSteps
                 );

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InfoFenix.Core.Cqrs {
@@ -7,7 +8,7 @@ namespace InfoFenix.Core.Cqrs {
 
         #region Methods
 
-        Task CommandAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken));
+        Task CommandAsync(ICommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default(CancellationToken));
 

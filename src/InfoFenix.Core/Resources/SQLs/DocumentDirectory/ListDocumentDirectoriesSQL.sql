@@ -13,8 +13,8 @@
     ) AS [total_documents]
 FROM [document_directories]
 WHERE
-    (@Label IS NULL OR ([document_directories].[label] LIKE '%' + @Label + '%'))
-AND (@Path IS NULL OR ([document_directories].[path] LIKE '%' + @Path + '%'))
-AND (@Code IS NULL OR ([document_directories].[code] LIKE '%' + @Code + '%'))
-AND (@Watch IS NULL OR ([document_directories].[watch] = @Watch))
-AND (@Index IS NULL OR ([document_directories].[index] = @Index));
+    (@label IS NULL OR ([document_directories].[label] LIKE '%' + @label + '%'))
+AND (@path IS NULL OR ([document_directories].[path] LIKE '%' + @path + '%'))
+AND (@code IS NULL OR ([document_directories].[code] LIKE '%' + @code + '%'))
+AND (@watch IS NULL OR ([document_directories].[watch] = @watch))
+AND (@index IS NULL OR ([document_directories].[index] = @index));

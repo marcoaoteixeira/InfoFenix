@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
+using InfoFenix.Core.Logging;
 using InfoFenix.Core.Office;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
@@ -18,6 +22,8 @@ namespace InfoFenix.Core.Queries {
 
         public bool ReadFileContent { get; set; }
 
+        public bool RequireDocumentDirectory { get; set; }
+
         #endregion Public Properties
     }
 
@@ -25,15 +31,28 @@ namespace InfoFenix.Core.Queries {
 
         #region Private Read-Only Fields
 
+        private readonly IDatabase _database;
         private readonly IWordApplication _wordApplication;
 
         #endregion Private Read-Only Fields
 
+        #region Public Properties
+
+        private ILogger _log;
+        public ILogger Log {
+            get { return _log ?? NullLogger.Instance; }
+            set { _log = value ?? NullLogger.Instance; }
+        }
+
+        #endregion
+
         #region Public Constructors
 
-        public ListDocumentsByDocumentDirectoryFromDiskQueryHandler(IWordApplication wordApplication) {
+        public ListDocumentsByDocumentDirectoryFromDiskQueryHandler(IDatabase database, IWordApplication wordApplication) {
+            Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(wordApplication, nameof(wordApplication));
-
+            
+            _database = database;
             _wordApplication = wordApplication;
         }
 
@@ -43,17 +62,27 @@ namespace InfoFenix.Core.Queries {
 
         public Task<IEnumerable<DocumentDto>> HandleAsync(ListDocumentsByDocumentDirectoryFromDiskQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
+                var documentDirectory = query.RequireDocumentDirectory
+                    ? _database.ExecuteReaderSingle(Resource.GetDocumentDirectoryByPathSQL, DocumentDirectoryDto.Map, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, query.DocumentDirectoryPath)
+                    })
+                    : null;
+
                 var result = new List<DocumentDto>();
-                foreach (var file in Common.GetDocFiles(query.DocumentDirectoryPath)) {
+                foreach (var filePath in Common.GetDocFiles(query.DocumentDirectoryPath)) {
                     var document = new DocumentDto {
-                        Code = Common.ExtractCodeFromFilePath(file),
-                        Path = file,
-                        LastWriteTime = File.GetLastWriteTime(file)
+                        Code = Common.ExtractCodeFromFilePath(filePath),
+                        DocumentDirectory = documentDirectory,
+                        Indexed = false,
+                        LastWriteTime = File.GetLastWriteTime(filePath),
+                        Path = filePath
                     };
                     if (query.ReadFileContent) {
-                        using (var wordDocument = _wordApplication.Open(file)) {
-                            document.Payload = Encoding.UTF8.GetBytes(query.ReadFileContent ? wordDocument.GetText() : string.Empty);
-                        }
+                        try {
+                            using (var wordDocument = _wordApplication.Open(filePath)) {
+                                document.Payload = Encoding.UTF8.GetBytes(query.ReadFileContent ? wordDocument.GetText() : string.Empty);
+                            }
+                        } catch (Exception ex) { Log.Error(ex, $"CANNOT OPEN/READ FILE: {filePath}"); }
                     }
                     result.Add(document);
                 }

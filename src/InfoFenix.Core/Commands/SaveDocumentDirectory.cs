@@ -52,43 +52,75 @@ namespace InfoFenix.Core.Commands {
 
         #endregion Public Constructors
 
+        #region Private Methods
+
+        private void CheckCancellationTokenAndNotify(CancellationToken cancellationToken, int actualStep, int totalSteps) {
+            if (cancellationToken.IsCancellationRequested) {
+                _publisherSuscriber.Publish(new ProgressiveTaskCancelNotification {
+                    Arguments = new ProgressiveTaskArguments {
+                        ActualStep = actualStep,
+                        TotalSteps = totalSteps
+                    }
+                });
+
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+        }
+
+        #endregion Private Methods
+
         #region ICommandHandler<SaveDocumentDirectoryCommand> Members
 
-        public Task HandleAsync(SaveDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var info = new ProgressiveTaskContinuationInfo {
-                Log = Log,
-                TotalSteps = 1
-            };
-
+        public Task HandleAsync(SaveDocumentDirectoryCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                _publisherSuscriber.ProgressiveTaskStart(
-                    title: Resource.SaveDocumentDirectory_ProgressiveTaskStart_Title,
-                    actualStep: info.ActualStep,
-                    totalSteps: info.TotalSteps
-                );
+                var actualStep = 0;
+                var totalSteps = 1;
+
+                _publisherSuscriber.Publish(new ProgressiveTaskStartNotification {
+                    Arguments = new ProgressiveTaskArguments {
+                        Title = Resource.SaveDocumentDirectory_ProgressiveTaskStart_Title,
+                        ActualStep = actualStep,
+                        TotalSteps = totalSteps
+                    }
+                });
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
-                    _publisherSuscriber.ProgressiveTaskStart(
-                        title: string.Format(Resource.SaveDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
-                        actualStep: ++info.ActualStep,
-                        totalSteps: info.TotalSteps
-                    );
+                    try {
+                        CheckCancellationTokenAndNotify(cancellationToken, actualStep, totalSteps);
 
-                    var result = _database.ExecuteScalar(Resource.SaveDocumentDirectorySQL, parameters: new[] {
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Label, command.DocumentDirectory.Label),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Path, command.DocumentDirectory.Path),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Code, command.DocumentDirectory.Code),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Watch, command.DocumentDirectory.Watch ? 1 : 0, DbType.Int32),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Index, command.DocumentDirectory.Index ? 1 : 0, DbType.Int32)
-                    });
-                    if (command.DocumentDirectory.DocumentDirectoryID <= 0) { command.DocumentDirectory.DocumentDirectoryID = Convert.ToInt32(result); }
+                        _publisherSuscriber.Publish(new ProgressiveTaskPerformStepNotification {
+                            Arguments = new ProgressiveTaskArguments {
+                                Message = string.Format(Resource.SaveDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
+                                ActualStep = ++actualStep,
+                                TotalSteps = totalSteps
+                            }
+                        });
 
-                    cancellationToken.ThrowIfCancellationRequested();
-                    transaction.Commit();
+                        var result = _database.ExecuteScalar(Resource.SaveDocumentDirectorySQL, parameters: new[] {
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Label, command.DocumentDirectory.Label),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Path, command.DocumentDirectory.Path),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Code, command.DocumentDirectory.Code),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Watch, command.DocumentDirectory.Watch ? 1 : 0, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Index, command.DocumentDirectory.Index ? 1 : 0, DbType.Int32)
+                        });
+                        if (command.DocumentDirectory.DocumentDirectoryID <= 0) { command.DocumentDirectory.DocumentDirectoryID = Convert.ToInt32(result); }
+
+                        CheckCancellationTokenAndNotify(cancellationToken, actualStep, totalSteps);
+                        transaction.Commit();
+                    } catch (Exception ex) {
+                        _publisherSuscriber.Publish(new ProgressiveTaskErrorNotification {
+                            Arguments = new ProgressiveTaskArguments {
+                                ActualStep = actualStep,
+                                TotalSteps = totalSteps,
+                                Error = ex.Message
+                            }
+                        });
+
+                        throw;
+                    }
                 }
-            }, cancellationToken)
-            .ContinueWith(_publisherSuscriber.TaskContinuation, info);
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<SaveDocumentDirectoryCommand> Members

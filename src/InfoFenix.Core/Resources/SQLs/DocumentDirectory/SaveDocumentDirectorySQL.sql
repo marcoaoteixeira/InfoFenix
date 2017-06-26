@@ -6,11 +6,11 @@
     [watch],
     [index]
 ) VALUES (
-    @ID,
-    @Label,
-    @Path,
-    @Code,
-    @Watch,
-    @Index
+    @id,
+    @label,
+    @path,
+    @code,
+    @watch,
+    @index
 );
 SELECT MAX([id]) FROM [document_directories]

@@ -48,12 +48,10 @@ namespace InfoFenix.Core.IO {
             if (disposing) {
                 lock (SyncLock) {
                     foreach (var item in Cache.Values) {
-                        var disposable = item as IDisposable;
-                        if (disposable != null) {
+                        if (item is IDisposable disposable) {
                             disposable.Dispose();
                         }
                     }
-                    Cache.Clear();
                 }
             }
             _disposed = true;
@@ -75,8 +73,7 @@ namespace InfoFenix.Core.IO {
         public void StopWatch(string path) {
             lock (SyncLock) {
                 if (Cache.ContainsKey(path)) {
-                    var disposable = Cache[path] as IDisposable;
-                    if (disposable != null) {
+                    if (Cache[path] is IDisposable disposable) {
                         disposable.Dispose();
                     }
                     Cache.Remove(path);

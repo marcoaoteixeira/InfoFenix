@@ -103,6 +103,7 @@
     <Compile Include="Commands\StopWatchDocumentDirectory .cs" />
     <Compile Include="Commands\StartWatchDocumentDirectory.cs" />
     <Compile Include="Cqrs\MediatorExtension.cs" />
+    <Compile Include="Cqrs\ProgressInfo.cs" />
     <Compile Include="Data\Impl\Database.cs" />
     <Compile Include="Data\DatabaseExtension.cs" />
     <Compile Include="Data\DatabaseSettings.cs" />
@@ -123,7 +124,6 @@
     <Compile Include="Dto\DocumentIndexDto.cs" />
     <Compile Include="Dto\IndexDto.cs" />
     <Compile Include="Dto\SearchDto.cs" />
-    <Compile Include="Expando.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\EventHandlerExtension.cs" />
@@ -131,7 +131,6 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TaskExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
-    <Compile Include="FatalException.cs" />
     <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="IoC\CompositionRoot.cs" />
     <Compile Include="IoC\CompositionRootState.cs" />
@@ -170,6 +169,7 @@
     <Compile Include="Logging\LogLevelExtension.cs" />
     <Compile Include="Logging\Impl\NullLogger.cs" />
     <Compile Include="Logging\Impl\NullLoggerFactory.cs" />
+    <Compile Include="NullProgress.cs" />
     <Compile Include="Office\IWordDocument.cs" />
     <Compile Include="Office\IWordApplication.cs" />
     <Compile Include="Office\Impl\NullWordDocument.cs" />
@@ -192,12 +192,12 @@
     <Compile Include="PubSub\Impl\NullSubscription.cs" />
     <Compile Include="PubSub\Impl\PublisherSubscriber.cs" />
     <Compile Include="PubSub\Impl\Subscription.cs" />
-    <Compile Include="Queries\DocumentDirectoryPath.cs" />
     <Compile Include="Queries\GetDocumentByPath.cs" />
     <Compile Include="Queries\GetDocument.cs" />
     <Compile Include="Queries\GetDocumentDirectoryByPath.cs" />
     <Compile Include="Queries\GetDocumentDirectory.cs" />
     <Compile Include="Queries\ListDocumentDirectories.cs" />
+    <Compile Include="Queries\ListDocumentsDifferenceBetweenDiskDatabase.cs" />
     <Compile Include="Queries\ListDocumentsByDocumentDirectoryFromDisk.cs" />
     <Compile Include="Queries\ListDocumentsByDocumentDirectory.cs" />
     <Compile Include="Queries\SearchDocumentIndex.cs" />
@@ -238,8 +238,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config">
+    <None Include="App.Config" />
+    <None Include="Packages.Config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

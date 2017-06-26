@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
@@ -13,6 +14,8 @@ namespace InfoFenix.Core.Queries {
         #region Public Properties
 
         public int ID { get; set; }
+
+        public bool RequireDocuments { get; set; }
 
         #endregion Public Properties
     }
@@ -39,9 +42,17 @@ namespace InfoFenix.Core.Queries {
 
         public Task<DocumentDirectoryDto> HandleAsync(GetDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReaderSingle(Resource.GetDocumentDirectorySQL, DocumentDirectoryDto.Map, parameters: new[] {
+                var documentDirectory = _database.ExecuteReaderSingle(Resource.GetDocumentDirectorySQL, DocumentDirectoryDto.Map, parameters: new[] {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, query.ID, DbType.Int32)
                 });
+
+                if (query.RequireDocuments) {
+                    documentDirectory.Documents = _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, (reader) => DocumentDto.Map(reader, documentDirectory), parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, documentDirectory.DocumentDirectoryID, DbType.Int32)
+                    }).ToList();
+                }
+
+                return documentDirectory;
             }, cancellationToken);
         }
 

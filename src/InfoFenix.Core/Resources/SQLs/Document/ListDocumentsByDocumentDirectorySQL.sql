@@ -9,4 +9,4 @@
 FROM [documents]
     INNER JOIN [document_directories] ON [document_directories].[id] = [documents].[document_directory_id]
 WHERE
-    [document_directories].[id] = @DocumentDirectoryID;
+    [document_directories].[id] = @document_directory_id;

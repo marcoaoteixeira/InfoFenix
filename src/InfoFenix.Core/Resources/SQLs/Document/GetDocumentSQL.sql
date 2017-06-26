@@ -8,5 +8,5 @@
     [payload]
 FROM [documents]
 WHERE
-    (@ID IS NULL OR ([id] = @ID))
-AND (@Code IS NULL OR ([code] = @Code))
+    (@id IS NULL OR ([id] = @id))
+AND (@code IS NULL OR ([code] = @code))

@@ -8,4 +8,4 @@
     [payload]
 FROM [documents]
 WHERE
-    [path] = @Path
+    [path] = @path

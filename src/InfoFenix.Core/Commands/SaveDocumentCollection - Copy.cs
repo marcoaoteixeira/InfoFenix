@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
@@ -9,28 +8,26 @@ using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
-using InfoFenix.Core.Search;
 using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
-    public sealed class RemoveDocumentCollectionCommand : ICommand {
+    public sealed class SaveDocumentCollectionCommand : ICommand {
 
         #region Public Properties
 
-        public string DocumentDirectoryCode { get; set; }
+        public int DocumentDirectoryID { get; set; }
 
         public IList<DocumentDto> Documents { get; set; } = new List<DocumentDto>();
 
         #endregion Public Properties
     }
 
-    public sealed class RemoveDocumentCollectionCommandHandler : ICommandHandler<RemoveDocumentCollectionCommand> {
+    public sealed class SaveDocumentCollectionCommandHandler : ICommandHandler<SaveDocumentCollectionCommand> {
 
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
-        private readonly IIndexProvider _indexProvider;
         private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
@@ -48,66 +45,60 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public RemoveDocumentCollectionCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
+        public SaveDocumentCollectionCommandHandler(IDatabase database, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(database, nameof(database));
-            Prevent.ParameterNull(indexProvider, nameof(indexProvider));
             Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
-            _indexProvider = indexProvider;
             _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
 
-        #region ICommandHandler<RemoveDocumentCollectionCommand> Members
+        #region ICommandHandler<SaveDocumentCollectionCommand> Members
 
-        public Task HandleAsync(RemoveDocumentCollectionCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
-            var documentIDs = command.Documents.Select(_ => _.DocumentID).ToArray();
+        public Task HandleAsync(SaveDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
             var info = new ProgressiveTaskContinuationInfo {
                 Log = Log,
-                TotalSteps = documentIDs.Length + 1
+                TotalSteps = command.Documents.Count
             };
 
             return Task.Run(() => {
                 _publisherSubscriber.ProgressiveTaskStart(
-                    title: Resource.RemoveDocumentCollection_ProgressiveTaskStart_Title,
+                    title: Resource.SaveDocumentCollection_ProgressiveTaskStart_Title,
                     actualStep: info.ActualStep,
                     totalSteps: info.TotalSteps
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
                     foreach (var document in command.Documents) {
-                        cancellationToken.ThrowIfCancellationRequested();
-
                         _publisherSubscriber.ProgressiveTaskPerformStep(
-                            message: string.Format(Resource.RemoveDocumentCollection_ProgressiveTaskPerformStep_Database_Message, document.Code),
+                            message: string.Format(Resource.SaveDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
                             actualStep: ++info.ActualStep,
                             totalSteps: info.TotalSteps
                         );
 
-                        _database.ExecuteScalar(Resource.RemoveDocumentSQL, parameters: new[] {
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID, DbType.Int32)
+                        var result = _database.ExecuteScalar(Resource.SaveDocumentSQL, parameters: new[] {
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID > 0 ? (object)document.DocumentID : DBNull.Value, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Path, document.Path),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, document.LastWriteTime, DbType.DateTime),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, document.Code, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, document.Indexed ? 1 : 0, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, document.Payload != null ? (object)document.Payload : DBNull.Value, DbType.Binary)
                         });
+                        if (document.DocumentID <= 0) { document.DocumentID = Convert.ToInt32(result); }
+
+                        cancellationToken.ThrowIfCancellationRequested();
                     }
 
                     cancellationToken.ThrowIfCancellationRequested();
                     transaction.Commit();
-
-                    _publisherSubscriber.ProgressiveTaskPerformStep(
-                        message: Resource.RemoveDocumentCollection_ProgressiveTaskPerformStep_Index_Message,
-                        actualStep: ++info.ActualStep,
-                        totalSteps: info.TotalSteps
-                    );
-
-                    _indexProvider
-                        .GetOrCreate(command.DocumentDirectoryCode)
-                        .DeleteDocuments(command.Documents.Select(_ => _.DocumentID.ToString()).ToArray());
                 }
             }, cancellationToken)
             .ContinueWith(_publisherSubscriber.TaskContinuation, info);
         }
 
-        #endregion ICommandHandler<RemoveDocumentCollectionCommand> Members
+        #endregion ICommandHandler<SaveDocumentCollectionCommand> Members
     }
 }

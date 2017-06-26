@@ -54,7 +54,7 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<SaveDocumentCommand> Members
 
-        public Task HandleAsync(SaveDocumentCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task HandleAsync(SaveDocumentCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             var info = new ProgressiveTaskContinuationInfo {
                 Log = Log,
                 TotalSteps = 1

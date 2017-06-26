@@ -289,4 +289,7 @@
   <data name="Reboot" xml:space="preserve">
     <value>Reiniciar</value>
   </data>
+  <data name="DocumentDirectoryForm_SelectDocumentDirectoryPath_Message" xml:space="preserve">
+    <value>Selecionar o caminho do diretório de documentos</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
@@ -57,7 +58,7 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<RemoveDocumentDirectoryCommand> Members
 
-        public Task HandleAsync(RemoveDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task HandleAsync(RemoveDocumentDirectoryCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             var info = new ProgressiveTaskContinuationInfo {
                 Log = Log,
                 TotalSteps = 2

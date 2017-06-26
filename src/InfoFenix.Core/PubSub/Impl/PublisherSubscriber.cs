@@ -64,10 +64,12 @@ namespace InfoFenix.Core.PubSub {
 
             var messageType = typeof(TMessage);
             if (_subscriptions.ContainsKey(messageType)) {
-                foreach (var subscription in _subscriptions[messageType].OfType<ISubscription<TMessage>>()) {
-                    var handler = subscription.CreateHandler();
-                    if (handler == null) { continue; }
-                    handler(message);
+                lock (SyncLock) {
+                    foreach (var subscription in _subscriptions[messageType].OfType<ISubscription<TMessage>>()) {
+                        var handler = subscription.CreateHandler();
+                        if (handler == null) { continue; }
+                        handler(message);
+                    }
                 }
             }
         }

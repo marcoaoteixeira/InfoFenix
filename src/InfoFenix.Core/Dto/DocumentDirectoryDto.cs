@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using InfoFenix.Core.Data;
 
 namespace InfoFenix.Core.Dto {
@@ -22,13 +23,18 @@ namespace InfoFenix.Core.Dto {
         #region Public Static Methods
 
         public static DocumentDirectoryDto Map(IDataReader reader) {
+            return Map(reader, documents: null);
+        }
+
+        public static DocumentDirectoryDto Map(IDataReader reader, IEnumerable<DocumentDto> documents) {
             return new DocumentDirectoryDto {
                 DocumentDirectoryID = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID),
                 Label = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Label),
                 Path = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Path),
                 Code = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Code),
                 Watch = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.Watch) > 0,
-                Index = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.Index) > 0
+                Index = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.Index) > 0,
+                Documents = (documents ?? Enumerable.Empty<DocumentDto>()).ToList()
             };
         }
 

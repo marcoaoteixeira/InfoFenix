@@ -27,18 +27,24 @@ namespace InfoFenix.Client.Code {
 
         #endregion Private Constructors
 
-        #region Public Static Methods
+        #region Public Methods
 
-        public static void Run(CancellationTokenIssuer cancellationTokenIssuer, IPublisherSubscriber publisherSubscriber, params Action<CancellationToken>[] actions) {
+        public void Run(CancellationTokenIssuer cancellationTokenIssuer, IPublisherSubscriber publisherSubscriber, params Action<CancellationToken>[] actions) {
             using (var form = new ProgressiveTaskForm(cancellationTokenIssuer, publisherSubscriber)) {
                 var cancellationToken = cancellationTokenIssuer.Get(ProgressiveTaskForm.PROGRESSIVE_TASK_CANCELLATION_KEY);
-                var taskScheduler = SynchronizationContext.Current == null
-                    ? TaskScheduler.Default
-                    : TaskScheduler.FromCurrentSynchronizationContext();
+                //var taskScheduler = SynchronizationContext.Current == null
+                //    ? TaskScheduler.Default
+                //    : TaskScheduler.FromCurrentSynchronizationContext();
 
-                var parent = new Task(() => actions[0](cancellationToken), cancellationToken);
-                Build(parent, cancellationToken, taskScheduler, 0 /* depth */, actions.Skip(1).ToArray());
-                parent.Start();
+                //var parent = new Task(() => actions[0](cancellationToken), cancellationToken);
+                //Build(parent, cancellationToken, taskScheduler, 0 /* depth */, actions.Skip(1).ToArray());
+                //parent.Start();
+
+                Task.Run(() => {
+                    foreach (var action in actions) {
+                        action(cancellationToken);
+                    }
+                });
 
                 form.ShowDialog();
             }
@@ -113,9 +119,7 @@ namespace InfoFenix.Client.Code {
 
                 _cancellationTokenIssuer = cancellationTokenIssuer;
                 _publisherSubscriber = publisherSubscriber;
-
-                SubscriberForNotifications();
-
+                
                 InitializeComponent();
             }
 
@@ -164,27 +168,26 @@ namespace InfoFenix.Client.Code {
             }
 
             private void StartNotificationHandler(ProgressiveTaskStartNotification message) {
-                progressTitleLabel.SafeCall(() => progressTitleLabel.Text = message.Arguments.Title);
-                progressMessageLabel.SafeCall(() => progressMessageLabel.Text = message.Arguments.Message);
-                mainProgressBar.SafeCall(() => {
-                    mainProgressBar.Value = 0;
-                    mainProgressBar.Minimum = message.Arguments.ActualStep;
-                    mainProgressBar.Maximum = message.Arguments.TotalSteps;
+                progressTitleLabel.SafeInvoke(_ => _.Text = message.Arguments.Title);
+                progressMessageLabel.SafeInvoke(_ => _.Text = message.Arguments.Message);
+                mainProgressBar.SafeInvoke(_ => {
+                    _.Value = 0;
+                    _.Minimum = message.Arguments.ActualStep;
+                    _.Maximum = message.Arguments.TotalSteps;
                 });
-                closeButton.SafeCall(() => closeButton.Text = Resource.ProgressiveTaskForm_ActionButton_Cancel);
+                closeButton.SafeInvoke(_ => _.Text = Resource.ProgressiveTaskForm_ActionButton_Cancel);
 
                 _running = true;
             }
 
             private void PerformStepNotificationHandler(ProgressiveTaskPerformStepNotification message) {
-                progressMessageLabel.SafeCall(() => progressMessageLabel.Text = message.Arguments.Message);
-                mainProgressBar.SafeCall(() => mainProgressBar.PerformStep());
+                progressMessageLabel.SafeInvoke(_ => _.Text = message.Arguments.Message);
+                mainProgressBar.SafeInvoke(_ => _.PerformStep());
             }
 
             private void CompleteNotificationHandler(ProgressiveTaskCompleteNotification message) {
-                progressTitleLabel.SafeCall(() => progressTitleLabel.Text = message.Arguments.Title);
-                progressMessageLabel.SafeCall(() => progressMessageLabel.Text = message.Arguments.HasError ? message.Arguments.Error : string.Empty);
-                closeButton.SafeCall(() => closeButton.Text = Resource.ProgressiveTaskForm_ActionButton_Close);
+                progressMessageLabel.SafeInvoke(_ => _.Text = message.Arguments.HasError ? message.Arguments.Error : string.Empty);
+                closeButton.SafeInvoke(_ => _.Text = Resource.ProgressiveTaskForm_ActionButton_Close);
 
                 _running = false;
             }
@@ -192,17 +195,15 @@ namespace InfoFenix.Client.Code {
             private void CancelNotificationHandler(ProgressiveTaskCancelNotification message) {
                 if (_error) { return; }
 
-                progressTitleLabel.SafeCall(() => progressTitleLabel.Text = message.Arguments.Title);
-                progressMessageLabel.SafeCall(() => progressMessageLabel.Text = message.Arguments.Message);
-                closeButton.SafeCall(() => closeButton.Text = Resource.ProgressiveTaskForm_ActionButton_Close);
+                progressMessageLabel.SafeInvoke(_ => _.Text = message.Arguments.Message);
+                closeButton.SafeInvoke(_ => _.Text = Resource.ProgressiveTaskForm_ActionButton_Close);
 
                 _running = false;
             }
 
             private void ErrorNotificationHandler(ProgressiveTaskErrorNotification message) {
-                progressTitleLabel.SafeCall(() => progressTitleLabel.Text = message.Arguments.Title);
-                progressMessageLabel.SafeCall(() => progressMessageLabel.Text = message.Arguments.Error);
-                closeButton.SafeCall(() => closeButton.Text = Resource.ProgressiveTaskForm_ActionButton_Close);
+                progressMessageLabel.SafeInvoke(_ => _.Text = message.Arguments.Error);
+                closeButton.SafeInvoke(_ => _.Text = Resource.ProgressiveTaskForm_ActionButton_Close);
 
                 _running = false;
                 _error = true;
@@ -216,6 +217,7 @@ namespace InfoFenix.Client.Code {
 
             private void ProgressiveTaskForm_Load(object sender, EventArgs e) {
                 Initialize();
+                SubscriberForNotifications();
             }
 
             private void ProgressiveTaskForm_FormClosing(object sender, FormClosingEventArgs e) {

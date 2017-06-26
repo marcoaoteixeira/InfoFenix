@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.IoC;
 
@@ -24,13 +25,13 @@ namespace InfoFenix.Core.Cqrs {
 
         #region ICommandQueryDispatcher Members
 
-        public Task CommandAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task CommandAsync(ICommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             Prevent.ParameterNull(command, nameof(command));
 
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
             dynamic handler = _resolver.Resolve(handlerType);
 
-            return handler.HandleAsync((dynamic)command, cancellationToken);
+            return handler.HandleAsync((dynamic)command, progress ?? NullProgress<ProgressArguments>.Instance, cancellationToken);
         }
 
         public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default(CancellationToken)) {

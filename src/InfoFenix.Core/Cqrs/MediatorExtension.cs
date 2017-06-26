@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace InfoFenix.Core.Cqrs {
 
@@ -6,10 +7,10 @@ namespace InfoFenix.Core.Cqrs {
 
         #region Public Static Methods
 
-        public static void Command(this IMediator source, ICommand command) {
+        public static void Command(this IMediator source, ICommand command, IProgress<ProgressArguments> progress = null) {
             if (source == null) { return; }
 
-            source.CommandAsync(command, CancellationToken.None).WaitForResult();
+            source.CommandAsync(command, progress, CancellationToken.None).WaitForResult();
         }
 
         public static TResult Query<TResult>(this IMediator source, IQuery<TResult> query) {

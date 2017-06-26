@@ -57,46 +57,78 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<SaveDocumentCollectionCommand> Members
 
-        public Task HandleAsync(SaveDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
-            var info = new ProgressiveTaskContinuationInfo {
-                Log = Log,
-                TotalSteps = command.Documents.Count
-            };
-
+        public Task HandleAsync(SaveDocumentCollectionCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStart(
-                    title: Resource.SaveDocumentCollection_ProgressiveTaskStart_Title,
-                    actualStep: info.ActualStep,
-                    totalSteps: info.TotalSteps
-                );
+                var actualStep = 0;
+                var totalSteps = command.Documents.Count;
 
-                using (var transaction = _database.Connection.BeginTransaction()) {
-                    foreach (var document in command.Documents) {
-                        _publisherSubscriber.ProgressiveTaskPerformStep(
-                            message: string.Format(Resource.SaveDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
-                            actualStep: ++info.ActualStep,
-                            totalSteps: info.TotalSteps
-                        );
-
-                        var result = _database.ExecuteScalar(Resource.SaveDocumentSQL, parameters: new[] {
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID > 0 ? (object)document.DocumentID : DBNull.Value, DbType.Int32),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Path, document.Path),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, document.LastWriteTime, DbType.DateTime),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, document.Code, DbType.Int32),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, document.Indexed ? 1 : 0, DbType.Int32),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, document.Payload != null ? (object)document.Payload : DBNull.Value, DbType.Binary)
-                        });
-                        if (document.DocumentID <= 0) { document.DocumentID = Convert.ToInt32(result); }
-
-                        cancellationToken.ThrowIfCancellationRequested();
+                _publisherSubscriber.Publish(new ProgressiveTaskStartNotification {
+                    Arguments = new ProgressiveTaskArguments {
+                        Title = Resource.SaveDocumentCollection_ProgressiveTaskStart_Title,
+                        ActualStep = actualStep,
+                        TotalSteps = totalSteps
                     }
+                });
+                
+                using (var transaction = _database.Connection.BeginTransaction()) {
+                    try {
+                        foreach (var document in command.Documents) {
+                            if (cancellationToken.IsCancellationRequested) {
+                                _publisherSubscriber.Publish(new ProgressiveTaskCancelNotification {
+                                    Arguments = new ProgressiveTaskArguments {
+                                        ActualStep = actualStep,
+                                        TotalSteps = totalSteps
+                                    }
+                                });
 
-                    cancellationToken.ThrowIfCancellationRequested();
-                    transaction.Commit();
+                                cancellationToken.ThrowIfCancellationRequested();
+                            }
+
+                            _publisherSubscriber.Publish(new ProgressiveTaskPerformStepNotification {
+                                Arguments = new ProgressiveTaskArguments {
+                                    Message = string.Format(Resource.SaveDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
+                                    ActualStep = ++actualStep,
+                                    TotalSteps = totalSteps
+                                }
+                            });
+
+                            var result = _database.ExecuteScalar(Resource.SaveDocumentSQL, parameters: new[] {
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID > 0 ? (object)document.DocumentID : DBNull.Value, DbType.Int32),
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32),
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Path, document.Path),
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, document.LastWriteTime, DbType.DateTime),
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, document.Code, DbType.Int32),
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, document.Indexed ? 1 : 0, DbType.Int32),
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, document.Payload != null ? (object)document.Payload : DBNull.Value, DbType.Binary)
+                            });
+                            if (document.DocumentID <= 0) { document.DocumentID = Convert.ToInt32(result); }
+                        }
+
+                        if (cancellationToken.IsCancellationRequested) {
+                            _publisherSubscriber.Publish(new ProgressiveTaskCancelNotification {
+                                Arguments = new ProgressiveTaskArguments {
+                                    ActualStep = actualStep,
+                                    TotalSteps = totalSteps
+                                }
+                            });
+
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+
+                        transaction.Commit();
+                    } catch (Exception ex) {
+                        _publisherSubscriber.Publish(new ProgressiveTaskErrorNotification {
+                            Arguments = new ProgressiveTaskArguments {
+                                Error = ex.Message,
+                                ActualStep = actualStep,
+                                TotalSteps = totalSteps
+                            }
+                        });
+
+                        throw;
+                    }
                 }
-            }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<SaveDocumentCollectionCommand> Members

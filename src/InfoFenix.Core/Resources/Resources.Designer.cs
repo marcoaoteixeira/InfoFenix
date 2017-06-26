@@ -147,7 +147,7 @@ namespace InfoFenix.Core.Resources {
         ///    [payload]
         ///FROM [documents]
         ///WHERE
-        ///    [path] = @Path.
+        ///    [path] = @path.
         /// </summary>
         internal static string GetDocumentByPathSQL {
             get {
@@ -171,7 +171,7 @@ namespace InfoFenix.Core.Resources {
         ///    ) AS [total_documents]
         ///FROM [document_directories]
         ///WHERE
-        ///    [document_directories].[path] = @Path;.
+        ///    [document_directories].[path] = @path;.
         /// </summary>
         internal static string GetDocumentDirectoryByPathSQL {
             get {
@@ -195,7 +195,7 @@ namespace InfoFenix.Core.Resources {
         ///    ) AS [total_documents]
         ///FROM [document_directories]
         ///WHERE
-        ///    [document_directories].[id] = @ID;.
+        ///    [document_directories].[id] = @id;.
         /// </summary>
         internal static string GetDocumentDirectorySQL {
             get {
@@ -214,8 +214,8 @@ namespace InfoFenix.Core.Resources {
         ///    [payload]
         ///FROM [documents]
         ///WHERE
-        ///    (@ID IS NULL OR ([id] = @ID))
-        ///AND (@Code IS NULL OR ([code] = @Code)).
+        ///    (@id IS NULL OR ([id] = @id))
+        ///AND (@code IS NULL OR ([code] = @code)).
         /// </summary>
         internal static string GetDocumentSQL {
             get {
@@ -257,7 +257,7 @@ namespace InfoFenix.Core.Resources {
         ///    ) AS [total_documents]
         ///FROM [document_directories]
         ///WHERE
-        ///    (@Label IS NULL OR ([document_directories].[label] LIKE &apos;%&apos; + @ [rest of string was truncated]&quot;;.
+        ///    (@label IS NULL OR ([document_directories].[label] LIKE &apos;%&apos; + @ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ListDocumentDirectoriesSQL {
             get {
@@ -277,7 +277,7 @@ namespace InfoFenix.Core.Resources {
         ///FROM [documents]
         ///    INNER JOIN [document_directories] ON [document_directories].[id] = [documents].[document_directory_id]
         ///WHERE
-        ///    [document_directories].[id] = @DocumentDirectoryID;.
+        ///    [document_directories].[id] = @document_directory_id;.
         /// </summary>
         internal static string ListDocumentsByDocumentDirectorySQL {
             get {
@@ -414,11 +414,11 @@ namespace InfoFenix.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to DELETE FROM [documents]
         ///WHERE
-        ///    [document_directory_id] = @DocumentDirectoryID;
+        ///    [document_directory_id] = @document_directory_id;
         ///
         ///DELETE FROM [document_directories]
         ///WHERE
-        ///    [id] = @DocumentDirectoryID;.
+        ///    [id] = @document_directory_id;.
         /// </summary>
         internal static string RemoveDocumentDirectorySQL {
             get {
@@ -427,9 +427,10 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM [documents]
+        ///   Looks up a localized string similar to DELETE
+        ///FROM [documents]
         ///WHERE
-        ///    [id] = @ID;.
+        ///    [id] = @id;.
         /// </summary>
         internal static string RemoveDocumentSQL {
             get {
@@ -500,12 +501,12 @@ namespace InfoFenix.Core.Resources {
         ///    [watch],
         ///    [index]
         ///) VALUES (
-        ///    @ID,
-        ///    @Label,
-        ///    @Path,
-        ///    @Code,
-        ///    @Watch,
-        ///    @Index
+        ///    @id,
+        ///    @label,
+        ///    @path,
+        ///    @code,
+        ///    @watch,
+        ///    @index
         ///);
         ///SELECT MAX([id]) FROM [document_directories].
         /// </summary>
@@ -525,13 +526,13 @@ namespace InfoFenix.Core.Resources {
         ///    [indexed],
         ///    [payload]
         ///) VALUES (
-        ///    @ID,
-        ///    @DocumentDirectoryID,
-        ///    @Path,
-        ///    @LastWriteTime,
-        ///    @Code,
-        ///    @Indexed,
-        ///    @Payload
+        ///    @id,
+        ///    @document_directory_id,
+        ///    @path,
+        ///    @last_write_time,
+        ///    @code,
+        ///    @indexed,
+        ///    @payload
         ///);
         ///SELECT MAX([id]) FROM [documents];.
         /// </summary>
@@ -572,7 +573,7 @@ namespace InfoFenix.Core.Resources {
         ///   Looks up a localized string similar to UPDATE [documents] SET
         ///    [indexed] = 1
         ///WHERE
-        ///    [id] = @ID.
+        ///    [id] = @id.
         /// </summary>
         internal static string SetDocumentIndexSQL {
             get {

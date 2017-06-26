@@ -1,4 +1,4 @@
 ﻿UPDATE [documents] SET
     [indexed] = 1
 WHERE
-    [id] = @ID
+    [id] = @id

@@ -15,6 +15,8 @@ namespace InfoFenix.Core.Queries {
 
         public int DocumentDirectoryID { get; set; }
 
+        public bool RequireDocumentDirectory { get; set; }
+
         #endregion Public Properties
     }
 
@@ -40,7 +42,13 @@ namespace InfoFenix.Core.Queries {
 
         public Task<IEnumerable<DocumentDto>> HandleAsync(ListDocumentsByDocumentDirectoryQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, DocumentDto.Map, parameters: new[] {
+                var documentDirectory = query.RequireDocumentDirectory
+                    ? _database.ExecuteReaderSingle(Resource.GetDocumentDirectorySQL, DocumentDirectoryDto.Map, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, query.DocumentDirectoryID, DbType.Int32)
+                    })
+                    : null;
+
+                return _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, (reader) => DocumentDto.Map(reader, documentDirectory), parameters: new[] {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, query.DocumentDirectoryID, DbType.Int32)
                 });
             }, cancellationToken);

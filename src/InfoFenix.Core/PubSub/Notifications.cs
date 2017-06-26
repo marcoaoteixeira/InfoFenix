@@ -172,7 +172,7 @@ namespace InfoFenix.Core.PubSub {
         public static void ProgressiveTaskError(this IPublisherSubscriber source, string error, string title = null, string message = null, int actualStep = 0, int totalSteps = 0, ILogger log = null) {
             InnerPublish<ProgressiveTaskErrorNotification>(source, title, message, null, actualStep, totalSteps, log);
         }
-
+        
         public static void TaskContinuation(this IPublisherSubscriber source, Task continuation, object state) {
             if (source == null) { return; }
             if (continuation == null) { return; }

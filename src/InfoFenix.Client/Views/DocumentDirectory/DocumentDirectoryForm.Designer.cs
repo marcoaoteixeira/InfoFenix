@@ -42,7 +42,7 @@
             // 
             this.separatorLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.separatorLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.separatorLabel.Location = new System.Drawing.Point(0, 229);
+            this.separatorLabel.Location = new System.Drawing.Point(0, 194);
             this.separatorLabel.Name = "separatorLabel";
             this.separatorLabel.Size = new System.Drawing.Size(584, 2);
             this.separatorLabel.TabIndex = 6;
@@ -52,7 +52,7 @@
             this.actionPanel.BackColor = System.Drawing.SystemColors.Window;
             this.actionPanel.Controls.Add(this.saveAndCloseButton);
             this.actionPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.actionPanel.Location = new System.Drawing.Point(0, 231);
+            this.actionPanel.Location = new System.Drawing.Point(0, 196);
             this.actionPanel.Name = "actionPanel";
             this.actionPanel.Padding = new System.Windows.Forms.Padding(20);
             this.actionPanel.Size = new System.Drawing.Size(584, 80);
@@ -82,7 +82,7 @@
             this.documentDirectoryPanel.Location = new System.Drawing.Point(0, 0);
             this.documentDirectoryPanel.Name = "documentDirectoryPanel";
             this.documentDirectoryPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.documentDirectoryPanel.Size = new System.Drawing.Size(584, 231);
+            this.documentDirectoryPanel.Size = new System.Drawing.Size(584, 196);
             this.documentDirectoryPanel.TabIndex = 8;
             // 
             // indexDocumentDirectoryCheckBox
@@ -90,26 +90,28 @@
             this.indexDocumentDirectoryCheckBox.AutoSize = true;
             this.indexDocumentDirectoryCheckBox.Checked = true;
             this.indexDocumentDirectoryCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.indexDocumentDirectoryCheckBox.Location = new System.Drawing.Point(17, 196);
+            this.indexDocumentDirectoryCheckBox.Location = new System.Drawing.Point(17, 157);
             this.indexDocumentDirectoryCheckBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
             this.indexDocumentDirectoryCheckBox.Name = "indexDocumentDirectoryCheckBox";
             this.indexDocumentDirectoryCheckBox.Size = new System.Drawing.Size(82, 23);
             this.indexDocumentDirectoryCheckBox.TabIndex = 12;
             this.indexDocumentDirectoryCheckBox.Text = "Indexar";
             this.indexDocumentDirectoryCheckBox.UseVisualStyleBackColor = true;
+            this.indexDocumentDirectoryCheckBox.CheckStateChanged += new System.EventHandler(this.indexDocumentDirectoryCheckBox_CheckStateChanged);
             // 
             // watchDocumentDirectoryCheckBox
             // 
             this.watchDocumentDirectoryCheckBox.AutoSize = true;
             this.watchDocumentDirectoryCheckBox.Checked = true;
             this.watchDocumentDirectoryCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.watchDocumentDirectoryCheckBox.Location = new System.Drawing.Point(17, 157);
+            this.watchDocumentDirectoryCheckBox.Location = new System.Drawing.Point(105, 157);
             this.watchDocumentDirectoryCheckBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
             this.watchDocumentDirectoryCheckBox.Name = "watchDocumentDirectoryCheckBox";
             this.watchDocumentDirectoryCheckBox.Size = new System.Drawing.Size(92, 23);
             this.watchDocumentDirectoryCheckBox.TabIndex = 11;
             this.watchDocumentDirectoryCheckBox.Text = "Observar";
             this.watchDocumentDirectoryCheckBox.UseVisualStyleBackColor = true;
+            this.watchDocumentDirectoryCheckBox.CheckStateChanged += new System.EventHandler(this.watchDocumentDirectoryCheckBox_CheckStateChanged);
             // 
             // selectDocumentDirectoryPathButton
             // 
@@ -131,6 +133,8 @@
             this.documentDirectoryPathTextBox.Name = "documentDirectoryPathTextBox";
             this.documentDirectoryPathTextBox.Size = new System.Drawing.Size(508, 27);
             this.documentDirectoryPathTextBox.TabIndex = 9;
+            this.documentDirectoryPathTextBox.TextChanged += new System.EventHandler(this.documentDirectoryPathTextBox_TextChanged);
+            this.documentDirectoryPathTextBox.Leave += new System.EventHandler(this.documentDirectoryPathTextBox_Leave);
             // 
             // documentDirectoryPathLabel
             // 
@@ -151,6 +155,8 @@
             this.documentDirectoryLabelTextBox.Name = "documentDirectoryLabelTextBox";
             this.documentDirectoryLabelTextBox.Size = new System.Drawing.Size(554, 27);
             this.documentDirectoryLabelTextBox.TabIndex = 7;
+            this.documentDirectoryLabelTextBox.TextChanged += new System.EventHandler(this.documentDirectoryLabelTextBox_TextChanged);
+            this.documentDirectoryLabelTextBox.Leave += new System.EventHandler(this.documentDirectoryLabelTextBox_Leave);
             // 
             // documentDirectoryLabelLabel
             // 
@@ -165,7 +171,7 @@
             // DocumentDirectoryForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(584, 311);
+            this.ClientSize = new System.Drawing.Size(584, 276);
             this.Controls.Add(this.separatorLabel);
             this.Controls.Add(this.documentDirectoryPanel);
             this.Controls.Add(this.actionPanel);

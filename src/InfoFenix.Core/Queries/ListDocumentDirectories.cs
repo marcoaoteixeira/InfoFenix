@@ -25,7 +25,7 @@ namespace InfoFenix.Core.Queries {
 
         public bool? Index { get; set; }
 
-        public bool FillDocuments { get; set; }
+        public bool RequireDocuments { get; set; }
 
         #endregion Public Properties
     }
@@ -60,9 +60,9 @@ namespace InfoFenix.Core.Queries {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Index, query.Index.HasValue ? (object)(query.Index.Value ? 1 : 0) : DBNull.Value , DbType.Int32)
                 });
 
-                if (query.FillDocuments) {
+                if (query.RequireDocuments) {
                     foreach (var documentDirectory in documentDirectories) {
-                        documentDirectory.Documents = _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, DocumentDto.Map, parameters: new[] {
+                        documentDirectory.Documents = _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, (reader) => DocumentDto.Map(reader, documentDirectory), parameters: new[] {
                             Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, documentDirectory.DocumentDirectoryID, DbType.Int32)
                         }).ToList();
                     }

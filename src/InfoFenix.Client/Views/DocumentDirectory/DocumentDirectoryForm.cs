@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Code.Helpers;
@@ -10,6 +10,9 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Infrastructure;
 using InfoFenix.Core.Logging;
+using InfoFenix.Core.PubSub;
+using InfoFenix.Core.Queries;
+using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views.DocumentDirectory {
 
@@ -17,8 +20,10 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
 
         #region Private Read-Only Fields
 
+        private readonly CancellationTokenIssuer _cancellationTokenIssuer;
         private readonly IMediator _mediator;
-        //private readonly ProgressiveTaskExecutor _progressiveTaskExecutor;
+        private readonly IPublisherSubscriber _publisherSubscriber;
+        private readonly ProgressiveTaskExecutor _progressiveTaskExecutor;
 
         #endregion Private Read-Only Fields
 
@@ -37,12 +42,16 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
 
         #region Public Constructors
 
-        public DocumentDirectoryForm(IMediator mediator/*, ProgressiveTaskExecutor progressiveTaskExecutor*/) {
+        public DocumentDirectoryForm(CancellationTokenIssuer cancellationTokenIssuer, IMediator mediator, IPublisherSubscriber publisherSubscriber, ProgressiveTaskExecutor progressiveTaskExecutor) {
+            Prevent.ParameterNull(cancellationTokenIssuer, nameof(cancellationTokenIssuer));
             Prevent.ParameterNull(mediator, nameof(mediator));
-            //Prevent.ParameterNull(progressiveTaskExecutor, nameof(progressiveTaskExecutor));
+            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
+            Prevent.ParameterNull(progressiveTaskExecutor, nameof(progressiveTaskExecutor));
 
+            _cancellationTokenIssuer = cancellationTokenIssuer;
             _mediator = mediator;
-            //_progressiveTaskExecutor = progressiveTaskExecutor;
+            _publisherSubscriber = publisherSubscriber;
+            _progressiveTaskExecutor = progressiveTaskExecutor;
 
             InitializeComponent();
         }
@@ -52,55 +61,76 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
         #region Private Methods
 
         private void Initialize() {
-            ViewModel = ViewModel ?? new DocumentDirectoryDto();
-        }
-
-        private void UpdateViewModel() {
-            ViewModel.Label = documentDirectoryLabelTextBox.Text;
-            ViewModel.Path = documentDirectoryPathTextBox.Text;
-            ViewModel.Code = ViewModel.Code ?? Guid.NewGuid().ToString("N");
-            ViewModel.Watch = watchDocumentDirectoryCheckBox.Checked;
-            ViewModel.Index = indexDocumentDirectoryCheckBox.Checked;
+            ViewModel = ViewModel ?? new DocumentDirectoryDto {
+                Code = Guid.NewGuid().ToString("N")
+            };
         }
 
         private bool ValidateViewModel() {
             var errors = Validator.Validate(ViewModel);
             if (errors.IsValid) { return true; }
-            MessageBox.Show(errors.First().Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(errors[0].Message, Resource.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
-        private void SaveDocumentDirectory() {
-            //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.CommandAsync(new SaveDocumentDirectoryCommand { DocumentDirectory = ViewModel }, cancellationToken));
+        private void SaveDocumentDirectory(CancellationToken cancellationToken) {
+            _mediator
+                .CommandAsync(new SaveDocumentDirectoryCommand {
+                    DocumentDirectory = ViewModel
+                }, cancellationToken)
+                .WaitForResult();
         }
 
-        private void SaveDocumentsInsideDirectoryDocuments() {
-            if (Directory.GetFiles(ViewModel.Path).Length > 0) {
-                //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.SaveDocumentsInsideDocumentDirectoryAsync(ViewModel.ID, cancellationToken));
-            }
+        private void SaveDocumentCollection(CancellationToken cancellationToken) {
+            ViewModel.Documents = _mediator
+                .Query(new ListDocumentsDifferenceBetweenDiskDatabaseQuery {
+                    DocumentDirectoryID = ViewModel.DocumentDirectoryID
+                })
+                .ToList();
+
+            _mediator
+                .CommandAsync(new SaveDocumentCollectionCommand {
+                    DocumentDirectoryID = ViewModel.DocumentDirectoryID,
+                    Documents = ViewModel.Documents
+                }, cancellationToken)
+                .WaitForResult();
         }
 
-        private void CleanDocumentDirectory() {
-            if (Directory.GetFiles(ViewModel.Path).Length > 0) {
-                //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.CleanAsync(ViewModel.ID, cancellationToken));
-            }
+        private void CleanDocumentDirectory(CancellationToken cancellationToken) {
+            _mediator
+                .CommandAsync(new CleanDocumentDirectoryCommand {
+                    DocumentDirectory = ViewModel
+                }, cancellationToken)
+                .WaitForResult();
+        }
+
+        private void IndexDocumentDirectory(CancellationToken cancellationToken) {
+            if (!ViewModel.Index) { return; }
+
+            _mediator
+                .CommandAsync(new IndexDocumentCollectionCommand {
+                    BatchSize = 128,
+                    Documents = ViewModel.Documents.Select(DocumentIndexDto.Map).ToList(),
+                    IndexName = ViewModel.Code,
+                }, cancellationToken)
+                .WaitForResult();
+        }
+
+        private void WatchDocumentDirectory(CancellationToken cancellationToken) {
+            ICommand command;
+            if (ViewModel.Watch) { command = new StartWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; }
+            else { command = new StopWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; }
+
+            _mediator
+                .CommandAsync(command, cancellationToken)
+                .WaitForResult();
         }
 
         private void SelectDocumentDirectoryPath() {
-            var path = DialogHelper.OpenFolderBrowserDialog("Selecionar o diretório de documentos");
+            var path = DialogHelper.OpenFolderBrowserDialog(Resource.DocumentDirectoryForm_SelectDocumentDirectoryPath_Message);
             if (!string.IsNullOrWhiteSpace(path)) {
                 documentDirectoryPathTextBox.Text = path;
             }
-        }
-
-        private void IndexDocumentDirectory(DocumentDirectoryDto documentDirectory) {
-            if (Directory.GetFiles(ViewModel.Path).Length > 0) {
-                //_progressiveTaskExecutor.Execute((cancellationToken) => _mediator.IndexAsync(ViewModel.ID, cancellationToken));
-            }
-        }
-
-        private void WatchDocumentDirectory(DocumentDirectoryDto documentDirectory) {
-            //_progressiveTaskExecutor.Execute(() => _mediator.StartWatchForModification(documentDirectory.ID));
         }
 
         #endregion Private Methods
@@ -111,33 +141,52 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
             Initialize();
         }
 
-        private void selectDocumentDirectoryPathButton_Click(object sender, EventArgs e) {
-            var button = sender as Button;
-            if (button == null) { return; }
+        private void documentDirectoryLabelTextBox_Leave(object sender, EventArgs e) {
+            if (sender is TextBox textBox) { ViewModel.Label = textBox.Text; }
+        }
 
-            SelectDocumentDirectoryPath();
+        private void documentDirectoryLabelTextBox_TextChanged(object sender, EventArgs e) {
+            if (sender is TextBox textBox) { ViewModel.Label = textBox.Text; }
+        }
+
+        private void documentDirectoryPathTextBox_Leave(object sender, EventArgs e) {
+            if (sender is TextBox textBox) { ViewModel.Path = textBox.Text; }
+        }
+
+        private void documentDirectoryPathTextBox_TextChanged(object sender, EventArgs e) {
+            if (sender is TextBox textBox) { ViewModel.Path = textBox.Text; }
+        }
+
+        private void selectDocumentDirectoryPathButton_Click(object sender, EventArgs e) {
+            if (sender is Button button) { SelectDocumentDirectoryPath(); }
+        }
+
+        private void indexDocumentDirectoryCheckBox_CheckStateChanged(object sender, EventArgs e) {
+            if (sender is CheckBox checkBox) { ViewModel.Index = checkBox.CheckState == CheckState.Checked; }
+        }
+
+        private void watchDocumentDirectoryCheckBox_CheckStateChanged(object sender, EventArgs e) {
+            if (sender is CheckBox checkBox) { ViewModel.Watch = checkBox.CheckState == CheckState.Checked; }
         }
 
         private void saveAndCloseButton_Click(object sender, EventArgs e) {
-            var button = sender as Button;
-            if (button == null) { return; }
+            if (sender is Button button) {
+                if (!ValidateViewModel()) { return; }
 
-            UpdateViewModel();
-            if (!ValidateViewModel()) { return; }
+                var actions = new Action<CancellationToken>[] {
+                    (token) => SaveDocumentDirectory(token),
+                    (token) => SaveDocumentCollection(token),
+                    (token) => CleanDocumentDirectory(token),
+                    (token) => IndexDocumentDirectory(token),
+                    (token) => WatchDocumentDirectory(token)
+                };
 
-            try { SaveDocumentDirectory(); } catch (Exception ex) {
-                MessageBox.Show($"Ocorreu um erro ao tentar salvar o diretório de documentos. ({ex.Message})", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ProgressiveTaskExecutor.Instance.Run(cancellationTokenIssuer: _cancellationTokenIssuer,
+                    publisherSubscriber: _publisherSubscriber,
+                    actions: actions);
 
-                DialogResult = DialogResult.Abort;
+                DialogResult = DialogResult.OK;
             }
-
-            SaveDocumentsInsideDirectoryDocuments();
-            CleanDocumentDirectory();
-
-            if (ViewModel.Index) { IndexDocumentDirectory(ViewModel); }
-            if (ViewModel.Watch) { WatchDocumentDirectory(ViewModel); }
-
-            DialogResult = DialogResult.OK;
         }
 
         #endregion Event Handlers

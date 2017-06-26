@@ -26,9 +26,13 @@ namespace InfoFenix.Core.Dto {
         #region Public Static Methods
 
         public static DocumentDto Map(IDataReader reader) {
+            return Map(reader, documentDirectory: null);
+        }
+
+        public static DocumentDto Map(IDataReader reader, DocumentDirectoryDto documentDirectory) {
             return new DocumentDto {
                 DocumentID = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.DocumentID),
-                DocumentDirectory = new DocumentDirectoryDto {
+                DocumentDirectory = documentDirectory ?? new DocumentDirectoryDto {
                     DocumentDirectoryID = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.DocumentDirectoryID)
                 },
                 Path = reader.GetStringOrDefault(Common.DatabaseSchema.Documents.Path),

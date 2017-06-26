@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
@@ -88,7 +89,7 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<IndexDocumentCollectionCommand> Members
 
-        public Task HandleAsync(IndexDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task HandleAsync(IndexDocumentCollectionCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             var info = new ProgressiveTaskContinuationInfo {
                 Log = Log,
                 TotalSteps = command.Documents.Count

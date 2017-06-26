@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace InfoFenix.Core.Commands {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
             Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
-
+            
             _database = database;
             _indexProvider = indexProvider;
             _publisherSubscriber = publisherSubscriber;
@@ -60,16 +61,16 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<CleanDocumentDirectoryCommand> Members
 
-        public Task HandleAsync(CleanDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task HandleAsync(CleanDocumentDirectoryCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             var info = new ProgressiveTaskContinuationInfo { Log = Log };
 
             return Task.Run(() => {
                 var filesOnDatabase = command.DocumentDirectory.Documents.Select(_ => _.Path).ToArray();
                 var filesOnDisk = Common.GetDocFiles(command.DocumentDirectory.Path);
-                var toRemove = filesOnDatabase.Except(filesOnDisk).ToArray();
-                var documentsToRemove = new List<DocumentDto>();
+                var removeFromDatabase = filesOnDatabase.Except(filesOnDisk).ToArray();
+                var removeFromIndex = new List<DocumentDto>();
 
-                info.TotalSteps = toRemove.Length + 1;
+                info.TotalSteps = removeFromDatabase.Length + 1;
 
                 _publisherSubscriber.ProgressiveTaskStart(
                     title: Resource.CleanDocumentDirectory_ProgressiveTaskStart_Title,
@@ -79,7 +80,7 @@ namespace InfoFenix.Core.Commands {
                 );
 
                 using (var transaction = _database.Connection.BeginTransaction()) {
-                    foreach (var filePath in toRemove) {
+                    foreach (var filePath in removeFromDatabase) {
                         cancellationToken.ThrowIfCancellationRequested();
 
                         _publisherSubscriber.ProgressiveTaskPerformStep(
@@ -93,7 +94,8 @@ namespace InfoFenix.Core.Commands {
                         _database.ExecuteNonQuery(Resource.RemoveDocumentSQL, parameters: new[] {
                             Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID, DbType.Int32)
                         });
-                        documentsToRemove.Add(document);
+
+                        removeFromIndex.Add(document);
                     }
 
                     cancellationToken.ThrowIfCancellationRequested();
@@ -108,7 +110,7 @@ namespace InfoFenix.Core.Commands {
 
                     _indexProvider
                         .GetOrCreate(command.DocumentDirectory.Code)
-                        .DeleteDocuments(documentsToRemove.Select(_ => _.DocumentID.ToString()).ToArray());
+                        .DeleteDocuments(removeFromIndex.Select(_ => _.DocumentID.ToString()).ToArray());
                 }
             }, cancellationToken)
             .ContinueWith(_publisherSubscriber.TaskContinuation, info);

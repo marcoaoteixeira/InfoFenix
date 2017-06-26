@@ -13,4 +13,4 @@
     ) AS [total_documents]
 FROM [document_directories]
 WHERE
-    [document_directories].[path] = @Path;
+    [document_directories].[path] = @path;

@@ -68,7 +68,7 @@ namespace InfoFenix.Core {
                 #region Public Static Read-Only Fields
 
                 public static readonly string DocumentID = "id";
-                public static readonly string DocumentDirectoryID = "document_diretory_id";
+                public static readonly string DocumentDirectoryID = "document_directory_id";
                 public static readonly string Path = "path";
                 public static readonly string LastWriteTime = "last_write_time";
                 public static readonly string Code = "code";

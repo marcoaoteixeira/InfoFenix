@@ -1,3 +1,4 @@
-﻿DELETE FROM [documents]
+﻿DELETE
+FROM [documents]
 WHERE
-    [id] = @ID;
+    [id] = @id;

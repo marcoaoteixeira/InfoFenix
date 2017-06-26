@@ -185,6 +185,15 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selecionar o caminho do diretório de documentos.
+        /// </summary>
+        internal static string DocumentDirectoryForm_SelectDocumentDirectoryPath_Message {
+            get {
+                return ResourceManager.GetString("DocumentDirectoryForm_SelectDocumentDirectoryPath_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erro.
         /// </summary>
         internal static string Error {

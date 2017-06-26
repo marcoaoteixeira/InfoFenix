@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Dto;
@@ -52,7 +53,7 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<StopWatchDocumentDirectoryCommand> Members
 
-        public Task HandleAsync(StopWatchDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task HandleAsync(StopWatchDocumentDirectoryCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
             var info = new ProgressiveTaskContinuationInfo {
                 Log = Log,
                 TotalSteps = 1

@@ -46,11 +46,11 @@ namespace InfoFenix.Core.Queries {
             foreach (var item in positiveTerms) {
                 if (item.IndexOf("-") > 0 || item.IndexOf("-") == (item.Length - 1)) {
                     searchBuilder = searchBuilder
-                        .WithField(Common.DocumentIndex.FieldNames.Content, item, item.Contains("*"))
+                        .WithField(Common.DocumentIndex.FieldNames.Content, item.ToLower(), item.Contains("*"))
                         .NotAnalyzed();
                 } else {
                     searchBuilder = searchBuilder
-                        .WithField(Common.DocumentIndex.FieldNames.Content, item, item.Contains("*"))
+                        .WithField(Common.DocumentIndex.FieldNames.Content, item.ToLower(), item.Contains("*"))
                         .ExactMatch()
                         .Mandatory();
                 }
@@ -58,7 +58,7 @@ namespace InfoFenix.Core.Queries {
             // Search negative terms
             foreach (var item in negativeTerms) {
                 searchBuilder = searchBuilder
-                    .WithField(Common.DocumentIndex.FieldNames.Content, item, false)
+                    .WithField(Common.DocumentIndex.FieldNames.Content, item.ToLower(), false)
                     .Forbidden();
             }
 

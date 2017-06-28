@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Office;
+using InfoFenix.Client.Code;
 using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views.Search {
@@ -56,8 +57,18 @@ namespace InfoFenix.Client.Views.Search {
 
             documentViewerRichTextBox.Text = document.Content;
 
+            HighlightSearchTerms(SearchTerms);
+
             informationLabel.Text = string.Format(Resource.SearchResultForm_InformationLabel, index + 1, SearchResult.Documents.Count);
             documentPathLabel.Text = string.Format(Resource.SearchResultForm_DocumentPathLabel, document.FileName);
+        }
+
+        private void HighlightSearchTerms(params string[] terms) {
+            foreach (var term in terms) {
+                if (term.StartsWith("-")) { continue; }
+
+                documentViewerRichTextBox.Highlight(term);
+            }
         }
 
         private void CopyTextToClipboard(string text) {

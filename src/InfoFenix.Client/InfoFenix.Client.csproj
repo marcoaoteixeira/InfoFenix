@@ -47,6 +47,7 @@
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,14 +64,18 @@
     <Compile Include="Code\Controls\PowerListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Code\Controls\PowerTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Code\Extensions\ControlExtension.cs" />
     <Compile Include="Code\Extensions\RichTextBoxExtension.cs" />
     <Compile Include="Code\FormManager.cs" />
     <Compile Include="Code\Helpers\DialogHelper.cs" />
     <Compile Include="Code\IFormManager.cs" />
-    <Compile Include="Code\ProgressiveTaskExecutor.cs" />
+    <Compile Include="Code\ProgressViewer.cs" />
     <Compile Include="Code\RichTextBoxAppender.cs" />
     <Compile Include="Code\WaitFor.cs" />
+    <Compile Include="Code\WindowWrapper.cs" />
     <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +134,18 @@
     </Compile>
     <Compile Include="Views\Shared\LayoutForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\ProgressViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\ProgressViewerForm.Designer.cs">
+      <DependentUpon>ProgressViewerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\WaitForForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Shared\WaitForForm.Designer.cs">
+      <DependentUpon>WaitForForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

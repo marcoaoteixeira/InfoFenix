@@ -1,32 +1,24 @@
 ﻿namespace InfoFenix.Core.Cqrs {
 
-    public sealed class ProgressArguments {
+    public enum ProgressState {
+        None,
+        Start,
+        PerformStep,
+        Complete,
+        Cancel,
+        Error
+    }
+
+    public sealed class ProgressInfo {
 
         #region Public Properties
 
+        public string Title { get; set; }
         public string Message { get; set; }
         public int ActualStep { get; set; }
         public int TotalSteps { get; set; }
+        public ProgressState State { get; set; }
 
         #endregion Public Properties
-
-        #region Private Constructors
-
-        private ProgressArguments() {
-        }
-
-        #endregion Private Constructors
-
-        #region Public Static Methods
-
-        public static ProgressArguments Create(string message, int actualStep, int totalSteps) {
-            return new ProgressArguments {
-                Message = message,
-                ActualStep = actualStep,
-                TotalSteps = totalSteps
-            };
-        }
-
-        #endregion Public Static Methods
     }
 }

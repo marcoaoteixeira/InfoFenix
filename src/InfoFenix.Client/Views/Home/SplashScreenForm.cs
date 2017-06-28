@@ -83,18 +83,18 @@ namespace InfoFenix.Client.Views.Home {
         }
 
         private void ProgressiveTaskStartHandler(ProgressiveTaskStartNotification message) {
-            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = string.Format(Resource.SplashScreenForm_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
+            messageLabel.SafeInvoke(_ => _.Text = message.Arguments.Message);
+            progressLabel.SafeInvoke(_ => _.Text = string.Format(Resource.SplashScreenForm_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
         }
 
         private void ProgressiveTaskPerformStepHandler(ProgressiveTaskPerformStepNotification message) {
-            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = string.Format(Resource.SplashScreenForm_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
+            messageLabel.SafeInvoke(_ => _.Text = message.Arguments.Message);
+            progressLabel.SafeInvoke(_ => _.Text = string.Format(Resource.SplashScreenForm_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
         }
 
         private void ProgressiveTaskCompleteHandler(ProgressiveTaskCompleteNotification message) {
-            messageLabel.SafeCall(() => messageLabel.Text = message.Arguments.Message);
-            progressLabel.SafeCall(() => progressLabel.Text = string.Format(Resource.SplashScreenForm_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
+            messageLabel.SafeInvoke(_ => _.Text = message.Arguments.Message);
+            progressLabel.SafeInvoke(_ => _.Text = string.Format(Resource.SplashScreenForm_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
         }
 
         #endregion Private Methods

@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Defines methods for search hit.
     /// </summary>
@@ -18,7 +19,7 @@ namespace InfoFenix.Core.Search {
         /// </summary>
         float Score { get; }
 
-        #endregion Properties
+        #endregion
 
         #region Methods
 
@@ -55,8 +56,8 @@ namespace InfoFenix.Core.Search {
         /// </summary>
         /// <param name="fieldName">The name of the field.</param>
         /// <returns>The <see cref="DateTime"/> value.</returns>
-        DateTime GetDateTime(string fieldName);
+        DateTimeOffset GetDateTimeOffset(string fieldName);
 
-        #endregion Methods
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ namespace InfoFenix.Core.Cqrs {
 
         #region Methods
 
-        Task HandleAsync(TCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task HandleAsync(TCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null);
 
         #endregion Methods
     }

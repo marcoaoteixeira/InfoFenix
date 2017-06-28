@@ -88,29 +88,29 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limpar Diretório de Documentos.
+        /// </summary>
+        internal static string CleanDocumentDirectory_Progress_Start_Title {
+            get {
+                return ResourceManager.GetString("CleanDocumentDirectory_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Removendo documento &quot;{0}&quot; da base de dados..
         /// </summary>
-        internal static string CleanDocumentDirectory_ProgressiveTaskPerformStep_Database_Message {
+        internal static string CleanDocumentDirectory_Progress_Step_Database_Message {
             get {
-                return ResourceManager.GetString("CleanDocumentDirectory_ProgressiveTaskPerformStep_Database_Message", resourceCulture);
+                return ResourceManager.GetString("CleanDocumentDirectory_Progress_Step_Database_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Removendo documentos do índice &quot;{0}&quot;..
         /// </summary>
-        internal static string CleanDocumentDirectory_ProgressiveTaskPerformStep_Index_Message {
+        internal static string CleanDocumentDirectory_Progress_Step_Index_Message {
             get {
-                return ResourceManager.GetString("CleanDocumentDirectory_ProgressiveTaskPerformStep_Index_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Limpar Diretório de Documentos.
-        /// </summary>
-        internal static string CleanDocumentDirectory_ProgressiveTaskStart_Title {
-            get {
-                return ResourceManager.GetString("CleanDocumentDirectory_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("CleanDocumentDirectory_Progress_Step_Index_Message", resourceCulture);
             }
         }
         
@@ -224,20 +224,20 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Indexando documento: {0}.
+        ///   Looks up a localized string similar to Indexar Documentos.
         /// </summary>
-        internal static string IndexDocumentCollection_ProgressiveTaskPerformStep_Message {
+        internal static string IndexDocumentCollection_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("IndexDocumentCollection_ProgressiveTaskPerformStep_Message", resourceCulture);
+                return ResourceManager.GetString("IndexDocumentCollection_Progress_Start_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Indexar Documentos.
+        ///   Looks up a localized string similar to Indexando documento: {0}.
         /// </summary>
-        internal static string IndexDocumentCollection_ProgressiveTaskStart_Title {
+        internal static string IndexDocumentCollection_Progress_Step_Message {
             get {
-                return ResourceManager.GetString("IndexDocumentCollection_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("IndexDocumentCollection_Progress_Step_Message", resourceCulture);
             }
         }
         
@@ -286,6 +286,51 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A tarefa foi cancelada!.
+        /// </summary>
+        internal static string Progress_Cancel {
+            get {
+                return ResourceManager.GetString("Progress_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A tarefa foi concluída com sucesso!.
+        /// </summary>
+        internal static string Progress_Complete {
+            get {
+                return ResourceManager.GetString("Progress_Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ocorreu um erro durante execução da tarefa!.
+        /// </summary>
+        internal static string Progress_Error {
+            get {
+                return ResourceManager.GetString("Progress_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executando passo {0} da tarefa....
+        /// </summary>
+        internal static string Progress_PerformStep {
+            get {
+                return ResourceManager.GetString("Progress_PerformStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tarefa Iniciada.
+        /// </summary>
+        internal static string Progress_Start {
+            get {
+                return ResourceManager.GetString("Progress_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tarefa cancelada!.
         /// </summary>
         internal static string ProgressiveTaskCancelNotification_Message {
@@ -322,92 +367,83 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remover Documento.
+        /// </summary>
+        internal static string RemoveDocument_Progress_Start_Title {
+            get {
+                return ResourceManager.GetString("RemoveDocument_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Removendo documento da base de dados: {0}.
         /// </summary>
-        internal static string RemoveDocument_ProgressiveTaskPerformStep_Database_Message {
+        internal static string RemoveDocument_Progress_Step_Database_Message {
             get {
-                return ResourceManager.GetString("RemoveDocument_ProgressiveTaskPerformStep_Database_Message", resourceCulture);
+                return ResourceManager.GetString("RemoveDocument_Progress_Step_Database_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Removendo documento do índice: {0}.
         /// </summary>
-        internal static string RemoveDocument_ProgressiveTaskPerformStep_Index_Message {
+        internal static string RemoveDocument_Progress_Step_Index_Message {
             get {
-                return ResourceManager.GetString("RemoveDocument_ProgressiveTaskPerformStep_Index_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remover Documento.
-        /// </summary>
-        internal static string RemoveDocument_ProgressiveTaskStart_Title {
-            get {
-                return ResourceManager.GetString("RemoveDocument_ProgressiveTaskStart_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Removendo documento da base de dados: {0}.
-        /// </summary>
-        internal static string RemoveDocumentCollection_ProgressiveTaskPerformStep_Database_Message {
-            get {
-                return ResourceManager.GetString("RemoveDocumentCollection_ProgressiveTaskPerformStep_Database_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Removendo documentos do índice.
-        /// </summary>
-        internal static string RemoveDocumentCollection_ProgressiveTaskPerformStep_Index_Message {
-            get {
-                return ResourceManager.GetString("RemoveDocumentCollection_ProgressiveTaskPerformStep_Index_Message", resourceCulture);
+                return ResourceManager.GetString("RemoveDocument_Progress_Step_Index_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Remover Documentos.
         /// </summary>
-        internal static string RemoveDocumentCollection_ProgressiveTaskStart_Title {
+        internal static string RemoveDocumentCollection_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("RemoveDocumentCollection_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("RemoveDocumentCollection_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removendo documento da base de dados: {0}.
+        /// </summary>
+        internal static string RemoveDocumentCollection_Progress_Step_Database_Message {
+            get {
+                return ResourceManager.GetString("RemoveDocumentCollection_Progress_Step_Database_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removendo documentos do índice.
+        /// </summary>
+        internal static string RemoveDocumentCollection_Progress_Step_Index_Message {
+            get {
+                return ResourceManager.GetString("RemoveDocumentCollection_Progress_Step_Index_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Remover Diretório de Documentos.
         /// </summary>
-        internal static string RemoveDocumentDirectory_ProgressiveTask_Title {
+        internal static string RemoveDocumentDirectory_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("RemoveDocumentDirectory_ProgressiveTask_Title", resourceCulture);
+                return ResourceManager.GetString("RemoveDocumentDirectory_Progress_Start_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Removendo diretório de documentos &quot;{0}&quot; da base de dados..
         /// </summary>
-        internal static string RemoveDocumentDirectory_ProgressiveTaskPerformStep_Database_Message {
+        internal static string RemoveDocumentDirectory_Progress_Step_Database_Message {
             get {
-                return ResourceManager.GetString("RemoveDocumentDirectory_ProgressiveTaskPerformStep_Database_Message", resourceCulture);
+                return ResourceManager.GetString("RemoveDocumentDirectory_Progress_Step_Database_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Removendo diretório de documentos &quot;{0}&quot; do índice..
         /// </summary>
-        internal static string RemoveDocumentDirectory_ProgressiveTaskPerformStep_Index_Message {
+        internal static string RemoveDocumentDirectory_Progress_Step_Index_Message {
             get {
-                return ResourceManager.GetString("RemoveDocumentDirectory_ProgressiveTaskPerformStep_Index_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remover Diretório de Documentos.
-        /// </summary>
-        internal static string RemoveDocumentDirectory_ProgressiveTaskStart_Title {
-            get {
-                return ResourceManager.GetString("RemoveDocumentDirectory_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("RemoveDocumentDirectory_Progress_Step_Index_Message", resourceCulture);
             }
         }
         
@@ -439,56 +475,74 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Salvando documento: {0}.
-        /// </summary>
-        internal static string SaveDocument_ProgressiveTaskPerformStep_Message {
-            get {
-                return ResourceManager.GetString("SaveDocument_ProgressiveTaskPerformStep_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Salvar Documento.
         /// </summary>
-        internal static string SaveDocument_ProgressiveTaskStart_Title {
+        internal static string SaveDocument_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("SaveDocument_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("SaveDocument_Progress_Start_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Salvando documento: {0}.
         /// </summary>
-        internal static string SaveDocumentCollection_ProgressiveTaskPerformStep_Message {
+        internal static string SaveDocument_Progress_Step_Message {
             get {
-                return ResourceManager.GetString("SaveDocumentCollection_ProgressiveTaskPerformStep_Message", resourceCulture);
+                return ResourceManager.GetString("SaveDocument_Progress_Step_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Salvar Documentos.
         /// </summary>
-        internal static string SaveDocumentCollection_ProgressiveTaskStart_Title {
+        internal static string SaveDocumentCollection_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("SaveDocumentCollection_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("SaveDocumentCollection_Progress_Start_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Salvando diretório de documentos: {0}.
+        ///   Looks up a localized string similar to Salvando documento: {0}.
         /// </summary>
-        internal static string SaveDocumentDirectory_ProgressiveTaskPerformStep_Message {
+        internal static string SaveDocumentCollection_Progress_Step_Message {
             get {
-                return ResourceManager.GetString("SaveDocumentDirectory_ProgressiveTaskPerformStep_Message", resourceCulture);
+                return ResourceManager.GetString("SaveDocumentCollection_Progress_Step_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salvar Documentos do Diretório de Documentos.
+        /// </summary>
+        internal static string SaveDocumentCollectionInDocumentDirectory_Progress_Start_Title {
+            get {
+                return ResourceManager.GetString("SaveDocumentCollectionInDocumentDirectory_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salvando documento: {0}.
+        /// </summary>
+        internal static string SaveDocumentCollectionInDocumentDirectory_Progress_Step_Message {
+            get {
+                return ResourceManager.GetString("SaveDocumentCollectionInDocumentDirectory_Progress_Step_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Salvar Diretório de Documentos.
         /// </summary>
-        internal static string SaveDocumentDirectory_ProgressiveTaskStart_Title {
+        internal static string SaveDocumentDirectory_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("SaveDocumentDirectory_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("SaveDocumentDirectory_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salvando diretório de documentos: {0}.
+        /// </summary>
+        internal static string SaveDocumentDirectory_Progress_Step_Message {
+            get {
+                return ResourceManager.GetString("SaveDocumentDirectory_Progress_Step_Message", resourceCulture);
             }
         }
         
@@ -543,29 +597,29 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pesquisar Índices.
+        /// </summary>
+        internal static string SearchDocumentIndex_Progress_Start_Title {
+            get {
+                return ResourceManager.GetString("SearchDocumentIndex_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Construíndo pesquisa....
         /// </summary>
-        internal static string SearchDocumentIndex_ProgressiveTaskPerformStep_Build_Message {
+        internal static string SearchDocumentIndex_Progress_Step_Build_Message {
             get {
-                return ResourceManager.GetString("SearchDocumentIndex_ProgressiveTaskPerformStep_Build_Message", resourceCulture);
+                return ResourceManager.GetString("SearchDocumentIndex_Progress_Step_Build_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pesquisando índice: {0}.
         /// </summary>
-        internal static string SearchDocumentIndex_ProgressiveTaskPerformStep_Search_Message {
+        internal static string SearchDocumentIndex_Progress_Step_Search_Message {
             get {
-                return ResourceManager.GetString("SearchDocumentIndex_ProgressiveTaskPerformStep_Search_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pesquisar Índices.
-        /// </summary>
-        internal static string SearchDocumentIndex_ProgressiveTaskStart_Title {
-            get {
-                return ResourceManager.GetString("SearchDocumentIndex_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("SearchDocumentIndex_Progress_Step_Search_Message", resourceCulture);
             }
         }
         
@@ -582,38 +636,38 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Observando diretório de documentos: {0}.
-        /// </summary>
-        internal static string StartWatchDocumentDirectory_ProgressiveTaskPerformStep_Message {
-            get {
-                return ResourceManager.GetString("StartWatchDocumentDirectory_ProgressiveTaskPerformStep_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Observar Diretório de Documentos.
         /// </summary>
-        internal static string StartWatchDocumentDirectory_ProgressiveTaskStart_Title {
+        internal static string StartWatchDocumentDirectory_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("StartWatchDocumentDirectory_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("StartWatchDocumentDirectory_Progress_Start_Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Liberando diretório de documentos: {0}.
+        ///   Looks up a localized string similar to Observando diretório de documentos: {0}.
         /// </summary>
-        internal static string StopWatchDocumentDirectory_ProgressiveTaskPerformStep_Message {
+        internal static string StartWatchDocumentDirectory_Progress_Step_Message {
             get {
-                return ResourceManager.GetString("StopWatchDocumentDirectory_ProgressiveTaskPerformStep_Message", resourceCulture);
+                return ResourceManager.GetString("StartWatchDocumentDirectory_Progress_Step_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Liberar Diretório de Documentos.
         /// </summary>
-        internal static string StopWatchDocumentDirectory_ProgressiveTaskStart_Title {
+        internal static string StopWatchDocumentDirectory_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("StopWatchDocumentDirectory_ProgressiveTaskStart_Title", resourceCulture);
+                return ResourceManager.GetString("StopWatchDocumentDirectory_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liberando diretório de documentos: {0}.
+        /// </summary>
+        internal static string StopWatchDocumentDirectory_Progress_Step_Message {
+            get {
+                return ResourceManager.GetString("StopWatchDocumentDirectory_Progress_Step_Message", resourceCulture);
             }
         }
     }

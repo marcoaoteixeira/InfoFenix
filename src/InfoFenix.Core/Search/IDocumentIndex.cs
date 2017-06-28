@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Defines methods for a document index.
     /// </summary>
@@ -13,78 +14,61 @@ namespace InfoFenix.Core.Search {
         /// </summary>
         string DocumentID { get; }
 
-        /// <summary>
-        /// Whether some property have been added to this document, or otherwise if it's empty
-        /// </summary>
-        bool IsDirty { get; }
-
-        #endregion Properties
+        #endregion
 
         #region Methods
 
         /// <summary>
         /// Sets the document ID.
         /// </summary>
-        /// <param name="documentID">Document ID.</param>
+        /// <param name="id">Document ID.</param>
         /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex SetDocumentID(string documentID);
+        IDocumentIndex SetID(string id);
 
         /// <summary>
-        /// Adds a new <see cref="string"/> value to the document index.
+        /// Adds a new <see cref="string"/> value to the document.
         /// </summary>
-        /// <param name="name">The name of the parameter.</param>
-        /// <param name="value">The value of the parameter.</param>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="value">The value of the field.</param>
+        /// <param name="options">The field options.</param>
         /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex Add(string name, string value);
+        IDocumentIndex Set(string fieldName, string value, DocumentIndexOptions options = DocumentIndexOptions.None);
 
         /// <summary>
-        /// Adds a new <see cref="DateTime"/> value to the document index.
+        /// Adds a new <see cref="DateTimeOffset"/> value to the document.
         /// </summary>
-        /// <param name="name">The name of the parameter.</param>
-        /// <param name="value">The value of the parameter.</param>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="value">The value of the field.</param>
+        /// <param name="options">The field options.</param>
         /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex Add(string name, DateTime value);
+        IDocumentIndex Set(string fieldName, DateTimeOffset value, DocumentIndexOptions options = DocumentIndexOptions.None);
 
         /// <summary>
-        /// Adds a new <see cref="int"/> value to the document index.
+        /// Adds a new <see cref="int"/> value to the document.
         /// </summary>
-        /// <param name="name">The name of the parameter.</param>
-        /// <param name="value">The value of the parameter.</param>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="value">The value of the field.</param>
+        /// <param name="options">The field options.</param>
         /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex Add(string name, int value);
+        IDocumentIndex Set(string fieldName, int value, DocumentIndexOptions options = DocumentIndexOptions.None);
 
         /// <summary>
-        /// Adds a new <see cref="bool"/> value to the document index.
+        /// Adds a new <see cref="bool"/> value to the document.
         /// </summary>
-        /// <param name="name">The name of the parameter.</param>
-        /// <param name="value">The value of the parameter.</param>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="value">The value of the field.</param>
+        /// <param name="options">The field options.</param>
         /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex Add(string name, bool value);
+        IDocumentIndex Set(string fieldName, bool value, DocumentIndexOptions options = DocumentIndexOptions.None);
 
         /// <summary>
-        /// Adds a new <see cref="double"/> value to the document index.
+        /// Adds a new <see cref="double"/> value to the document.
         /// </summary>
-        /// <param name="name">The name of the parameter.</param>
-        /// <param name="value">The value of the parameter.</param>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="value">The value of the field.</param>
+        /// <param name="options">The field options.</param>
         /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex Add(string name, double value);
-
-        /// <summary>
-        /// Document is analyzed and tokenized.
-        /// </summary>
-        IDocumentIndex Analyze();
-
-        /// <summary>
-        /// Stores the original value to the index.
-        /// </summary>
-        /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex Store();
-
-        /// <summary>
-        /// Remove any HTML tag from the current string
-        /// </summary>
-        /// <returns>The current instance of <see cref="IDocumentIndex"/>.</returns>
-        IDocumentIndex RemoveHtmlTags();
+        IDocumentIndex Set(string fieldName, double value, DocumentIndexOptions options = DocumentIndexOptions.None);
 
         #endregion Methods
     }

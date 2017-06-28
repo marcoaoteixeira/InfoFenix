@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Defines methods for a search builder.
     /// </summary>
@@ -39,9 +40,9 @@ namespace InfoFenix.Core.Search {
         /// </summary>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
-        /// <param name="useWildCard">Use wild card.</param>
+        /// <param name="useWildcard">Use wild card search.</param>
         /// <returns>The current instance of <see cref="ISearchBuilder"/>.</returns>
-        ISearchBuilder WithField(string field, string value, bool useWildCard);
+        ISearchBuilder WithField(string field, string value, bool useWildcard);
 
         /// <summary>
         /// Adds the specified field and value to the search.

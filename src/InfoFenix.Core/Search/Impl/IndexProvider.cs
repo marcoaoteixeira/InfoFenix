@@ -8,7 +8,7 @@ namespace InfoFenix.Core.Search {
     /// <summary>
     /// Default implementation of <see cref="IIndexProvider"/>
     /// </summary>
-    public class IndexProvider : IIndexProvider {
+    public sealed class IndexProvider : IIndexProvider {
 
         #region Private Static Read-Only Fields
 
@@ -39,7 +39,6 @@ namespace InfoFenix.Core.Search {
         /// Initializes a new instance of <see cref="IndexProvider"/>.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        /// <param name="hostingEnvironment">The hosting environment.</param>
         /// <param name="analyzerProvider">The analyzer provider.</param>
         public IndexProvider(IAnalyzerProvider analyzerProvider, LuceneSettings settings) {
             Prevent.ParameterNull(analyzerProvider, nameof(analyzerProvider));
@@ -61,20 +60,25 @@ namespace InfoFenix.Core.Search {
 
         #region IIndexProvider Members
 
+        /// <inheritdoc />
         public void Delete(string indexName) {
             lock (SyncLock) {
                 if (!Cache.ContainsKey(indexName)) { return; }
 
-                if (Cache[indexName] is IDisposable disposable) { disposable.Dispose(); }
-                Cache.Remove(indexName);
                 Directory.Delete(Path.Combine(_settings.IndexStorageDirectoryPath, indexName));
+                if (Cache[indexName] is IDisposable disposable) {
+                    disposable.Dispose();
+                }
+                Cache.Remove(indexName);
             }
         }
 
+        /// <inheritdoc />
         public bool Exists(string indexName) {
             return Cache.ContainsKey(indexName);
         }
 
+        /// <inheritdoc />
         public IIndex GetOrCreate(string indexName) {
             lock (SyncLock) {
                 if (!Cache.ContainsKey(indexName)) {
@@ -85,6 +89,7 @@ namespace InfoFenix.Core.Search {
             }
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> List() {
             return Cache.Keys;
         }

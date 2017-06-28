@@ -15,7 +15,7 @@ namespace InfoFenix.Core.Search {
     /// <summary>
     /// Default implementation of <see cref="ISearchBuilder"/>.
     /// </summary>
-    public class SearchBuilder : ISearchBuilder {
+    public sealed class SearchBuilder : ISearchBuilder {
 
         #region Private Constants
 
@@ -35,12 +35,12 @@ namespace InfoFenix.Core.Search {
 
         #region Private Fields
 
+        private bool _asFilter;
+        private bool _sortDescending;
         private int _count;
         private int _skip;
-        private string _sort;
         private SortField.Type_e _comparer;
-        private bool _sortDescending;
-        private bool _asFilter;
+        private string _sort;
 
         // pending clause attributes
         private BooleanClause.Occur _occur;
@@ -57,8 +57,8 @@ namespace InfoFenix.Core.Search {
         /// <summary>
         /// Initializes a new instance of <see cref="SearchBuilder"/>.
         /// </summary>
+        /// <param name="indexSearcherFactory">The indexes directory factory.</param>
         /// <param name="analyzer">The analyzer provider.</param>
-        /// <param name="indexSearcherFactory">The index searcher.</param>
         public SearchBuilder(Analyzer analyzer, Func<IndexSearcher> indexSearcherFactory) {
             Prevent.ParameterNull(analyzer, nameof(analyzer));
             Prevent.ParameterNull(indexSearcherFactory, nameof(indexSearcherFactory));
@@ -81,7 +81,10 @@ namespace InfoFenix.Core.Search {
 
         private static List<string> AnalyzeText(Analyzer analyzer, string field, string text) {
             var result = new List<string>();
-            if (string.IsNullOrEmpty(text)) { return result; }
+
+            if (string.IsNullOrEmpty(text)) {
+                return result;
+            }
 
             using (var stringReader = new StringReader(text)) {
                 using (var tokenStream = analyzer.TokenStream(field, stringReader)) {
@@ -117,20 +120,16 @@ namespace InfoFenix.Core.Search {
             if (_query == null) { return; }
 
             // comparing floating-point numbers using an epsilon value
-            if (Math.Abs(_boost - 0) > EPSILON) {
-                _query.Boost = _boost;
-            }
+            if (Math.Abs(_boost - 0) > EPSILON) { _query.Boost = _boost; }
 
             if (!_notAnalyzed) {
-                var termQuery = _query as TermQuery;
-                if (termQuery != null) {
+                if (_query is TermQuery termQuery) {
                     var term = termQuery.Term;
                     var analyzedText = AnalyzeText(_analyzer, term.Field, term.Text()).FirstOrDefault();
                     _query = new TermQuery(new Term(term.Field, analyzedText));
                 }
 
-                var termRangeQuery = _query as TermRangeQuery;
-                if (termRangeQuery != null) {
+                if (_query is TermRangeQuery termRangeQuery) {
                     var lowerTerm = AnalyzeText(_analyzer, termRangeQuery.Field, termRangeQuery.LowerTerm.Utf8ToString()).FirstOrDefault();
                     var upperTerm = AnalyzeText(_analyzer, termRangeQuery.Field, termRangeQuery.UpperTerm.Utf8ToString()).FirstOrDefault();
 
@@ -139,8 +138,7 @@ namespace InfoFenix.Core.Search {
             }
 
             if (!_exactMatch) {
-                var termQuery = _query as TermQuery;
-                if (termQuery != null) {
+                if (_query is TermQuery termQuery) {
                     var term = termQuery.Term;
                     _query = new PrefixQuery(new Term(term.Field, term.Text()));
                 }
@@ -197,21 +195,11 @@ namespace InfoFenix.Core.Search {
 
         /// <inheritdoc />
         public ISearchBuilder Parse(string query, bool escape = true, params string[] defaultFields) {
-            if (string.IsNullOrWhiteSpace(query)) {
-                throw new ArgumentNullException("Parameter cannot be null, empty or white spaces.", nameof(query));
-            }
+            Prevent.ParameterNullOrWhiteSpace(query, nameof(query));
+            Prevent.ParameterNull(defaultFields, nameof(defaultFields));
+            if (defaultFields.Length == 0) { throw new ArgumentException("Default fields can't be empty."); }
 
-            if (defaultFields == null) {
-                throw new ArgumentNullException(nameof(defaultFields));
-            }
-
-            if (defaultFields.Length == 0) {
-                throw new ArgumentException("Default fields can't be empty.");
-            }
-
-            if (escape) {
-                query = QueryParserBase.Escape(query);
-            }
+            if (escape) { query = QueryParserBase.Escape(query); }
 
             foreach (var defaultField in defaultFields) {
                 CreatePendingClause();
@@ -236,11 +224,11 @@ namespace InfoFenix.Core.Search {
         }
 
         /// <inheritdoc />
-        public ISearchBuilder WithField(string field, string value, bool useWildCard) {
+        public ISearchBuilder WithField(string field, string value, bool useWildcard) {
             CreatePendingClause();
 
             if (!string.IsNullOrWhiteSpace(value)) {
-                if (useWildCard) {
+                if (useWildcard) {
                     _query = new WildcardQuery(new Term(field, value));
                 } else {
                     _query = new TermQuery(new Term(field, QueryParser.Escape(value)));

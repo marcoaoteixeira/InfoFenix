@@ -1,10 +1,11 @@
 ﻿using Lucene.Net.Analysis.Standard;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Default implementation of <see cref="IAnalyzerSelector"/>.
     /// </summary>
-    public class AnalyzerSelector : IAnalyzerSelector {
+    public sealed class AnalyzerSelector : IAnalyzerSelector {
 
         #region ILuceneAnalyzerSelector Members
 

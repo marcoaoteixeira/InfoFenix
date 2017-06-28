@@ -97,6 +97,7 @@
     <Compile Include="Commands\RemoveDocument.cs" />
     <Compile Include="Commands\CleanDocumentDirectory.cs" />
     <Compile Include="Commands\RemoveDocumentDirectory.cs" />
+    <Compile Include="Commands\SaveDocumentCollectionInDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocumentCollection.cs" />
     <Compile Include="Commands\SaveDocumentDirectory.cs" />
     <Compile Include="Commands\SaveDocument.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Commands\StartWatchDocumentDirectory.cs" />
     <Compile Include="Cqrs\MediatorExtension.cs" />
     <Compile Include="Cqrs\ProgressInfo.cs" />
+    <Compile Include="Cqrs\ProgressExtension.cs" />
     <Compile Include="Data\Impl\Database.cs" />
     <Compile Include="Data\DatabaseExtension.cs" />
     <Compile Include="Data\DatabaseSettings.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TaskExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
+    <Compile Include="IApplicationContext.cs" />
     <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="IoC\CompositionRoot.cs" />
     <Compile Include="IoC\CompositionRootState.cs" />
@@ -206,24 +209,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Search\AnalyzerProvider.cs" />
-    <Compile Include="Search\AnalyzerSelector.cs" />
-    <Compile Include="Search\AnalyzerSelectorResult.cs" />
-    <Compile Include="Search\DocumentIndex.cs" />
-    <Compile Include="Search\IAnalyzerProvider.cs" />
-    <Compile Include="Search\IAnalyzerSelector.cs" />
+    <Compile Include="Search\DocumentIndexOptions.cs" />
     <Compile Include="Search\IDocumentIndex.cs" />
     <Compile Include="Search\IIndex.cs" />
     <Compile Include="Search\IIndexProvider.cs" />
-    <Compile Include="Search\Index.cs" />
-    <Compile Include="Search\IndexProvider.cs" />
+    <Compile Include="Search\Impl\AnalyzerProvider.cs" />
+    <Compile Include="Search\Impl\AnalyzerSelector.cs" />
+    <Compile Include="Search\Impl\AnalyzerSelectorResult.cs" />
+    <Compile Include="Search\Impl\DocumentIndex.cs" />
+    <Compile Include="Search\Impl\IAnalyzerProvider.cs" />
+    <Compile Include="Search\Impl\IAnalyzerSelector.cs" />
+    <Compile Include="Search\Impl\Index.cs" />
+    <Compile Include="Search\Impl\IndexProvider.cs" />
+    <Compile Include="Search\Impl\LuceneSettings.cs" />
+    <Compile Include="Search\Impl\SearchBit.cs" />
+    <Compile Include="Search\Impl\SearchBuilder.cs" />
+    <Compile Include="Search\Impl\SearchHit.cs" />
     <Compile Include="Search\ISearchBit.cs" />
     <Compile Include="Search\ISearchBuilder.cs" />
     <Compile Include="Search\ISearchHit.cs" />
-    <Compile Include="Search\LuceneSettings.cs" />
-    <Compile Include="Search\SearchBit.cs" />
-    <Compile Include="Search\SearchBuilder.cs" />
-    <Compile Include="Search\SearchHit.cs" />
     <Compile Include="Services\IManagementService.cs" />
     <Compile Include="Services\ManagementService.cs" />
   </ItemGroup>

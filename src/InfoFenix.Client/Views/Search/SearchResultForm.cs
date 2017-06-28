@@ -77,8 +77,6 @@ namespace InfoFenix.Client.Views.Search {
 
         private void SearchResultForm_Load(object sender, EventArgs e) {
             Initialize();
-
-            documentViewerRichTextBox.Text = "It works!";
         }
 
         private void SearchResultForm_FormClosing(object sender, FormClosingEventArgs e) {

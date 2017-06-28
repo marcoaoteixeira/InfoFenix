@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Default implementation of <see cref="IAnalyzerProvider"/>.
     /// </summary>
-    public class AnalyzerProvider : IAnalyzerProvider {
+    public sealed class AnalyzerProvider : IAnalyzerProvider {
 
         #region Private Read-Only Fields
 
@@ -22,9 +22,7 @@ namespace InfoFenix.Core.Search {
         /// </summary>
         /// <param name="selectors">A collection of <see cref="IAnalyzerSelector"/>.</param>
         public AnalyzerProvider(params IAnalyzerSelector[] selectors) {
-            if (selectors == null) {
-                throw new ArgumentNullException(nameof(selectors));
-            }
+            Prevent.ParameterNull(selectors, nameof(selectors));
 
             _selectors = selectors;
         }

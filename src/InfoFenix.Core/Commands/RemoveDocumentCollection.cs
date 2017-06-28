@@ -8,7 +8,6 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
 using Resource = InfoFenix.Core.Resources.Resources;
 
@@ -18,7 +17,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public string DocumentDirectoryCode { get; set; }
+        public DocumentDirectoryDto DocumentDirectory { get; set; }
 
         public IList<DocumentDto> Documents { get; set; } = new List<DocumentDto>();
 
@@ -31,7 +30,6 @@ namespace InfoFenix.Core.Commands {
 
         private readonly IDatabase _database;
         private readonly IIndexProvider _indexProvider;
-        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -48,64 +46,59 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public RemoveDocumentCollectionCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
+        public RemoveDocumentCollectionCommandHandler(IDatabase database, IIndexProvider indexProvider) {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
-            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
             _indexProvider = indexProvider;
-            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
 
         #region ICommandHandler<RemoveDocumentCollectionCommand> Members
 
-        public Task HandleAsync(RemoveDocumentCollectionCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
-            var documentIDs = command.Documents.Select(_ => _.DocumentID).ToArray();
-            var info = new ProgressiveTaskContinuationInfo {
-                Log = Log,
-                TotalSteps = documentIDs.Length + 1
-            };
-
+        public Task HandleAsync(RemoveDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStart(
-                    title: Resource.RemoveDocumentCollection_ProgressiveTaskStart_Title,
-                    actualStep: info.ActualStep,
-                    totalSteps: info.TotalSteps
-                );
+                var documentIDs = command.Documents.Select(_ => _.DocumentID).ToArray();
+                var actualStep = 0;
+                var totalSteps = (documentIDs.Length + 1);
 
-                using (var transaction = _database.Connection.BeginTransaction()) {
-                    foreach (var document in command.Documents) {
-                        cancellationToken.ThrowIfCancellationRequested();
+                try {
+                    progress.Start(totalSteps, Resource.RemoveDocumentCollection_Progress_Start_Title);
 
-                        _publisherSubscriber.ProgressiveTaskPerformStep(
-                            message: string.Format(Resource.RemoveDocumentCollection_ProgressiveTaskPerformStep_Database_Message, document.Code),
-                            actualStep: ++info.ActualStep,
-                            totalSteps: info.TotalSteps
-                        );
+                    using (var transaction = _database.Connection.BeginTransaction()) {
+                        foreach (var document in command.Documents) {
+                            progress.PerformStep(++actualStep, totalSteps, Resource.RemoveDocumentCollection_Progress_Step_Database_Message, document.FileName);
 
-                        _database.ExecuteScalar(Resource.RemoveDocumentSQL, parameters: new[] {
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID, DbType.Int32)
-                        });
+                            if (cancellationToken.IsCancellationRequested) {
+                                progress.Cancel(actualStep, totalSteps);
+
+                                cancellationToken.ThrowIfCancellationRequested();
+                            }
+
+                            _database.ExecuteScalar(Resource.RemoveDocumentSQL, parameters: new[] {
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID, DbType.Int32)
+                            });
+                        }
+
+                        if (cancellationToken.IsCancellationRequested) {
+                            progress.Cancel(actualStep, totalSteps);
+
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+                        transaction.Commit();
+
+                        progress.PerformStep(++actualStep, totalSteps, Resource.RemoveDocumentCollection_Progress_Step_Index_Message, command.DocumentDirectory.Label);
+
+                        _indexProvider
+                            .GetOrCreate(command.DocumentDirectory.Code)
+                            .DeleteDocuments(command.Documents.Select(_ => _.DocumentID.ToString()).ToArray());
                     }
 
-                    cancellationToken.ThrowIfCancellationRequested();
-                    transaction.Commit();
-
-                    _publisherSubscriber.ProgressiveTaskPerformStep(
-                        message: Resource.RemoveDocumentCollection_ProgressiveTaskPerformStep_Index_Message,
-                        actualStep: ++info.ActualStep,
-                        totalSteps: info.TotalSteps
-                    );
-
-                    _indexProvider
-                        .GetOrCreate(command.DocumentDirectoryCode)
-                        .DeleteDocuments(command.Documents.Select(_ => _.DocumentID.ToString()).ToArray());
-                }
-            }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
+                    progress.Complete(actualStep, totalSteps);
+                } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<RemoveDocumentCollectionCommand> Members

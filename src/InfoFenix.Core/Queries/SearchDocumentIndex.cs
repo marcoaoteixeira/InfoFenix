@@ -6,7 +6,6 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
-using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Queries {
 
@@ -26,18 +25,15 @@ namespace InfoFenix.Core.Queries {
         #region Private Read-Only Fields
 
         private readonly IIndexProvider _indexProvider;
-        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
         #region Public Constructors
 
-        public SearchDocumentIndexQueryHandler(IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
+        public SearchDocumentIndexQueryHandler(IIndexProvider indexProvider) {
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
-            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _indexProvider = indexProvider;
-            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
@@ -85,9 +81,7 @@ namespace InfoFenix.Core.Queries {
         }
 
         private IEnumerable<DocumentIndexDto> ExecuteSearch(IIndex index, ISearchBuilder searchBuilder, string label) {
-            foreach (var searchHit in searchBuilder.Search()) {
-                yield return DocumentIndexDto.Map(searchHit);
-            }
+            return searchBuilder.Search().Select(DocumentIndexDto.Map);
         }
 
         #endregion Private Methods
@@ -95,22 +89,7 @@ namespace InfoFenix.Core.Queries {
         #region IQueryHandler<SearchDocumentIndexQuery, SearchDto> Members
 
         public Task<SearchDto> HandleAsync(SearchDocumentIndexQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
-            var actualStep = 0;
-            var totalSteps = query.Indexes.Count + 1;
-
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStart(
-                    title: Resource.SearchDocumentIndex_ProgressiveTaskStart_Title,
-                    actualStep: actualStep,
-                    totalSteps: totalSteps
-                );
-
-                _publisherSubscriber.ProgressiveTaskPerformStep(
-                    message: Resource.SearchDocumentIndex_ProgressiveTaskPerformStep_Build_Message,
-                    actualStep: ++actualStep,
-                    totalSteps: totalSteps
-                );
-
                 var indexes = GetIndexes(query.Indexes.Keys).ToArray();
                 var searchDto = new SearchDto {
                     QueryTerm = query.QueryTerm,
@@ -122,11 +101,6 @@ namespace InfoFenix.Core.Queries {
                 };
 
                 if (string.IsNullOrWhiteSpace(query.QueryTerm)) {
-                    _publisherSubscriber.ProgressiveTaskComplete(
-                        actualStep: actualStep,
-                        totalSteps: totalSteps
-                    );
-
                     return searchDto;
                 }
 
@@ -137,30 +111,11 @@ namespace InfoFenix.Core.Queries {
                     if (cancellationToken.IsCancellationRequested) { break; }
 
                     var indexDto = searchDto[index.Name];
-
-                    _publisherSubscriber.ProgressiveTaskPerformStep(
-                        message: string.Format(Resource.SearchDocumentIndex_ProgressiveTaskPerformStep_Search_Message, indexDto.Label),
-                        actualStep: ++actualStep,
-                        totalSteps: totalSteps
-                    );
-
                     var searchBuilder = CreateSearchBuilder(index, positiveTerms, negativeTerms);
                     var documents = ExecuteSearch(index, searchBuilder, indexDto.Label);
 
                     indexDto.Documents = documents.ToList();
                 }
-
-                if (cancellationToken.IsCancellationRequested) {
-                    _publisherSubscriber.ProgressiveTaskCancel(
-                        actualStep: actualStep,
-                        totalSteps: totalSteps
-                    );
-                }
-
-                _publisherSubscriber.ProgressiveTaskComplete(
-                    actualStep: actualStep,
-                    totalSteps: totalSteps
-                );
 
                 return searchDto;
             }, cancellationToken);

@@ -1,4 +1,5 @@
 ﻿namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Defines methods for a search bit class.
     /// </summary>
@@ -33,6 +34,6 @@
         /// <returns>A <see cref="long"/> representing the count of cardinality.</returns>
         long Count();
 
-        #endregion Methods
+        #endregion
     }
 }

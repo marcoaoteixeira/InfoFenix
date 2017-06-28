@@ -6,7 +6,7 @@ using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Core {
 
-    public class CancellationTokenIssuer : IDisposable {
+    public sealed class CancellationTokenIssuer : IDisposable {
 
         #region Private Fields
 

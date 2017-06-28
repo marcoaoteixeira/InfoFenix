@@ -115,14 +115,14 @@ namespace InfoFenix.Client.Views.Manage {
             var path = DialogHelper.OpenFolderBrowserDialog(Resource.ConfigurationForm_SelectDatabaseBackupDirectory);
             if (string.IsNullOrEmpty(path)) { return; }
 
-            WaitFor.Instance.Execution(() => _managementService.BackupDatabase(path));
+            WaitFor.Execution(() => _managementService.BackupDatabase(path));
         }
 
         private void performDatabaseRestoreButton_Click(object sender, EventArgs e) {
             var paths = DialogHelper.OpenFileBrowserDialog(Resource.ConfigurationForm_SelectDatabaseRestoreFile);
             if (paths.IsNullOrEmpty()) { return; }
 
-            WaitFor.Instance.Execution(() => _managementService.RestoreDatabase(paths[0]));
+            WaitFor.Execution(() => _managementService.RestoreDatabase(paths[0]));
 
             _mustRestartApplication = true;
 

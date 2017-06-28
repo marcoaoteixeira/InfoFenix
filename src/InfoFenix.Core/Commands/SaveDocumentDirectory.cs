@@ -6,7 +6,6 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.PubSub;
 using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
@@ -25,7 +24,6 @@ namespace InfoFenix.Core.Commands {
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
-        private readonly IPublisherSubscriber _publisherSuscriber;
 
         #endregion Private Read-Only Fields
 
@@ -42,59 +40,32 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public SaveDocumentDirectoryCommandHandler(IDatabase database, IPublisherSubscriber publisherSuscriber) {
+        public SaveDocumentDirectoryCommandHandler(IDatabase database) {
             Prevent.ParameterNull(database, nameof(database));
-            Prevent.ParameterNull(publisherSuscriber, nameof(publisherSuscriber));
 
             _database = database;
-            _publisherSuscriber = publisherSuscriber;
         }
 
         #endregion Public Constructors
 
-        #region Private Methods
-
-        private void CheckCancellationTokenAndNotify(CancellationToken cancellationToken, int actualStep, int totalSteps) {
-            if (cancellationToken.IsCancellationRequested) {
-                _publisherSuscriber.Publish(new ProgressiveTaskCancelNotification {
-                    Arguments = new ProgressiveTaskArguments {
-                        ActualStep = actualStep,
-                        TotalSteps = totalSteps
-                    }
-                });
-
-                cancellationToken.ThrowIfCancellationRequested();
-            }
-        }
-
-        #endregion Private Methods
-
         #region ICommandHandler<SaveDocumentDirectoryCommand> Members
 
-        public Task HandleAsync(SaveDocumentDirectoryCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task HandleAsync(SaveDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
                 var actualStep = 0;
                 var totalSteps = 1;
 
-                _publisherSuscriber.Publish(new ProgressiveTaskStartNotification {
-                    Arguments = new ProgressiveTaskArguments {
-                        Title = Resource.SaveDocumentDirectory_ProgressiveTaskStart_Title,
-                        ActualStep = actualStep,
-                        TotalSteps = totalSteps
-                    }
-                });
+                try {
+                    progress.Start(totalSteps, Resource.SaveDocumentDirectory_Progress_Start_Title);
 
-                using (var transaction = _database.Connection.BeginTransaction()) {
-                    try {
-                        CheckCancellationTokenAndNotify(cancellationToken, actualStep, totalSteps);
+                    using (var transaction = _database.Connection.BeginTransaction()) {
+                        if (cancellationToken.IsCancellationRequested) {
+                            progress.Cancel(actualStep, totalSteps);
 
-                        _publisherSuscriber.Publish(new ProgressiveTaskPerformStepNotification {
-                            Arguments = new ProgressiveTaskArguments {
-                                Message = string.Format(Resource.SaveDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
-                                ActualStep = ++actualStep,
-                                TotalSteps = totalSteps
-                            }
-                        });
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+
+                        progress.PerformStep(++actualStep, totalSteps, Resource.SaveDocumentDirectory_Progress_Step_Message, command.DocumentDirectory.Label);
 
                         var result = _database.ExecuteScalar(Resource.SaveDocumentDirectorySQL, parameters: new[] {
                             Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
@@ -106,20 +77,16 @@ namespace InfoFenix.Core.Commands {
                         });
                         if (command.DocumentDirectory.DocumentDirectoryID <= 0) { command.DocumentDirectory.DocumentDirectoryID = Convert.ToInt32(result); }
 
-                        CheckCancellationTokenAndNotify(cancellationToken, actualStep, totalSteps);
-                        transaction.Commit();
-                    } catch (Exception ex) {
-                        _publisherSuscriber.Publish(new ProgressiveTaskErrorNotification {
-                            Arguments = new ProgressiveTaskArguments {
-                                ActualStep = actualStep,
-                                TotalSteps = totalSteps,
-                                Error = ex.Message
-                            }
-                        });
+                        if (cancellationToken.IsCancellationRequested) {
+                            progress.Cancel(actualStep, totalSteps);
 
-                        throw;
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+                        transaction.Commit();
+
+                        progress.Complete(actualStep, totalSteps);
                     }
-                }
+                } catch (Exception ex) { progress.Cancel(actualStep, totalSteps, ex.Message); throw; }
             }, cancellationToken);
         }
 

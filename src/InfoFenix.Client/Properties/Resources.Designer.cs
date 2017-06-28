@@ -362,6 +362,15 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indexado.
+        /// </summary>
+        internal static string Indexed {
+            get {
+                return ResourceManager.GetString("Indexed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon info_fenix_113x128 {
@@ -400,38 +409,47 @@ namespace InfoFenix.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Não indexado.
+        /// </summary>
+        internal static string NonIndexed {
+            get {
+                return ResourceManager.GetString("NonIndexed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Cancelar.
         /// </summary>
-        internal static string ProgressiveTaskForm_ActionButton_Cancel {
+        internal static string ProgressViewForm_ActionButton_Cancel {
             get {
-                return ResourceManager.GetString("ProgressiveTaskForm_ActionButton_Cancel", resourceCulture);
+                return ResourceManager.GetString("ProgressViewForm_ActionButton_Cancel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to &amp;Fechar.
         /// </summary>
-        internal static string ProgressiveTaskForm_ActionButton_Close {
+        internal static string ProgressViewForm_ActionButton_Close {
             get {
-                return ResourceManager.GetString("ProgressiveTaskForm_ActionButton_Close", resourceCulture);
+                return ResourceManager.GetString("ProgressViewForm_ActionButton_Close", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Deseja realmente cancelar a tarefa?.
         /// </summary>
-        internal static string ProgressiveTaskForm_Cancellation_Message {
+        internal static string ProgressViewForm_Cancellation_Message {
             get {
-                return ResourceManager.GetString("ProgressiveTaskForm_Cancellation_Message", resourceCulture);
+                return ResourceManager.GetString("ProgressViewForm_Cancellation_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Cancelar Tarefa.
         /// </summary>
-        internal static string ProgressiveTaskForm_Cancellation_Title {
+        internal static string ProgressViewForm_Cancellation_Title {
             get {
-                return ResourceManager.GetString("ProgressiveTaskForm_Cancellation_Title", resourceCulture);
+                return ResourceManager.GetString("ProgressViewForm_Cancellation_Title", resourceCulture);
             }
         }
         
@@ -555,6 +573,15 @@ namespace InfoFenix.Client.Properties {
         internal static string TextCopiedToClipboard {
             get {
                 return ResourceManager.GetString("TextCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total de documentos: {0}.
+        /// </summary>
+        internal static string TotalDocumentsMessage {
+            get {
+                return ResourceManager.GetString("TotalDocumentsMessage", resourceCulture);
             }
         }
         

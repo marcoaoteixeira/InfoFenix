@@ -8,7 +8,6 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.PubSub;
 using InfoFenix.Core.Search;
 using Resource = InfoFenix.Core.Resources.Resources;
 
@@ -33,7 +32,6 @@ namespace InfoFenix.Core.Commands {
 
         private readonly IDatabase _database;
         private readonly IIndexProvider _indexProvider;
-        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -50,14 +48,12 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public IndexDocumentCollectionCommandHandler(IDatabase database, IIndexProvider indexProvider, IPublisherSubscriber publisherSubscriber) {
+        public IndexDocumentCollectionCommandHandler(IDatabase database, IIndexProvider indexProvider) {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
-            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
             _indexProvider = indexProvider;
-            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
@@ -89,40 +85,39 @@ namespace InfoFenix.Core.Commands {
 
         #region ICommandHandler<IndexDocumentCollectionCommand> Members
 
-        public Task HandleAsync(IndexDocumentCollectionCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
-            var info = new ProgressiveTaskContinuationInfo {
-                Log = Log,
-                TotalSteps = command.Documents.Count
-            };
-
+        public Task HandleAsync(IndexDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStart(
-                    title: Resource.IndexDocumentCollection_ProgressiveTaskStart_Title,
-                    actualStep: info.ActualStep,
-                    totalSteps: info.TotalSteps
-                );
+                var actualStep = 0;
+                var totalSteps = command.Documents.Count;
 
-                // Gets the Lucene Index
-                var index = _indexProvider.GetOrCreate(command.IndexName);
-                var documentIndexList = new List<IDocumentIndex>();
-                foreach (var document in command.Documents) {
-                    cancellationToken.ThrowIfCancellationRequested();
+                try {
+                    progress.Start(totalSteps, Resource.IndexDocumentCollection_Progress_Start_Title);
 
-                    _publisherSubscriber.ProgressiveTaskPerformStep(
-                        message: string.Format(Resource.IndexDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
-                        actualStep: ++info.ActualStep,
-                        totalSteps: info.TotalSteps
-                    );
+                    // Gets the Lucene Index
+                    var index = _indexProvider.GetOrCreate(command.IndexName);
+                    var documentIndexList = new List<IDocumentIndex>();
+                    foreach (var document in command.Documents) {
+                        progress.PerformStep(++actualStep, totalSteps, Resource.IndexDocumentCollection_Progress_Step_Message, document.FileName);
 
-                    documentIndexList.Add(document.Map());
+                        if (cancellationToken.IsCancellationRequested) {
+                            progress.Cancel(actualStep, totalSteps);
 
-                    Flush(index, command.BatchSize, info.ActualStep, documentIndexList);
-                }
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
 
-                // Flush to Lucene Index the last documents.
-                Flush(index, command.BatchSize, info.ActualStep, documentIndexList, force: true);
-            }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
+                        documentIndexList.Add(document.Map());
+
+                        Flush(index, command.BatchSize, actualStep, documentIndexList);
+                    }
+
+                    if (documentIndexList.Count > 0) {
+                        // Flush to Lucene Index the last documents.
+                        Flush(index, command.BatchSize, actualStep, documentIndexList, force: true);
+                    }
+
+                    progress.Complete(actualStep, totalSteps);
+                } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<IndexDocumentCollectionCommand> Members

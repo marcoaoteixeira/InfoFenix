@@ -184,7 +184,7 @@
             // 
             // foundTotalDocumentsDataGridViewTextBoxColumn
             // 
-            this.foundTotalDocumentsDataGridViewTextBoxColumn.DataPropertyName = "Documents.Count";
+            this.foundTotalDocumentsDataGridViewTextBoxColumn.DataPropertyName = "TotalDocumentsFound";
             this.foundTotalDocumentsDataGridViewTextBoxColumn.HeaderText = "Documentos encontrados";
             this.foundTotalDocumentsDataGridViewTextBoxColumn.Name = "foundTotalDocumentsDataGridViewTextBoxColumn";
             this.foundTotalDocumentsDataGridViewTextBoxColumn.ReadOnly = true;

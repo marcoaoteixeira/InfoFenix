@@ -7,10 +7,10 @@ namespace InfoFenix.Core.Cqrs {
 
         #region Public Static Methods
 
-        public static void Command(this IMediator source, ICommand command, IProgress<ProgressArguments> progress = null) {
+        public static void Command(this IMediator source, ICommand command, IProgress<ProgressInfo> progress = null) {
             if (source == null) { return; }
 
-            source.CommandAsync(command, progress, CancellationToken.None).WaitForResult();
+            source.CommandAsync(command, CancellationToken.None, progress).WaitForResult();
         }
 
         public static TResult Query<TResult>(this IMediator source, IQuery<TResult> query) {

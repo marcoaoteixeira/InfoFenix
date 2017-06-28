@@ -10,7 +10,13 @@ using LuceneFSDirectory = Lucene.Net.Store.FSDirectory;
 
 namespace InfoFenix.Core.Search {
 
-    public class Index : IIndex, IDisposable {
+    public sealed class Index : IIndex, IDisposable {
+
+        #region Private Constants
+
+        private const string DATE_PATTERN = "yyyy-MM-ddTHH:mm:ssZ";
+
+        #endregion
 
         #region Private Read-Only Fields
 
@@ -47,6 +53,12 @@ namespace InfoFenix.Core.Search {
 
         #region Public Constructors
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="Index"/>.
+        /// </summary>
+        /// <param name="analyzer">The Lucene analyzer.</param>
+        /// <param name="basePath">The base path of the Lucene directory.</param>
+        /// <param name="name">The index name.</param>
         public Index(Analyzer analyzer, string basePath, string name) {
             Prevent.ParameterNull(analyzer, nameof(analyzer));
             Prevent.ParameterNullOrWhiteSpace(basePath, nameof(basePath));
@@ -55,7 +67,7 @@ namespace InfoFenix.Core.Search {
             _analyzer = analyzer;
             _basePath = basePath;
             _name = name;
-
+            
             Initialize();
         }
 
@@ -63,6 +75,9 @@ namespace InfoFenix.Core.Search {
 
         #region Destructor
 
+        /// <summary>
+        /// Destructor
+        /// </summary>
         ~Index() {
             Dispose(disposing: false);
         }
@@ -73,14 +88,50 @@ namespace InfoFenix.Core.Search {
 
         private static Document CreateDocument(IDocumentIndex documentIndex) {
             var documentIndexImpl = documentIndex as DocumentIndex;
-            if (documentIndexImpl == null) {
-                throw new InvalidCastException($"Parameter {nameof(documentIndex)} must be of type {nameof(DocumentIndex)}");
-            }
-
             var document = new Document();
-            documentIndexImpl.PrepareForIndexing();
-            foreach (var field in documentIndexImpl.Fields) {
-                document.Add(field);
+            foreach (var entry in documentIndexImpl.Entries) {
+                if (entry.Value.Value == null) { continue; }
+                var fieldName = entry.Key;
+                var fieldValue = entry.Value.Value;
+
+                var store = entry.Value.Options.HasFlag(DocumentIndexOptions.Store) ? Field.Store.YES : Field.Store.NO;
+                var analyze = entry.Value.Options.HasFlag(DocumentIndexOptions.Analyze);
+                var sanitize = entry.Value.Options.HasFlag(DocumentIndexOptions.Sanitize);
+
+                switch (entry.Value.Type) {
+                    case DocumentIndex.IndexableType.Integer:
+                        document.Add(new IntField(fieldName, Convert.ToInt32(fieldValue), store));
+                        break;
+
+                    case DocumentIndex.IndexableType.Text:
+                        var textValue = sanitize ? Convert.ToString(fieldValue).RemoveHtmlTags() : Convert.ToString(fieldValue);
+                        
+                        if (analyze) { document.Add(new TextField(fieldName, textValue, store)); }
+                        else { document.Add(new StringField(fieldName, textValue, store)); }
+                        break;
+
+                    case DocumentIndex.IndexableType.DateTime:
+                        var dateValue = string.Empty;
+                        if (fieldValue is DateTimeOffset) {
+                            dateValue = ((DateTimeOffset)fieldValue).ToUniversalTime().ToString(DATE_PATTERN);
+                        } else {
+                            dateValue = ((DateTime)fieldValue).ToUniversalTime().ToString(DATE_PATTERN);
+                        }
+                        document.Add(new StringField(fieldName, dateValue, store));
+
+                        break;
+
+                    case DocumentIndex.IndexableType.Boolean:
+                        document.Add(new StringField(fieldName, Convert.ToString(fieldValue).ToLower(), store));
+                        break;
+
+                    case DocumentIndex.IndexableType.Number:
+                        document.Add(new DoubleField(fieldName, Convert.ToDouble(fieldValue), store));
+                        break;
+
+                    default:
+                        break;
+                }
             }
             return document;
         }
@@ -92,7 +143,8 @@ namespace InfoFenix.Core.Search {
         private void Initialize() {
             _directory = LuceneFSDirectory.Open(new DirectoryInfo(Path.Combine(_basePath, Name)));
 
-            using (CreateIndexWriter()) { /* Creates the index folder */ }
+            // Creates the index directory
+            using (CreateIndexWriter()) { }
         }
 
         private bool IndexDirectoryExists() {
@@ -105,13 +157,13 @@ namespace InfoFenix.Core.Search {
 
         private IndexReader CreateIndexReader() {
             lock (_syncLock) {
-                return _indexReader ?? (_indexReader = DirectoryReader.Open(_directory));
+                return _indexReader ?? (_indexReader = DirectoryReader.Open(_directory)); 
             }
         }
 
         private IndexSearcher CreateIndexSearcher() {
             lock (_syncLock) {
-                return _indexSearcher ?? (_indexSearcher = new IndexSearcher(CreateIndexReader()));
+                return _indexSearcher ?? (_indexSearcher = new IndexSearcher(CreateIndexReader())); 
             }
         }
 
@@ -121,6 +173,7 @@ namespace InfoFenix.Core.Search {
                     _indexReader.Dispose();
                     _indexReader = null;
                 }
+
                 if (_indexSearcher != null) {
                     _indexSearcher = null;
                 }
@@ -133,6 +186,7 @@ namespace InfoFenix.Core.Search {
                 if (_directory != null) {
                     _directory.Dispose();
                 }
+
                 if (_indexReader != null) {
                     _indexReader.Dispose();
                 }
@@ -148,24 +202,29 @@ namespace InfoFenix.Core.Search {
 
         #region IIndex Members
 
+        /// <inheritdoc />
         public string Name {
             get { return _name; }
         }
 
+        /// <inheritdoc />
         public bool IsEmpty() {
             return TotalDocuments() <= 0;
         }
 
+        /// <inheritdoc />
         public int TotalDocuments() {
             if (!IndexDirectoryExists()) { return -1; }
 
             return CreateIndexReader().NumDocs;
         }
 
+        /// <inheritdoc />
         public IDocumentIndex NewDocument(string documentID) {
             return new DocumentIndex(documentID);
         }
 
+        /// <inheritdoc />
         public void StoreDocuments(params IDocumentIndex[] documents) {
             if (documents == null) { return; }
             if (documents.Length == 0) { return; }
@@ -181,20 +240,21 @@ namespace InfoFenix.Core.Search {
             }
         }
 
+        /// <inheritdoc />
         public void DeleteDocuments(params string[] documentIDs) {
             if (documentIDs == null) { return; }
             if (documentIDs.Length == 0) { return; }
 
-            // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
-
             using (var writer = CreateIndexWriter()) {
+
+                // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
                 var pageCount = documentIDs.Length / (BatchSize + 1);
                 for (var page = 0; page < pageCount; page++) {
                     var query = new BooleanQuery();
                     try {
                         var batch = documentIDs.Skip(page * BatchSize).Take(BatchSize);
                         foreach (var id in batch) {
-                            query.Add(new BooleanClause(new TermQuery(new Term(nameof(ISearchHit.DocumentID), id)), BooleanClause.Occur.SHOULD));
+                            query.Add(new BooleanClause(new TermQuery(new Term(nameof(ISearchHit.DocumentID), id.ToString())), BooleanClause.Occur.SHOULD));
                         }
                         writer.DeleteDocuments(query);
                     } catch { /* Just skip error */ }
@@ -204,6 +264,7 @@ namespace InfoFenix.Core.Search {
             }
         }
 
+        /// <inheritdoc />
         public ISearchBuilder CreateSearchBuilder() {
             return new SearchBuilder(_analyzer, CreateIndexSearcher);
         }
@@ -212,6 +273,7 @@ namespace InfoFenix.Core.Search {
 
         #region IDisposable Members
 
+        /// <inheritdoc />
         public void Dispose() {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);

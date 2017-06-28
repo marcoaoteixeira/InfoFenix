@@ -11,6 +11,9 @@ namespace InfoFenix.Core.Dto {
         public int TotalDocuments { get; set; }
 
         public IList<DocumentIndexDto> Documents { get; set; } = new List<DocumentIndexDto>();
+        public int TotalDocumentsFound {
+            get { return Documents.Count; }
+        }
 
         #endregion Public Properties
 

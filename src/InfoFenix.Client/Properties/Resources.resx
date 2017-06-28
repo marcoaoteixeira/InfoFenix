@@ -139,7 +139,7 @@
   <data name="TextCopiedToClipboard" xml:space="preserve">
     <value>Texto selecionado foi copiado para a área de transferência</value>
   </data>
-  <data name="ProgressiveTaskForm_Cancellation_Message" xml:space="preserve">
+  <data name="ProgressViewForm_Cancellation_Message" xml:space="preserve">
     <value>Deseja realmente cancelar a tarefa?</value>
   </data>
   <data name="forward_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -181,13 +181,13 @@
   <data name="search_result_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\search_result_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ProgressiveTaskForm_Cancellation_Title" xml:space="preserve">
+  <data name="ProgressViewForm_Cancellation_Title" xml:space="preserve">
     <value>Cancelar Tarefa</value>
   </data>
   <data name="Success" xml:space="preserve">
     <value>Sucesso</value>
   </data>
-  <data name="ProgressiveTaskForm_ActionButton_Cancel" xml:space="preserve">
+  <data name="ProgressViewForm_ActionButton_Cancel" xml:space="preserve">
     <value>&amp;Cancelar</value>
   </data>
   <data name="fast_rewind_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -253,7 +253,7 @@
   <data name="rewind_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rewind-64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ProgressiveTaskForm_ActionButton_Close" xml:space="preserve">
+  <data name="ProgressViewForm_ActionButton_Close" xml:space="preserve">
     <value>&amp;Fechar</value>
   </data>
   <data name="word_document_docx_blue_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -291,5 +291,14 @@
   </data>
   <data name="DocumentDirectoryForm_SelectDocumentDirectoryPath_Message" xml:space="preserve">
     <value>Selecionar o caminho do diretório de documentos</value>
+  </data>
+  <data name="Indexed" xml:space="preserve">
+    <value>Indexado</value>
+  </data>
+  <data name="NonIndexed" xml:space="preserve">
+    <value>Não indexado</value>
+  </data>
+  <data name="TotalDocumentsMessage" xml:space="preserve">
+    <value>Total de documentos: {0}</value>
   </data>
 </root>

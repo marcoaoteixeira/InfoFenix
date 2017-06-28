@@ -12,6 +12,11 @@ namespace InfoFenix.Core.IoC {
                 .RegisterType<ManagementService>()
                 .As<IManagementService>()
                 .SingleInstance();
+
+            Builder
+               .RegisterType<ApplicationContext>()
+               .As<IApplicationContext>()
+               .SingleInstance();
         }
 
         #endregion Public Override Methods

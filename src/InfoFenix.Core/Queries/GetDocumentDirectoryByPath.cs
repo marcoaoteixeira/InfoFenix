@@ -46,7 +46,7 @@ namespace InfoFenix.Core.Queries {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Path, query.Path)
                 });
 
-                if (query.RequireDocuments) {
+                if (query.RequireDocuments && documentDirectory != null && documentDirectory.DocumentDirectoryID != 0) {
                     documentDirectory.Documents = _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, (reader) => DocumentDto.Map(reader, documentDirectory), parameters: new[] {
                         Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, documentDirectory.DocumentDirectoryID, DbType.Int32)
                     }).ToList();

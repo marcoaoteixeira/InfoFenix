@@ -33,7 +33,7 @@
             this.manageDocumentDirectoryImageList = new System.Windows.Forms.ImageList(this.components);
             this.directoryInformationLabel = new System.Windows.Forms.Label();
             this.filterListViewPanel = new System.Windows.Forms.Panel();
-            this.filterListViewTextBox = new System.Windows.Forms.TextBox();
+            this.filterListViewTextBox = new InfoFenix.Client.Code.Controls.PowerTextBox();
             this.filterListViewLabel = new System.Windows.Forms.Label();
             this.documentDirectoryContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -195,11 +195,12 @@
             // 
             this.filterListViewTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.filterListViewTextBox.Delay = 350;
             this.filterListViewTextBox.Location = new System.Drawing.Point(70, 12);
             this.filterListViewTextBox.Name = "filterListViewTextBox";
             this.filterListViewTextBox.Size = new System.Drawing.Size(410, 27);
             this.filterListViewTextBox.TabIndex = 1;
-            this.filterListViewTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.filterListViewTextBox_KeyUp);
+            this.filterListViewTextBox.DelayedTextChanged += new System.EventHandler(this.filterListViewTextBox_DelayedTextChanged);
             // 
             // filterListViewLabel
             // 
@@ -357,8 +358,8 @@
         private System.Windows.Forms.ToolTip manageDocumentDirectoryToolTip;
         private System.Windows.Forms.ImageList manageDocumentDirectoryImageList;
         private System.Windows.Forms.Panel filterListViewPanel;
-        private System.Windows.Forms.TextBox filterListViewTextBox;
         private System.Windows.Forms.Label filterListViewLabel;
         private System.Windows.Forms.Label directoryInformationLabel;
+        private Code.Controls.PowerTextBox filterListViewTextBox;
     }
 }

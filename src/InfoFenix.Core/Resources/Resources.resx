@@ -126,14 +126,14 @@
   <data name="Bootstrapper_ProgressiveTaskStart_Title" xml:space="preserve">
     <value>Inicializado Aplicativo</value>
   </data>
-  <data name="CleanDocumentDirectory_ProgressiveTaskPerformStep_Database_Message" xml:space="preserve">
+  <data name="CleanDocumentDirectory_Progress_Start_Title" xml:space="preserve">
+    <value>Limpar Diretório de Documentos</value>
+  </data>
+  <data name="CleanDocumentDirectory_Progress_Step_Database_Message" xml:space="preserve">
     <value>Removendo documento "{0}" da base de dados.</value>
   </data>
-  <data name="CleanDocumentDirectory_ProgressiveTaskPerformStep_Index_Message" xml:space="preserve">
+  <data name="CleanDocumentDirectory_Progress_Step_Index_Message" xml:space="preserve">
     <value>Removendo documentos do índice "{0}".</value>
-  </data>
-  <data name="CleanDocumentDirectory_ProgressiveTaskStart_Title" xml:space="preserve">
-    <value>Limpar Diretório de Documentos</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="CreateSchemaSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -151,10 +151,10 @@
   <data name="GetDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\getdocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="IndexDocumentCollection_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+  <data name="IndexDocumentCollection_Progress_Step_Message" xml:space="preserve">
     <value>Indexando documento: {0}</value>
   </data>
-  <data name="IndexDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="IndexDocumentCollection_Progress_Start_Title" xml:space="preserve">
     <value>Indexar Documentos</value>
   </data>
   <data name="ListDocumentDirectoriesSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -175,88 +175,106 @@
   <data name="ProgressiveTaskStartNotification_Message" xml:space="preserve">
     <value>Iniciando tarefa...</value>
   </data>
-  <data name="RemoveDocumentCollection_ProgressiveTaskPerformStep_Database_Message" xml:space="preserve">
+  <data name="Progress_Complete" xml:space="preserve">
+    <value>A tarefa foi concluída com sucesso!</value>
+  </data>
+  <data name="RemoveDocumentCollection_Progress_Step_Database_Message" xml:space="preserve">
     <value>Removendo documento da base de dados: {0}</value>
   </data>
-  <data name="RemoveDocumentCollection_ProgressiveTaskPerformStep_Index_Message" xml:space="preserve">
+  <data name="RemoveDocumentCollection_Progress_Step_Index_Message" xml:space="preserve">
     <value>Removendo documentos do índice</value>
   </data>
-  <data name="RemoveDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="RemoveDocumentCollection_Progress_Start_Title" xml:space="preserve">
     <value>Remover Documentos</value>
   </data>
   <data name="RemoveDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\removedocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="RemoveDocumentDirectory_ProgressiveTaskPerformStep_Database_Message" xml:space="preserve">
+  <data name="RemoveDocumentDirectory_Progress_Step_Database_Message" xml:space="preserve">
     <value>Removendo diretório de documentos "{0}" da base de dados.</value>
   </data>
-  <data name="RemoveDocumentDirectory_ProgressiveTaskPerformStep_Index_Message" xml:space="preserve">
+  <data name="RemoveDocumentDirectory_Progress_Step_Index_Message" xml:space="preserve">
     <value>Removendo diretório de documentos "{0}" do índice.</value>
   </data>
-  <data name="RemoveDocumentDirectory_ProgressiveTaskStart_Title" xml:space="preserve">
-    <value>Remover Diretório de Documentos</value>
-  </data>
-  <data name="RemoveDocumentDirectory_ProgressiveTask_Title" xml:space="preserve">
+  <data name="RemoveDocumentDirectory_Progress_Start_Title" xml:space="preserve">
     <value>Remover Diretório de Documentos</value>
   </data>
   <data name="RemoveDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\removedocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="RemoveDocument_ProgressiveTaskPerformStep_Database_Message" xml:space="preserve">
+  <data name="RemoveDocument_Progress_Step_Database_Message" xml:space="preserve">
     <value>Removendo documento da base de dados: {0}</value>
   </data>
-  <data name="RemoveDocument_ProgressiveTaskPerformStep_Index_Message" xml:space="preserve">
+  <data name="RemoveDocument_Progress_Step_Index_Message" xml:space="preserve">
     <value>Removendo documento do índice: {0}</value>
   </data>
-  <data name="RemoveDocument_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="RemoveDocument_Progress_Start_Title" xml:space="preserve">
     <value>Remover Documento</value>
   </data>
-  <data name="SaveDocumentCollection_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+  <data name="SaveDocumentCollection_Progress_Step_Message" xml:space="preserve">
     <value>Salvando documento: {0}</value>
   </data>
-  <data name="SaveDocumentCollection_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="SaveDocumentCollection_Progress_Start_Title" xml:space="preserve">
     <value>Salvar Documentos</value>
   </data>
   <data name="SaveDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\savedocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="SaveDocumentDirectory_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+  <data name="SaveDocumentDirectory_Progress_Step_Message" xml:space="preserve">
     <value>Salvando diretório de documentos: {0}</value>
   </data>
-  <data name="SaveDocumentDirectory_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="SaveDocumentDirectory_Progress_Start_Title" xml:space="preserve">
     <value>Salvar Diretório de Documentos</value>
   </data>
   <data name="SaveDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\savedocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="SaveDocument_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+  <data name="SaveDocument_Progress_Step_Message" xml:space="preserve">
     <value>Salvando documento: {0}</value>
   </data>
-  <data name="SaveDocument_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="SaveDocument_Progress_Start_Title" xml:space="preserve">
     <value>Salvar Documento</value>
   </data>
-  <data name="SearchDocumentIndex_ProgressiveTaskPerformStep_Build_Message" xml:space="preserve">
+  <data name="SearchDocumentIndex_Progress_Step_Build_Message" xml:space="preserve">
     <value>Construíndo pesquisa...</value>
   </data>
-  <data name="SearchDocumentIndex_ProgressiveTaskPerformStep_Search_Message" xml:space="preserve">
+  <data name="SearchDocumentIndex_Progress_Step_Search_Message" xml:space="preserve">
     <value>Pesquisando índice: {0}</value>
   </data>
-  <data name="SearchDocumentIndex_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="SearchDocumentIndex_Progress_Start_Title" xml:space="preserve">
     <value>Pesquisar Índices</value>
   </data>
   <data name="SetDocumentIndexSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\setdocumentindexsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="StartWatchDocumentDirectory_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+  <data name="StartWatchDocumentDirectory_Progress_Step_Message" xml:space="preserve">
     <value>Observando diretório de documentos: {0}</value>
   </data>
-  <data name="StartWatchDocumentDirectory_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="StartWatchDocumentDirectory_Progress_Start_Title" xml:space="preserve">
     <value>Observar Diretório de Documentos</value>
   </data>
-  <data name="StopWatchDocumentDirectory_ProgressiveTaskPerformStep_Message" xml:space="preserve">
+  <data name="StopWatchDocumentDirectory_Progress_Step_Message" xml:space="preserve">
     <value>Liberando diretório de documentos: {0}</value>
   </data>
-  <data name="StopWatchDocumentDirectory_ProgressiveTaskStart_Title" xml:space="preserve">
+  <data name="StopWatchDocumentDirectory_Progress_Start_Title" xml:space="preserve">
     <value>Liberar Diretório de Documentos</value>
+  </data>
+  <data name="Progress_Cancel" xml:space="preserve">
+    <value>A tarefa foi cancelada!</value>
+  </data>
+  <data name="Progress_Error" xml:space="preserve">
+    <value>Ocorreu um erro durante execução da tarefa!</value>
+  </data>
+  <data name="Progress_Start" xml:space="preserve">
+    <value>Tarefa Iniciada</value>
+  </data>
+  <data name="Progress_PerformStep" xml:space="preserve">
+    <value>Executando passo {0} da tarefa...</value>
+  </data>
+  <data name="SaveDocumentCollectionInDocumentDirectory_Progress_Start_Title" xml:space="preserve">
+    <value>Salvar Documentos do Diretório de Documentos</value>
+  </data>
+  <data name="SaveDocumentCollectionInDocumentDirectory_Progress_Step_Message" xml:space="preserve">
+    <value>Salvando documento: {0}</value>
   </data>
 </root>

@@ -61,6 +61,7 @@ namespace InfoFenix.Core.Queries {
                 });
 
                 if (query.RequireDocuments) {
+                    documentDirectories = documentDirectories.ToArray(); // Evaluate the enumerable.
                     foreach (var documentDirectory in documentDirectories) {
                         documentDirectory.Documents = _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, (reader) => DocumentDto.Map(reader, documentDirectory), parameters: new[] {
                             Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, documentDirectory.DocumentDirectoryID, DbType.Int32)
@@ -68,7 +69,7 @@ namespace InfoFenix.Core.Queries {
                     }
                 }
 
-                return documentDirectories;
+                return documentDirectories.AsEnumerable();
             }, cancellationToken);
         }
 

@@ -76,23 +76,23 @@ namespace InfoFenix.Core.Queries {
             #region Public Properties
 
             public DocumentDto Current { get; set; }
-            public bool Keep { get; set; }
+            public bool Save { get; set; }
 
             #endregion
 
             #region Public Constructors
 
-            public Document(DocumentDto current, bool keep) {
+            public Document(DocumentDto current, bool save) {
                 Current = current;
-                Keep = keep;
+                Save = save;
             }
 
             #endregion
 
             #region Public Static Methods
 
-            public static Document Create(DocumentDto current, bool keep) {
-                return new Document(current, keep);
+            public static Document Create(DocumentDto current, bool save) {
+                return new Document(current, save);
             }
 
             #endregion
@@ -112,7 +112,7 @@ namespace InfoFenix.Core.Queries {
                     .ExecuteReader(Resource.ListDocumentsByDocumentDirectorySQL, (reader) => DocumentDto.Map(reader, documentDirectory), parameters: new[] {
                         Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, documentDirectory.DocumentDirectoryID, DbType.Int32)
                     })
-                    .Select(_ => Document.Create(current: _, keep: false))
+                    .Select(_ => Document.Create(current: _, save: false))
                     .ToList();
 
                 foreach (var filePath in Common.GetDocFiles(documentDirectory.Path)) {
@@ -124,7 +124,7 @@ namespace InfoFenix.Core.Queries {
                     // If database document exists and last write time is equals to the physical file last write time
                     // Ignores and move next.
                     if (document != null && document.Current.LastWriteTime == physicalFileLastWriteTime) {
-                        document.Keep = true;
+                        document.Save = false;
 
                         continue;
                     }
@@ -135,7 +135,7 @@ namespace InfoFenix.Core.Queries {
                         document.Current.Indexed = false;
                         document.Current.LastWriteTime = physicalFileLastWriteTime;
                         document.Current.Payload = ReadFileContent(filePath);
-                        document.Keep = true;
+                        document.Save = true;
 
                         continue;
                     }
@@ -150,11 +150,11 @@ namespace InfoFenix.Core.Queries {
                             LastWriteTime = physicalFileLastWriteTime,
                             Path = filePath,
                             Payload = ReadFileContent(filePath)
-                        }, keep: true));
+                        }, save: true));
                     }
                 }
 
-                return documents.Where(_ => _.Keep).Select(_ => _.Current);
+                return documents.Where(_ => _.Save).Select(_ => _.Current);
             }, cancellationToken);
         }
 

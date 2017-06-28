@@ -2,10 +2,11 @@
 using Lucene.Net.Util;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Default implementation of <see cref="ISearchBit"/>.
     /// </summary>
-    public class SearchBit : ISearchBit {
+    public sealed class SearchBit : ISearchBit {
 
         #region Private Read-Only Fields
 
@@ -20,9 +21,7 @@ namespace InfoFenix.Core.Search {
         /// </summary>
         /// <param name="openBitSet">The open bit set.</param>
         public SearchBit(OpenBitSet openBitSet) {
-            if (openBitSet == null) {
-                throw new ArgumentNullException(nameof(openBitSet));
-            }
+            Prevent.ParameterNull(openBitSet, nameof(openBitSet));
 
             _openBitSet = openBitSet;
         }

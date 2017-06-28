@@ -2,10 +2,11 @@
 using Lucene.Net.Documents;
 
 namespace InfoFenix.Core.Search {
+
     /// <summary>
     /// Default implementation of <see cref="ISearchHit"/>.
     /// </summary>
-    public class SearchHit : ISearchHit {
+    public sealed class SearchHit : ISearchHit {
 
         #region Private Read-Only Fields
 
@@ -22,9 +23,7 @@ namespace InfoFenix.Core.Search {
         /// <param name="document">The document.</param>
         /// <param name="score">The score.</param>
         public SearchHit(Document document, float score) {
-            if (document == null) {
-                throw new ArgumentNullException(nameof(document));
-            }
+            Prevent.ParameterNull(document, nameof(document));
 
             _document = document;
             _score = score;
@@ -67,14 +66,14 @@ namespace InfoFenix.Core.Search {
         public string GetString(string name) {
             var field = _document.GetField(name);
 
-            return field != null ? field.StringValue : null;
+            return field?.StringValue;
         }
 
         /// <inheritdoc />
-        public DateTime GetDateTime(string name) {
+        public DateTimeOffset GetDateTimeOffset(string name) {
             var field = _document.GetField(name);
 
-            return field != null ? DateTools.StringToDate(field.StringValue) : DateTime.MinValue;
+            return field != null ? DateTools.StringToDate(field.StringValue) : DateTimeOffset.MinValue;
         }
 
         #endregion ISearchHit Members

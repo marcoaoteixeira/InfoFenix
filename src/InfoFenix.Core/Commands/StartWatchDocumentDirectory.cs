@@ -5,7 +5,6 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.IO;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.PubSub;
 using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
@@ -24,7 +23,6 @@ namespace InfoFenix.Core.Commands {
         #region Private Read-Only Fields
 
         private readonly IDirectoryWatcherManager _directoryWatcherManager;
-        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -41,41 +39,36 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public StartWatchDocumentDirectoryCommandHandler(IDirectoryWatcherManager directoryWatcherManager, IPublisherSubscriber publisherSubscriber) {
+        public StartWatchDocumentDirectoryCommandHandler(IDirectoryWatcherManager directoryWatcherManager) {
             Prevent.ParameterNull(directoryWatcherManager, nameof(directoryWatcherManager));
-            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _directoryWatcherManager = directoryWatcherManager;
-            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
 
         #region ICommandHandler<StartWatchDocumentDirectoryCommand> Members
 
-        public Task HandleAsync(StartWatchDocumentDirectoryCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
-            var info = new ProgressiveTaskContinuationInfo {
-                Log = Log,
-                TotalSteps = 1
-            };
-
+        public Task HandleAsync(StartWatchDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStart(
-                    title: Resource.StartWatchDocumentDirectory_ProgressiveTaskStart_Title,
-                    actualStep: info.ActualStep,
-                    totalSteps: info.TotalSteps
-                );
+                var actualStep = 0;
+                var totalSteps = 1;
 
-                _publisherSubscriber.ProgressiveTaskPerformStep(
-                    message: string.Format(Resource.StartWatchDocumentDirectory_ProgressiveTaskPerformStep_Message, command.DocumentDirectory.Label),
-                    actualStep: ++info.ActualStep,
-                    totalSteps: info.TotalSteps
-                );
+                try {
+                    progress.Start(totalSteps, Resource.StartWatchDocumentDirectory_Progress_Start_Title);
+                    progress.PerformStep(++actualStep, totalSteps, Resource.StartWatchDocumentDirectory_Progress_Step_Message, command.DocumentDirectory.Label);
 
-                cancellationToken.ThrowIfCancellationRequested();
-                _directoryWatcherManager.StartWatch(command.DocumentDirectory.Path);
-            }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
+                    if (cancellationToken.IsCancellationRequested) {
+                        progress.Cancel(actualStep, totalSteps);
+
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
+                    _directoryWatcherManager.StartWatch(command.DocumentDirectory.Path);
+
+                    progress.Complete(actualStep, totalSteps);
+                } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<StartWatchDocumentDirectoryCommand> Members

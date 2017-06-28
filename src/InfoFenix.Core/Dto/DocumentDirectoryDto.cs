@@ -39,5 +39,25 @@ namespace InfoFenix.Core.Dto {
         }
 
         #endregion Public Static Methods
+
+        #region Public Methods
+
+        public bool Equals(DocumentDirectoryDto obj) {
+            return obj != null && obj.DocumentDirectoryID == DocumentDirectoryID;
+        }
+
+        #endregion Public Methods
+
+        #region Public Override Methods
+
+        public override bool Equals(object obj) {
+            return Equals(obj as DocumentDirectoryDto);
+        }
+
+        public override int GetHashCode() {
+            return DocumentDirectoryID.GetHashCode();
+        }
+
+        #endregion Public Override Methods
     }
 }

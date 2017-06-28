@@ -76,7 +76,7 @@ namespace InfoFenix.Client.Views.Search {
         }
 
         private void DoSearch() {
-            ViewModel = WaitFor.Instance.Execution(() => {
+            ViewModel = WaitFor.Execution(() => {
                 return _mediator.Query(new SearchDocumentIndexQuery {
                     QueryTerm = searchTermTextBox.Text,
                     Indexes = _currentIndexes
@@ -85,10 +85,9 @@ namespace InfoFenix.Client.Views.Search {
 
             documentDirectoriesDataGridView.DataSource = ViewModel.Indexes.ToArray();
 
-            informationLabel.Text = string.Empty;
-            if (ViewModel.Indexes.SelectMany(_ => _.Documents).Count() == 0) {
-                informationLabel.Text = Resource.SearchForm_EmptyResultSet;
-            }
+            informationLabel.Text = (ViewModel.Indexes.SelectMany(_ => _.Documents).Count() == 0)
+                ? Resource.SearchForm_EmptyResultSet
+                : string.Empty;
         }
 
         private void ShowSearchResult(IndexDto index) {

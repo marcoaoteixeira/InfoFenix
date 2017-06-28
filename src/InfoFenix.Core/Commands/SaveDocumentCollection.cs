@@ -7,7 +7,6 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.PubSub;
 using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
@@ -28,7 +27,6 @@ namespace InfoFenix.Core.Commands {
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
-        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -45,52 +43,32 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public SaveDocumentCollectionCommandHandler(IDatabase database, IPublisherSubscriber publisherSubscriber) {
+        public SaveDocumentCollectionCommandHandler(IDatabase database) {
             Prevent.ParameterNull(database, nameof(database));
-            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
-            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
 
         #region ICommandHandler<SaveDocumentCollectionCommand> Members
 
-        public Task HandleAsync(SaveDocumentCollectionCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
+        public Task HandleAsync(SaveDocumentCollectionCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
                 var actualStep = 0;
                 var totalSteps = command.Documents.Count;
 
-                _publisherSubscriber.Publish(new ProgressiveTaskStartNotification {
-                    Arguments = new ProgressiveTaskArguments {
-                        Title = Resource.SaveDocumentCollection_ProgressiveTaskStart_Title,
-                        ActualStep = actualStep,
-                        TotalSteps = totalSteps
-                    }
-                });
-                
-                using (var transaction = _database.Connection.BeginTransaction()) {
-                    try {
+                try {
+                    progress.Start(totalSteps, Resource.SaveDocumentCollection_Progress_Start_Title);
+                    using (var transaction = _database.Connection.BeginTransaction()) {
                         foreach (var document in command.Documents) {
+                            progress.PerformStep(++actualStep, totalSteps, Resource.SaveDocumentCollection_Progress_Step_Message, document.FileName);
+
                             if (cancellationToken.IsCancellationRequested) {
-                                _publisherSubscriber.Publish(new ProgressiveTaskCancelNotification {
-                                    Arguments = new ProgressiveTaskArguments {
-                                        ActualStep = actualStep,
-                                        TotalSteps = totalSteps
-                                    }
-                                });
+                                progress.Cancel(actualStep, totalSteps);
 
                                 cancellationToken.ThrowIfCancellationRequested();
                             }
-
-                            _publisherSubscriber.Publish(new ProgressiveTaskPerformStepNotification {
-                                Arguments = new ProgressiveTaskArguments {
-                                    Message = string.Format(Resource.SaveDocumentCollection_ProgressiveTaskPerformStep_Message, document.FileName),
-                                    ActualStep = ++actualStep,
-                                    TotalSteps = totalSteps
-                                }
-                            });
 
                             var result = _database.ExecuteScalar(Resource.SaveDocumentSQL, parameters: new[] {
                                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID > 0 ? (object)document.DocumentID : DBNull.Value, DbType.Int32),
@@ -105,29 +83,16 @@ namespace InfoFenix.Core.Commands {
                         }
 
                         if (cancellationToken.IsCancellationRequested) {
-                            _publisherSubscriber.Publish(new ProgressiveTaskCancelNotification {
-                                Arguments = new ProgressiveTaskArguments {
-                                    ActualStep = actualStep,
-                                    TotalSteps = totalSteps
-                                }
-                            });
+                            progress.Cancel(actualStep, totalSteps);
 
                             cancellationToken.ThrowIfCancellationRequested();
                         }
 
                         transaction.Commit();
-                    } catch (Exception ex) {
-                        _publisherSubscriber.Publish(new ProgressiveTaskErrorNotification {
-                            Arguments = new ProgressiveTaskArguments {
-                                Error = ex.Message,
-                                ActualStep = actualStep,
-                                TotalSteps = totalSteps
-                            }
-                        });
-
-                        throw;
                     }
-                }
+
+                    progress.Complete(actualStep, totalSteps);
+                } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
             }, cancellationToken);
         }
 

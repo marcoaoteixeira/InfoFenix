@@ -6,7 +6,6 @@ using InfoFenix.Core.Cqrs;
 using InfoFenix.Core.Data;
 using InfoFenix.Core.Dto;
 using InfoFenix.Core.Logging;
-using InfoFenix.Core.PubSub;
 using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
@@ -25,7 +24,6 @@ namespace InfoFenix.Core.Commands {
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
-        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
@@ -42,54 +40,49 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Constructors
 
-        public SaveDocumentCommandHandler(IDatabase database, IPublisherSubscriber publisherSubscriber) {
+        public SaveDocumentCommandHandler(IDatabase database) {
             Prevent.ParameterNull(database, nameof(database));
-            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _database = database;
-            _publisherSubscriber = publisherSubscriber;
         }
 
         #endregion Public Constructors
 
         #region ICommandHandler<SaveDocumentCommand> Members
 
-        public Task HandleAsync(SaveDocumentCommand command, IProgress<ProgressArguments> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
-            var info = new ProgressiveTaskContinuationInfo {
-                Log = Log,
-                TotalSteps = 1
-            };
-
+        public Task HandleAsync(SaveDocumentCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
-                _publisherSubscriber.ProgressiveTaskStart(
-                    title: Resource.SaveDocument_ProgressiveTaskStart_Title,
-                    actualStep: info.ActualStep,
-                    totalSteps: info.TotalSteps
-                );
+                var actualStep = 0;
+                var totalSteps = 1;
 
-                using (var transaction = _database.Connection.BeginTransaction()) {
-                    _publisherSubscriber.ProgressiveTaskPerformStep(
-                        title: string.Format(Resource.SaveDocument_ProgressiveTaskPerformStep_Message, command.Document.FileName),
-                        actualStep: ++info.ActualStep,
-                        totalSteps: info.TotalSteps
-                    );
+                try {
+                    progress.Start(totalSteps, Resource.SaveDocument_Progress_Start_Title);
 
-                    var result = _database.ExecuteScalar(Resource.SaveDocumentSQL, parameters: new[] {
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, command.Document.DocumentID > 0 ? (object)command.Document.DocumentID : DBNull.Value, DbType.Int32),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.Document.DocumentDirectory.DocumentDirectoryID, DbType.Int32),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Path, command.Document.Path),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, command.Document.LastWriteTime, DbType.DateTime),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, command.Document.Code, DbType.Int32),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, command.Document.Indexed ? 1 : 0, DbType.Int32),
-                        Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, command.Document.Payload != null ? (object)command.Document.Payload : DBNull.Value, DbType.Binary)
-                    });
-                    if (command.Document.DocumentID <= 0) { command.Document.DocumentID = Convert.ToInt32(result); }
+                    using (var transaction = _database.Connection.BeginTransaction()) {
+                        progress.PerformStep(++actualStep, totalSteps, Resource.SaveDocument_Progress_Step_Message, command.Document.FileName);
 
-                    cancellationToken.ThrowIfCancellationRequested();
-                    transaction.Commit();
-                }
-            }, cancellationToken)
-            .ContinueWith(_publisherSubscriber.TaskContinuation, info);
+                        var result = _database.ExecuteScalar(Resource.SaveDocumentSQL, parameters: new[] {
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, command.Document.DocumentID > 0 ? (object)command.Document.DocumentID : DBNull.Value, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.Document.DocumentDirectory.DocumentDirectoryID, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Path, command.Document.Path),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, command.Document.LastWriteTime, DbType.DateTime),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, command.Document.Code, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, command.Document.Indexed ? 1 : 0, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, command.Document.Payload != null ? (object)command.Document.Payload : DBNull.Value, DbType.Binary)
+                        });
+                        if (command.Document.DocumentID <= 0) { command.Document.DocumentID = Convert.ToInt32(result); }
+
+                        if (cancellationToken.IsCancellationRequested) {
+                            progress.Cancel(actualStep, totalSteps);
+
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+                        transaction.Commit();
+                    }
+
+                    progress.Complete(actualStep, totalSteps);
+                } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
+            }, cancellationToken);
         }
 
         #endregion ICommandHandler<SaveDocumentCommand> Members

@@ -26,6 +26,8 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         public override string Name => "Criar Diretório de Índices";
 
         public override void Execute() {
+            if (_appSettings.UseRemoteSearchDatabase) { return; }
+
             var indexStoragePath = Path.Combine(_appSettings.ApplicationDataDirectoryPath, Common.IndexStorageDirectoryName);
             if (!Directory.Exists(indexStoragePath)) {
                 Directory.CreateDirectory(indexStoragePath);

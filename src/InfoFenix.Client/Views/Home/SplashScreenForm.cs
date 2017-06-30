@@ -54,7 +54,7 @@ namespace InfoFenix.Client.Views.Home {
             using (var form = factory()) {
                 Task
                     .Run(action)
-                    .ContinueWith(continuationTask => form.DialogResult = DialogResult.OK);
+                    .ContinueWith(form.Continuation, form);
 
                 form.ShowDialog();
             }
@@ -95,6 +95,12 @@ namespace InfoFenix.Client.Views.Home {
         private void ProgressiveTaskCompleteHandler(ProgressiveTaskCompleteNotification message) {
             messageLabel.SafeInvoke(_ => _.Text = message.Arguments.Message);
             progressLabel.SafeInvoke(_ => _.Text = string.Format(Resource.SplashScreenForm_ActualStep_TotalSteps, message.Arguments.ActualStep, message.Arguments.TotalSteps));
+        }
+
+        private void Continuation(Task continuation, object state) {
+            if (state is Form form) {
+                form.SafeInvoke(_ => _.DialogResult = DialogResult.OK);
+            }
         }
 
         #endregion Private Methods

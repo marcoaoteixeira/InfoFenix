@@ -137,6 +137,15 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ocorreu um erro fatal. O aplicativo será finalizado..
+        /// </summary>
+        internal static string FatalException_Message {
+            get {
+                return ResourceManager.GetString("FatalException_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT
         ///    [id],
         ///    [document_directory_id],
@@ -220,6 +229,33 @@ namespace InfoFenix.Core.Resources {
         internal static string GetDocumentSQL {
             get {
                 return ResourceManager.GetString("GetDocumentSQL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indexar Documento.
+        /// </summary>
+        internal static string IndexDocument_Progress_Start_Title {
+            get {
+                return ResourceManager.GetString("IndexDocument_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gravando documento: {0}.
+        /// </summary>
+        internal static string IndexDocument_Progress_Step_Database_Message {
+            get {
+                return ResourceManager.GetString("IndexDocument_Progress_Step_Database_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indexando documento: {0}.
+        /// </summary>
+        internal static string IndexDocument_Progress_Step_Index_Message {
+            get {
+                return ResourceManager.GetString("IndexDocument_Progress_Step_Index_Message", resourceCulture);
             }
         }
         

@@ -82,7 +82,6 @@
     <Compile Include="Bootstrap\ActionBase.cs" />
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
-    <Compile Include="Bootstrap\Actions\999_IndexDocumentDirectoriesAction.cs" />
     <Compile Include="Bootstrap\Actions\005_WatchDocumentDirectoriesAction.cs" />
     <Compile Include="Bootstrap\Actions\004_InitializeLuceneSearchIndexesAction.cs" />
     <Compile Include="Bootstrap\Actions\003_InitializeServicesAction.cs" />
@@ -92,6 +91,7 @@
     <Compile Include="Bootstrap\IBootstrapper.cs" />
     <Compile Include="Bootstrap\OrderAttribute.cs" />
     <Compile Include="CancellationTokenIssuer.cs" />
+    <Compile Include="Commands\IndexDocument.cs" />
     <Compile Include="Commands\IndexDocumentCollection.cs" />
     <Compile Include="Commands\RemoveDocumentCollection.cs" />
     <Compile Include="Commands\RemoveDocument.cs" />
@@ -126,6 +126,7 @@
     <Compile Include="Dto\DocumentIndexDto.cs" />
     <Compile Include="Dto\IndexDto.cs" />
     <Compile Include="Dto\SearchDto.cs" />
+    <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\EventHandlerExtension.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Queries\GetDocument.cs" />
     <Compile Include="Queries\GetDocumentDirectoryByPath.cs" />
     <Compile Include="Queries\GetDocumentDirectory.cs" />
+    <Compile Include="Queries\GetDocumentDirectoryContentChange.cs" />
     <Compile Include="Queries\ListDocumentDirectories.cs" />
     <Compile Include="Queries\ListDocumentsDifferenceBetweenDiskDatabase.cs" />
     <Compile Include="Queries\ListDocumentsByDocumentDirectoryFromDisk.cs" />

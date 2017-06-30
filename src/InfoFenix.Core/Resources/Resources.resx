@@ -277,4 +277,16 @@
   <data name="SaveDocumentCollectionInDocumentDirectory_Progress_Step_Message" xml:space="preserve">
     <value>Salvando documento: {0}</value>
   </data>
+  <data name="FatalException_Message" xml:space="preserve">
+    <value>Ocorreu um erro fatal. O aplicativo será finalizado.</value>
+  </data>
+  <data name="IndexDocument_Progress_Start_Title" xml:space="preserve">
+    <value>Indexar Documento</value>
+  </data>
+  <data name="IndexDocument_Progress_Step_Database_Message" xml:space="preserve">
+    <value>Gravando documento: {0}</value>
+  </data>
+  <data name="IndexDocument_Progress_Step_Index_Message" xml:space="preserve">
+    <value>Indexando documento: {0}</value>
+  </data>
 </root>

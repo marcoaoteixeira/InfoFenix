@@ -124,7 +124,8 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
 
         private void WatchDocumentDirectory(CancellationToken cancellationToken, IProgress<ProgressInfo> progress) {
             ICommand command;
-            if (ViewModel.Watch) { command = new StartWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; } else { command = new StopWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; }
+            if (ViewModel.Watch) { command = new StartWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; }
+            else { command = new StopWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; }
 
             _mediator
                 .CommandAsync(command, cancellationToken, progress).Wait();

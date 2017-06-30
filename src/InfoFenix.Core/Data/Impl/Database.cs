@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SQLite;
 using System.Linq;
 using InfoFenix.Core.Logging;
 
@@ -81,7 +82,14 @@ namespace InfoFenix.Core.Data {
                 if (_connection == null) {
                     _connection = GetFactory().CreateConnection();
 
-                    _connection.ConnectionString = _databaseSettings.ConnectionString;
+                    // HACK: Force use of SQLite, to set the ParseViaFramework property.
+                    ((SQLiteConnection)_connection).ParseViaFramework = true;
+
+                    // HACK2: Add a double slash to the connection string beginning,
+                    // if necessary.
+                    _connection.ConnectionString = _databaseSettings.ConnectionString.StartsWith(@"\\")
+                        ? string.Concat(@"\\", _databaseSettings.ConnectionString)
+                        : _databaseSettings.ConnectionString;
                     _connection.Open();
                 }
             } catch (Exception ex) { Log.Error(ex, ex.Message); throw; }

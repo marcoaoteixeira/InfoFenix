@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using InfoFenix.Core;
+using InfoFenix.Core.Exceptions;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
+using Resource = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Bootstrap {
 
@@ -53,7 +55,7 @@ namespace InfoFenix.Core.Bootstrap {
             };
 
             _publisherSubscriber.ProgressiveTaskStart(
-                title: Resources.Resources.Bootstrapper_ProgressiveTaskStart_Title,
+                title: Resource.Bootstrapper_ProgressiveTaskStart_Title,
                 actualStep: arguments.ActualStep,
                 totalSteps: arguments.TotalSteps
             );
@@ -61,7 +63,7 @@ namespace InfoFenix.Core.Bootstrap {
             actions.Each((_, idx) => {
                 try {
                     _publisherSubscriber.ProgressiveTaskPerformStep(
-                        message: string.Format(Resources.Resources.Bootstrapper_ProgressiveTaskPerformStep_Message, _.Name),
+                        message: string.Format(Resource.Bootstrapper_ProgressiveTaskPerformStep_Message, _.Name),
                         actualStep: ++arguments.ActualStep,
                         totalSteps: arguments.TotalSteps
                     );
@@ -76,12 +78,12 @@ namespace InfoFenix.Core.Bootstrap {
 
                     Log.Error(ex, ex.Message);
 
-                    throw;
+                    throw new FatalException(Resource.FatalException_Message, ex);
                 }
             });
 
             _publisherSubscriber.ProgressiveTaskComplete(
-                message: Resources.Resources.Bootstrapper_ProgressiveTaskComplete_Message,
+                message: Resource.Bootstrapper_ProgressiveTaskComplete_Message,
                 actualStep: arguments.ActualStep,
                 totalSteps: arguments.TotalSteps
             );

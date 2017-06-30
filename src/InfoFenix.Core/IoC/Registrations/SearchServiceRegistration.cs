@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using Autofac;
-using InfoFenix.Core;
 using InfoFenix.Core.IoC;
 using InfoFenix.Core.Search;
 
 namespace InfoFenix.Core.IoC {
+
     public sealed class SearchServiceRegistration : ServiceRegistrationBase {
 
         #region Private Methods

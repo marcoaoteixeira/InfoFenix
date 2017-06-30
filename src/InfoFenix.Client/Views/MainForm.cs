@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Views.DocumentDirectory;
@@ -6,7 +8,11 @@ using InfoFenix.Client.Views.Home;
 using InfoFenix.Client.Views.Manage;
 using InfoFenix.Client.Views.Search;
 using InfoFenix.Core;
+using InfoFenix.Core.Commands;
+using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.Dto;
 using InfoFenix.Core.PubSub;
+using InfoFenix.Core.Queries;
 using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views {
@@ -17,6 +23,7 @@ namespace InfoFenix.Client.Views {
 
         private readonly CancellationTokenIssuer _cancellationTokenIssuer;
         private readonly IFormManager _formManager;
+        private readonly IMediator _mediator;
         private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
@@ -24,28 +31,36 @@ namespace InfoFenix.Client.Views {
         #region Private Fields
 
         private ISubscription<DirectoryContentChangeNotification> _directoryContentChangeSubscription;
+        private IProgress<ProgressInfo> _progress;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public MainForm(CancellationTokenIssuer cancellationTokenIssuer, IFormManager formManager, IPublisherSubscriber publisherSubscriber) {
+        public MainForm(CancellationTokenIssuer cancellationTokenIssuer, IFormManager formManager, IMediator mediator, IPublisherSubscriber publisherSubscriber) {
             Prevent.ParameterNull(cancellationTokenIssuer, nameof(cancellationTokenIssuer));
             Prevent.ParameterNull(formManager, nameof(formManager));
+            Prevent.ParameterNull(mediator, nameof(mediator));
             Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
             _cancellationTokenIssuer = cancellationTokenIssuer;
             _formManager = formManager;
+            _mediator = mediator;
             _publisherSubscriber = publisherSubscriber;
-
-            SubscribeForNotifications();
+            
+            _progress = new Progress<ProgressInfo>(NotifyProcess);
 
             InitializeComponent();
+            Initialize();
         }
 
         #endregion Public Constructors
 
         #region Private Methods
+
+        private void Initialize() {
+            SubscribeForNotifications();
+        }
 
         private void SubscribeForNotifications() {
             _directoryContentChangeSubscription = _publisherSubscriber.Subscribe<DirectoryContentChangeNotification>(DirectoryContentChangeHandler);
@@ -56,7 +71,41 @@ namespace InfoFenix.Client.Views {
         }
 
         private void DirectoryContentChangeHandler(DirectoryContentChangeNotification message) {
+            if (message.Changes == DirectoryContentChangeNotification.ChangeTypes.Created) {
+                ProcessDocumentDirectoryChange_Create(message.WatchingPath, message.FullPath, _progress);
+            }
+        }
 
+        private void ProcessDocumentDirectoryChange_Create(string watchingPath, string fullPath, IProgress<ProgressInfo> progress) {
+            Task.Run(() => {
+                var document = _mediator.Query(new GetDocumentDirectoryContentChangeQuery {
+                    DocumentDirectoryPath = watchingPath,
+                    DocumentPath = fullPath
+                });
+
+                _mediator.Command(new SaveDocumentCommand {
+                    Document = document
+                }, _progress);
+
+                _mediator.Command(new IndexDocumentCommand {
+                    IndexName = document.DocumentDirectory.Code,
+                    DocumentIndex = DocumentIndexDto.Map(document)
+                }, _progress);
+            });
+        }
+
+        private void NotifyProcess(ProgressInfo info) {
+            switch (info.State) {
+                case ProgressState.PerformStep:
+                    informationToolStripStatusLabel.Text = info.Message;
+                    break;
+
+                case ProgressState.Cancel:
+                case ProgressState.Complete:
+                case ProgressState.Error:
+                    informationToolStripStatusLabel.Text = string.Empty;
+                    break;
+            }
         }
 
         #endregion Private Methods

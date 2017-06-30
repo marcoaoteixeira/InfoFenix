@@ -28,11 +28,13 @@ namespace InfoFenix.Core.Bootstrap.Actions {
         public override string Name => "Criar Banco de Dados";
 
         public override void Execute() {
+            if (_appSettings.UseRemoteSearchDatabase) { return; }
+
             var databaseFilePath = Path.Combine(_appSettings.ApplicationDataDirectoryPath, Common.DatabaseFileName);
             if (!File.Exists(databaseFilePath)) {
                 SQLiteConnection.CreateFile(databaseFilePath);
 
-                using (var connection = new SQLiteConnection($"Data Source={databaseFilePath}; Version=3;")) {
+                using (var connection = new SQLiteConnection($"Data Source={databaseFilePath}; Version=3;", true)) {
                     connection.Open();
                     using (var command = new SQLiteCommand(connection)) {
                         command.CommandText = Resource.CreateSchemaSQL;

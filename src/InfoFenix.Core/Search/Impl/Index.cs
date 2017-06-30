@@ -248,7 +248,7 @@ namespace InfoFenix.Core.Search {
             using (var writer = CreateIndexWriter()) {
 
                 // Process documents by batch as there is a max number of terms a query can contain (1024 by default).
-                var pageCount = documentIDs.Length / (BatchSize + 1);
+                var pageCount = (documentIDs.Length / BatchSize) + 1;
                 for (var page = 0; page < pageCount; page++) {
                     var query = new BooleanQuery();
                     try {

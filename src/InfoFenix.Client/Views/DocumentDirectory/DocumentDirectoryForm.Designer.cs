@@ -34,6 +34,7 @@
             this.documentDirectoryPathLabel = new System.Windows.Forms.Label();
             this.documentDirectoryLabelTextBox = new System.Windows.Forms.TextBox();
             this.documentDirectoryLabelLabel = new System.Windows.Forms.Label();
+            this.saveUpdateDocumentsCheckBox = new System.Windows.Forms.CheckBox();
             this.actionPanel.SuspendLayout();
             this.documentDirectoryPanel.SuspendLayout();
             this.SuspendLayout();
@@ -71,6 +72,7 @@
             // 
             // documentDirectoryPanel
             // 
+            this.documentDirectoryPanel.Controls.Add(this.saveUpdateDocumentsCheckBox);
             this.documentDirectoryPanel.Controls.Add(this.indexDocumentDirectoryCheckBox);
             this.documentDirectoryPanel.Controls.Add(this.watchDocumentDirectoryCheckBox);
             this.documentDirectoryPanel.Controls.Add(this.selectDocumentDirectoryPathButton);
@@ -168,6 +170,19 @@
             this.documentDirectoryLabelLabel.TabIndex = 6;
             this.documentDirectoryLabelLabel.Text = "Rótulo";
             // 
+            // saveUpdateDocumentsCheckBox
+            // 
+            this.saveUpdateDocumentsCheckBox.AutoSize = true;
+            this.saveUpdateDocumentsCheckBox.Checked = true;
+            this.saveUpdateDocumentsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.saveUpdateDocumentsCheckBox.Location = new System.Drawing.Point(203, 157);
+            this.saveUpdateDocumentsCheckBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 13);
+            this.saveUpdateDocumentsCheckBox.Name = "saveUpdateDocumentsCheckBox";
+            this.saveUpdateDocumentsCheckBox.Size = new System.Drawing.Size(236, 23);
+            this.saveUpdateDocumentsCheckBox.TabIndex = 13;
+            this.saveUpdateDocumentsCheckBox.Text = "Gravar/Atualizar Documentos";
+            this.saveUpdateDocumentsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // DocumentDirectoryForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -201,5 +216,6 @@
         private System.Windows.Forms.Label documentDirectoryLabelLabel;
         private System.Windows.Forms.CheckBox indexDocumentDirectoryCheckBox;
         private System.Windows.Forms.CheckBox watchDocumentDirectoryCheckBox;
+        private System.Windows.Forms.CheckBox saveUpdateDocumentsCheckBox;
     }
 }

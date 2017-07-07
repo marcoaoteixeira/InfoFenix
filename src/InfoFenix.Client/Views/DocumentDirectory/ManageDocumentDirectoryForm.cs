@@ -84,22 +84,24 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
         }
 
         private void InsertTreeViewEntry(DocumentDirectoryDto documentDirectory) {
-            var item = documentDirectoryTreeView.SafeInvoke(_ => _.Nodes.Find(key: documentDirectory.Code, searchAllChildren: false).SingleOrDefault());
+            var node = documentDirectoryTreeView.SafeInvoke(_ => _.Nodes.Find(key: documentDirectory.Code, searchAllChildren: false).SingleOrDefault());
 
             // Insert or update node
-            if (item == null) {
-                item = new TreeNode {
+            if (node == null) {
+                node = new TreeNode {
                     Name = documentDirectory.Code,
                     Text = documentDirectory.Label,
                     Tag = documentDirectory,
                     ImageIndex = FOLDER_BLUE_ICON_INDEX
                 };
             } else {
-                item.Text = documentDirectory.Label;
-                item.Tag = documentDirectory;
+                node.Text = documentDirectory.Label;
+                node.Tag = documentDirectory;
             }
 
-            documentDirectoryTreeView.SafeInvoke(_ => _.Nodes.Add(item));
+            documentDirectoryTreeView.SafeInvoke(_ => {
+                if (!_.Nodes.Contains(node)) { _.Nodes.Add(node); }
+            });
         }
 
         private Task FillListViewAsync(DocumentDirectoryDto documentDirectory, CancellationToken cancellationToken = default(CancellationToken)) {

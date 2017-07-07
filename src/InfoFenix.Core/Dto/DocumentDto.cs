@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using InfoFenix.Core.Data;
 
 namespace InfoFenix.Core.Dto {
@@ -25,6 +26,15 @@ namespace InfoFenix.Core.Dto {
 
         #region Public Static Methods
 
+        public static DocumentDto Map(string file) {
+            return new DocumentDto {
+                Code = Common.ExtractCodeFromFilePath(file),
+                Indexed = false,
+                LastWriteTime = File.GetLastWriteTime(file),
+                Path = file
+            };
+        }
+
         public static DocumentDto Map(IDataReader reader) {
             return Map(reader, documentDirectory: null);
         }
@@ -48,7 +58,9 @@ namespace InfoFenix.Core.Dto {
         #region Public Methods
 
         public bool Equals(DocumentDto obj) {
-            return obj != null && obj.DocumentID == DocumentID;
+            return obj != null
+                && string.Equals(obj.Path, Path, StringComparison.CurrentCultureIgnoreCase)
+                && obj.LastWriteTime == LastWriteTime;
         }
 
         #endregion Public Methods
@@ -60,7 +72,12 @@ namespace InfoFenix.Core.Dto {
         }
 
         public override int GetHashCode() {
-            return DocumentID.GetHashCode();
+            var hash = 13;
+            unchecked {
+                hash += (Path ?? string.Empty).GetHashCode() * 7;
+                hash += LastWriteTime.GetHashCode() * 7;
+            }
+            return hash;
         }
 
         #endregion Public Override Methods

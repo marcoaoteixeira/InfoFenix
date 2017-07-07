@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -178,15 +179,16 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
             if (sender is Button button) {
                 if (!ValidateViewModel()) { return; }
 
-                var actions = new Action<CancellationToken, IProgress<ProgressInfo>>[] {
-                    (token, progress) => SaveDocumentDirectory(token, progress),
-                    (token, progress) => SaveDocumentCollection(token, progress),
-                    (token, progress) => CleanDocumentDirectory(token, progress),
-                    (token, progress) => IndexDocumentDirectory(token, progress),
-                    (token, progress) => WatchDocumentDirectory(token, progress)
-                };
+                var actions = new List<Action<CancellationToken, IProgress<ProgressInfo>>>();
+                actions.Add((token, progress) => SaveDocumentDirectory(token, progress));
+                if (saveUpdateDocumentsCheckBox.Checked) {
+                    actions.Add((token, progress) => SaveDocumentCollection(token, progress));
+                    actions.Add((token, progress) => CleanDocumentDirectory(token, progress));
+                    actions.Add((token, progress) => IndexDocumentDirectory(token, progress));
+                }
+                actions.Add((token, progress) => WatchDocumentDirectory(token, progress));
 
-                ProgressViewer.Display(_cancellationTokenIssuer, log: Log, actions: actions);
+                ProgressViewer.Display(_cancellationTokenIssuer, log: Log, actions: actions.ToArray());
 
                 DialogResult = DialogResult.OK;
             }

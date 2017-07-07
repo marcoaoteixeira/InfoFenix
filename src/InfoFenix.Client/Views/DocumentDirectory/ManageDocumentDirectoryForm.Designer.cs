@@ -224,7 +224,7 @@
             this.removeDirectoryToolStripMenuItem});
             this.documentDirectoryContextMenuStrip.Name = "directoryTreeViewContextMenuStrip";
             this.documentDirectoryContextMenuStrip.ShowImageMargin = false;
-            this.documentDirectoryContextMenuStrip.Size = new System.Drawing.Size(145, 126);
+            this.documentDirectoryContextMenuStrip.Size = new System.Drawing.Size(145, 148);
             // 
             // editDirectoryToolStripMenuItem
             // 

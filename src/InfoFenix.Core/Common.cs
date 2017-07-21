@@ -73,6 +73,7 @@ namespace InfoFenix.Core {
                 public static readonly string LastWriteTime = "last_write_time";
                 public static readonly string Code = "code";
                 public static readonly string Indexed = "indexed";
+                public static readonly string Content = "content";
                 public static readonly string Payload = "payload";
 
                 #endregion Public Static Read-Only Fields

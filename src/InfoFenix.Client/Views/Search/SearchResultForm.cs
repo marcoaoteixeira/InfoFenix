@@ -6,6 +6,9 @@ using InfoFenix.Core.Dto;
 using InfoFenix.Core.Office;
 using InfoFenix.Client.Code;
 using Resource = InfoFenix.Client.Properties.Resources;
+using InfoFenix.Core.Cqrs;
+using InfoFenix.Core;
+using InfoFenix.Core.Queries;
 
 namespace InfoFenix.Client.Views.Search {
 
@@ -14,7 +17,7 @@ namespace InfoFenix.Client.Views.Search {
         #region Private Read-Only Fields
 
         private readonly string _tempFilePath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-        private readonly IWordApplication _wordApplication;
+        private readonly IMediator _mediator;
 
         #endregion Private Read-Only Fields
 
@@ -34,8 +37,10 @@ namespace InfoFenix.Client.Views.Search {
 
         #region Public Constructors
 
-        public SearchResultForm(IWordApplication wordApplication) {
-            _wordApplication = wordApplication;
+        public SearchResultForm(IMediator mediator) {
+            Prevent.ParameterNull(mediator, nameof(mediator));
+
+            _mediator = mediator;
 
             InitializeComponent();
         }
@@ -53,14 +58,18 @@ namespace InfoFenix.Client.Views.Search {
         private void ShowDocument(int index) {
             if (SearchResult == null) { return; }
 
-            var document = SearchResult.Documents[index];
+            var documentIndex = SearchResult.Documents[index];
+            var document = _mediator.Query(new GetDocumentQuery { ID = documentIndex.DocumentID });
 
-            documentViewerRichTextBox.Text = document.Content;
+            documentViewerRichTextBox.Text = documentIndex.Content;
+
+            //File.WriteAllBytes(_tempFilePath, document.Payload);
+            //documentViewerRichTextBox.LoadFile(_tempFilePath);
 
             HighlightSearchTerms(SearchTerms);
 
             informationLabel.Text = string.Format(Resource.SearchResultForm_InformationLabel, index + 1, SearchResult.Documents.Count);
-            documentPathLabel.Text = string.Format(Resource.SearchResultForm_DocumentPathLabel, document.FileName);
+            documentPathLabel.Text = string.Format(Resource.SearchResultForm_DocumentPathLabel, documentIndex.FileName);
         }
 
         private void HighlightSearchTerms(params string[] terms) {

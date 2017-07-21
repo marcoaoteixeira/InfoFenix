@@ -220,7 +220,7 @@
             this.spacerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spacerPanel.Location = new System.Drawing.Point(100, 10);
             this.spacerPanel.Name = "spacerPanel";
-            this.spacerPanel.Padding = new System.Windows.Forms.Padding(15);
+            this.spacerPanel.Padding = new System.Windows.Forms.Padding(15, 15, 0, 15);
             this.spacerPanel.Size = new System.Drawing.Size(434, 181);
             this.spacerPanel.TabIndex = 0;
             // 
@@ -230,11 +230,11 @@
             this.documentViewerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.documentViewerRichTextBox.ContextMenuStrip = this.documentViewerContextMenuStrip;
             this.documentViewerRichTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.documentViewerRichTextBox.Font = new System.Drawing.Font("Courier New", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.documentViewerRichTextBox.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.documentViewerRichTextBox.Location = new System.Drawing.Point(15, 15);
             this.documentViewerRichTextBox.Name = "documentViewerRichTextBox";
             this.documentViewerRichTextBox.ReadOnly = true;
-            this.documentViewerRichTextBox.Size = new System.Drawing.Size(400, 147);
+            this.documentViewerRichTextBox.Size = new System.Drawing.Size(415, 147);
             this.documentViewerRichTextBox.TabIndex = 0;
             this.documentViewerRichTextBox.Text = "";
             // 

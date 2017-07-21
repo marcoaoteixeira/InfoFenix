@@ -77,6 +77,7 @@ namespace InfoFenix.Core.Commands {
                                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, document.LastWriteTime, DbType.DateTime),
                                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, document.Code, DbType.Int32),
                                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, document.Indexed ? 1 : 0, DbType.Int32),
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Content, document.Content ?? string.Empty),
                                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, document.Payload != null ? (object)document.Payload : DBNull.Value, DbType.Binary)
                             });
                             if (document.DocumentID <= 0) { document.DocumentID = Convert.ToInt32(result); }

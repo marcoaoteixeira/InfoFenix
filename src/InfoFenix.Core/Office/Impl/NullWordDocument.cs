@@ -32,6 +32,10 @@ namespace InfoFenix.Core.Office {
             return Task.FromResult(Stream.Null);
         }
 
+        public void SaveAs(string filePath, DocumentFormatType type = DocumentFormatType.Rtf) {
+
+        }
+
         #endregion IWordDocument Members
 
         #region IDisposable Members

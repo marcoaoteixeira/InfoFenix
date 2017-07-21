@@ -65,11 +65,12 @@ namespace InfoFenix.Core.Search {
             lock (SyncLock) {
                 if (!Cache.ContainsKey(indexName)) { return; }
 
-                Directory.Delete(Path.Combine(_settings.IndexStorageDirectoryPath, indexName));
                 if (Cache[indexName] is IDisposable disposable) {
                     disposable.Dispose();
                 }
                 Cache.Remove(indexName);
+
+                Directory.Delete(Path.Combine(_settings.IndexStorageDirectoryPath, indexName), recursive: true);
             }
         }
 

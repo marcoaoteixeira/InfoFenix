@@ -138,6 +138,11 @@ namespace InfoFenix.Core.Office {
             }, cancellationToken);
         }
 
+        public void SaveAs(string filePath, DocumentFormatType type = DocumentFormatType.Rtf) {
+            try { _document.SaveToFile(filePath, type == DocumentFormatType.Rtf ? FileFormat.Rtf : FileFormat.Doc); }
+            catch { _log.Error("CANNOT SAVE FILE: {0}", filePath); }
+        }
+
         #endregion IWordDocument Members
 
         #region IDisposable Members

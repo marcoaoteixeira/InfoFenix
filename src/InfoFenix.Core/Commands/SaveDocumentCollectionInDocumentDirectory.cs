@@ -25,6 +25,12 @@ namespace InfoFenix.Core.Commands {
 
     public sealed class SaveDocumentCollectionInDocumentDirectoryCommandHandler : ICommandHandler<SaveDocumentCollectionInDocumentDirectoryCommand> {
 
+        #region Private Static Read-Only Fields
+
+        private static readonly string TempFilePath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+
+        #endregion
+
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
@@ -57,11 +63,22 @@ namespace InfoFenix.Core.Commands {
 
         #region Private Methods
 
-        private byte[] ReadFileContent(string filePath) {
+        private byte[] ReadFileAsRtf(string filePath) {
             byte[] result = null;
             try {
                 using (var wordDocument = _wordApplication.Open(filePath)) {
-                    result = Encoding.UTF8.GetBytes(wordDocument.GetText());
+                    wordDocument.SaveAs(TempFilePath);
+                }
+                result = File.ReadAllBytes(TempFilePath);
+            } catch (Exception ex) { Log.Error(ex, $"CANNOT SAVE FILE: {filePath}"); }
+            return result;
+        }
+
+        private string ReadFileContent(string filePath) {
+            string result = null;
+            try {
+                using (var wordDocument = _wordApplication.Open(filePath)) {
+                    result = wordDocument.GetText();
                 }
             } catch (Exception ex) { Log.Error(ex, $"CANNOT OPEN/READ FILE: {filePath}"); }
             return result;
@@ -75,6 +92,7 @@ namespace InfoFenix.Core.Commands {
                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.LastWriteTime, document.LastWriteTime, DbType.DateTime),
                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Code, document.Code, DbType.Int32),
                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Indexed, document.Indexed ? 1 : 0, DbType.Int32),
+                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Content, document.Content ?? string.Empty),
                 Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Payload, document.Payload != null ? (object)document.Payload : DBNull.Value, DbType.Binary)
             });
             if (document.DocumentID <= 0) { document.DocumentID = Convert.ToInt32(result); }
@@ -115,7 +133,8 @@ namespace InfoFenix.Core.Commands {
                             if (document != null && document.LastWriteTime != physicalFileLastWriteTime) {
                                 document.Indexed = false;
                                 document.LastWriteTime = physicalFileLastWriteTime;
-                                document.Payload = ReadFileContent(filePath);
+                                document.Content = ReadFileContent(filePath);
+                                document.Payload = ReadFileAsRtf(filePath);
                             }
 
                             // If database document does not exists, create it.
@@ -127,7 +146,8 @@ namespace InfoFenix.Core.Commands {
                                     Indexed = false,
                                     LastWriteTime = physicalFileLastWriteTime,
                                     Path = filePath,
-                                    Payload = ReadFileContent(filePath)
+                                    Content = ReadFileContent(filePath),
+                                    Payload = ReadFileAsRtf(filePath)
                                 };
 
                                 command.DocumentDirectory.Documents.Add(document);

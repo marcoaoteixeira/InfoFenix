@@ -29,6 +29,12 @@ namespace InfoFenix.Core.Queries {
 
     public class ListDocumentsByDocumentDirectoryFromDiskQueryHandler : IQueryHandler<ListDocumentsByDocumentDirectoryFromDiskQuery, IEnumerable<DocumentDto>> {
 
+        #region Private Static Read-Only Fields
+
+        private static readonly string TempFilePath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+
+        #endregion
+
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
@@ -80,8 +86,10 @@ namespace InfoFenix.Core.Queries {
                     if (query.ReadFileContent) {
                         try {
                             using (var wordDocument = _wordApplication.Open(filePath)) {
-                                document.Payload = Encoding.UTF8.GetBytes(query.ReadFileContent ? wordDocument.GetText() : string.Empty);
+                                document.Content = query.ReadFileContent ? wordDocument.GetText() : string.Empty;
+                                wordDocument.SaveAs(TempFilePath);
                             }
+                            document.Payload = query.ReadFileContent ? File.ReadAllBytes(TempFilePath) : null;
                         } catch (Exception ex) { Log.Error(ex, $"CANNOT OPEN/READ FILE: {filePath}"); }
                     }
                     result.Add(document);

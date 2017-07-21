@@ -5,6 +5,7 @@
     [last_write_time],
     [code],
     [indexed],
+    [content],
     [payload]
 FROM [documents]
 WHERE

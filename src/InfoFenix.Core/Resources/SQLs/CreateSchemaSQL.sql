@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS [documents] (
     [last_write_time]       DATETIME            NOT NULL,
     [code]                  INTEGER             NOT NULL,
     [indexed]               INTEGER             NOT NULL,
+    [content]               TEXT                NOT NULL,
     [payload]               BLOB                NULL,
 
     CONSTRAINT [UQ_document_path] UNIQUE ([path]),

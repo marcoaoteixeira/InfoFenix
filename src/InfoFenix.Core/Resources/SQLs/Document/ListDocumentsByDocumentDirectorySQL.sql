@@ -5,6 +5,7 @@
     [documents].[last_write_time],
     [documents].[code],
     [documents].[indexed],
+    [documents].[content],
     [documents].[payload]
 FROM [documents]
     INNER JOIN [document_directories] ON [document_directories].[id] = [documents].[document_directory_id]

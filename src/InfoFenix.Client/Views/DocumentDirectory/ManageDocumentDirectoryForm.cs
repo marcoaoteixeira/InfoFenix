@@ -77,7 +77,7 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
 
             WaitFor.Execution(() => {
                 _mediator
-                   .Query(new ListDocumentDirectoriesQuery { RequireDocuments = true })
+                   .Query(new ListDocumentDirectoriesQuery { RequireDocuments = false })
                    .OrderBy(_ => _.DocumentDirectoryID)
                    .Each(InsertTreeViewEntry);
             }, silent: true);
@@ -287,6 +287,8 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
 
                     case CONTEXT_MENU_TAG_REMOVE:
                         RemoveDocumentDirectory(documentDirectory);
+                        documentDirectoryTreeView.Nodes.Remove(node);
+                        documentListView.Clear();
                         break;
                 }
             }
@@ -319,6 +321,11 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
                 }
 
                 _cancellationTokenFillListView = _cancellationTokenIssuer.Get(CANCELLATION_TOKEN_FILL_LISTVIEW);
+
+                var documents = _mediator.Query(new ListDocumentsByDocumentDirectoryQuery {
+                    DocumentDirectoryID = documentDirectory.DocumentDirectoryID
+                });
+                documentDirectory.Documents = new List<DocumentDto>(documents);
 
                 FillListViewAsync(documentDirectory, _cancellationTokenFillListView);
             }

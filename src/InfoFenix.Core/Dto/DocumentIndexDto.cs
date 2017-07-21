@@ -22,7 +22,7 @@ namespace InfoFenix.Core.Dto {
                 .Set(Common.DocumentIndex.FieldNames.DocumentCode, DocumentCode, DocumentIndexOptions.Store)
                 .Set(Common.DocumentIndex.FieldNames.DocumentDirectoryCode, DocumentDirectoryCode, DocumentIndexOptions.Store)
                 .Set(Common.DocumentIndex.FieldNames.FileName, FileName, DocumentIndexOptions.Store)
-                .Set(Common.DocumentIndex.FieldNames.Content, Content, DocumentIndexOptions.Analyze | DocumentIndexOptions.Store);
+                .Set(Common.DocumentIndex.FieldNames.Content, Content ?? string.Empty, DocumentIndexOptions.Analyze | DocumentIndexOptions.Store);
         }
 
         #endregion Public Methods
@@ -35,7 +35,7 @@ namespace InfoFenix.Core.Dto {
                 DocumentCode = searchHit.GetInt(Common.DocumentIndex.FieldNames.DocumentCode),
                 DocumentDirectoryCode = searchHit.GetString(Common.DocumentIndex.FieldNames.DocumentDirectoryCode),
                 FileName = searchHit.GetString(Common.DocumentIndex.FieldNames.FileName),
-                Content = searchHit.GetString(Common.DocumentIndex.FieldNames.Content)
+                Content = searchHit.GetString(Common.DocumentIndex.FieldNames.Content) ?? string.Empty
             };
         }
 
@@ -45,7 +45,7 @@ namespace InfoFenix.Core.Dto {
                 DocumentCode = documentDto.Code,
                 DocumentDirectoryCode = documentDto.DocumentDirectory.Code,
                 FileName = documentDto.FileName,
-                Content = Encoding.UTF8.GetString(documentDto.Payload ?? new byte[0])
+                Content = documentDto.Content ?? string.Empty
             };
         }
 

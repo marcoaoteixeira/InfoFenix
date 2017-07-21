@@ -26,6 +26,12 @@ namespace InfoFenix.Core.Queries {
 
     public class ListDocumentsDifferenceBetweenDiskDatabaseQueryHandler : IQueryHandler<ListDocumentsDifferenceBetweenDiskDatabaseQuery, IEnumerable<DocumentDto>> {
 
+        #region Private Static Read-Only Fields
+
+        private static readonly string TempFilePath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+
+        #endregion
+
         #region Private Read-Only Fields
 
         private readonly IDatabase _database;
@@ -58,11 +64,22 @@ namespace InfoFenix.Core.Queries {
 
         #region Private Methods
 
-        private byte[] ReadFileContent(string filePath) {
+        private byte[] ReadFileAsRtf(string filePath) {
             byte[] result = null;
             try {
                 using (var wordDocument = _wordApplication.Open(filePath)) {
-                    result = Encoding.UTF8.GetBytes(wordDocument.GetText());
+                    wordDocument.SaveAs(TempFilePath);
+                }
+                result = File.ReadAllBytes(TempFilePath);
+            } catch (Exception ex) { Log.Error(ex, $"CANNOT OPEN/READ FILE: {filePath}"); }
+            return result;
+        }
+
+        private string ReadFileContent(string filePath) {
+            string result = null;
+            try {
+                using (var wordDocument = _wordApplication.Open(filePath)) {
+                    result = wordDocument.GetText();
                 }
             } catch (Exception ex) { Log.Error(ex, $"CANNOT OPEN/READ FILE: {filePath}"); }
             return result;
@@ -134,7 +151,8 @@ namespace InfoFenix.Core.Queries {
                     if (document != null && document.Current.LastWriteTime != physicalFileLastWriteTime) {
                         document.Current.Indexed = false;
                         document.Current.LastWriteTime = physicalFileLastWriteTime;
-                        document.Current.Payload = ReadFileContent(filePath);
+                        document.Current.Content = ReadFileContent(filePath);
+                        document.Current.Payload = ReadFileAsRtf(filePath);
                         document.Save = true;
 
                         continue;
@@ -149,7 +167,8 @@ namespace InfoFenix.Core.Queries {
                             Indexed = false,
                             LastWriteTime = physicalFileLastWriteTime,
                             Path = filePath,
-                            Payload = ReadFileContent(filePath)
+                            Content = ReadFileContent(filePath),
+                            Payload = ReadFileAsRtf(filePath)
                         }, save: true));
                     }
                 }

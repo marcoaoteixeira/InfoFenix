@@ -14,6 +14,7 @@ namespace InfoFenix.Core.Dto {
         public DateTime LastWriteTime { get; set; }
         public int Code { get; set; }
         public bool Indexed { get; set; }
+        public string Content { get; set; }
         public byte[] Payload { get; set; }
 
         public string FileName {
@@ -49,6 +50,7 @@ namespace InfoFenix.Core.Dto {
                 Code = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.Code),
                 LastWriteTime = reader.GetDateTimeOrDefault(Common.DatabaseSchema.Documents.LastWriteTime, DateTime.MinValue),
                 Indexed = reader.GetInt32OrDefault(Common.DatabaseSchema.Documents.Indexed) > 0,
+                Content = reader.GetStringOrDefault(Common.DatabaseSchema.Documents.Content),
                 Payload = reader.GetBlobOrDefault(Common.DatabaseSchema.Documents.Payload)
             };
         }

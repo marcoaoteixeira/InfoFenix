@@ -5,6 +5,7 @@
     [last_write_time],
     [code],
     [indexed],
+    [content],
     [payload]
 ) VALUES (
     @id,
@@ -13,6 +14,7 @@
     @last_write_time,
     @code,
     @indexed,
+    @content,
     @payload
 );
 SELECT MAX([id]) FROM [documents];

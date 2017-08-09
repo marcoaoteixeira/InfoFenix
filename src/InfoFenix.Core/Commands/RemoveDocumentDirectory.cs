@@ -66,7 +66,7 @@ namespace InfoFenix.Core.Commands {
                         progress.PerformStep(++actualStep, totalSteps, Resource.RemoveDocumentDirectory_Progress_Step_Database_Message, command.DocumentDirectory.Label);
 
                         _database.ExecuteScalar(Resource.RemoveDocumentDirectorySQL, parameters: new[] {
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID, DbType.Int32)
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID, DbType.Int32)
                         });
 
                         if (cancellationToken.IsCancellationRequested) {

@@ -78,7 +78,7 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
                 _mediator.CommandAsync(new IndexDocumentDirectoryCommand {
                     DocumentDirectoryID = documentDirectory.DocumentDirectoryID,
                     BatchSize = 128
-                }, token, progress);
+                }, token, progress).Wait();
             });
         }
 
@@ -86,16 +86,24 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
             ProgressViewer.Display(_cancellationTokenIssuer, actions: (token, progress) => {
                 _mediator.CommandAsync(new CleanDocumentDirectoryCommand {
                     DocumentDirectoryID = documentDirectory.DocumentDirectoryID
-                }, token, progress);
+                }, token, progress).Wait();
             });
         }
 
         private void RemoveDocumentDirectory(Core.Entities.DocumentDirectory documentDirectory) {
+            var confirm = MessageBox.Show($"Deseja realmente remover o diretório de documentos \"{documentDirectory.Label}\"?"
+                , "Remover Diretório de Documentos"
+                , MessageBoxButtons.YesNo
+                , MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) { return; }
+
             ProgressViewer.Display(_cancellationTokenIssuer, actions: (token, progress) => {
                 _mediator.CommandAsync(new RemoveDocumentDirectoryCommand {
                     DocumentDirectoryID = documentDirectory.DocumentDirectoryID
-                }, token, progress);
+                }, token, progress).Wait();
             });
+
+            FillDocumentDirectoryDataGridView();
         }
 
         #endregion Private Methods

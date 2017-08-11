@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -18,6 +19,8 @@ namespace InfoFenix.Core.Commands {
         #region Public Properties
 
         public int DocumentDirectoryID { get; set; }
+
+        public int BatchSize { get; set; } = 128;
 
         #endregion Public Properties
     }
@@ -62,24 +65,16 @@ namespace InfoFenix.Core.Commands {
 
         #region Private Methods
 
-        private byte[] ReadFileAsRtf(string filePath) {
-            byte[] result = null;
+        private DocumentTransform Transform(string filePath) {
+            var result = new DocumentTransform();
             try {
                 using (var wordDocument = _wordApplication.Open(filePath)) {
+                    result.Content = wordDocument.GetText();
                     wordDocument.SaveAs(TempFilePath);
+                    result.Payload = File.ReadAllBytes(TempFilePath);
+                    File.Delete(TempFilePath);
                 }
-                result = File.ReadAllBytes(TempFilePath);
             } catch { Log.Error($"CANNOT SAVE FILE: {filePath}"); }
-            return result;
-        }
-
-        private string ReadFileContent(string filePath) {
-            string result = null;
-            try {
-                using (var wordDocument = _wordApplication.Open(filePath)) {
-                    result = wordDocument.GetText();
-                }
-            } catch { Log.Error($"CANNOT OPEN/READ FILE: {filePath}"); }
             return result;
         }
 
@@ -103,13 +98,15 @@ namespace InfoFenix.Core.Commands {
 
         public Task HandleAsync(SaveDocumentDirectoryDocumentsCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
+                var sw = new Stopwatch();
+
                 var documentDirectory = _database.ExecuteReaderSingle(Resource.GetDocumentDirectorySQL, DocumentDirectory.Map, parameters: new[] {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
                 });
 
                 var documents = _database.ExecuteReader(Resource.ListDocumentsByDocumentDirectoryNoContentSQL, Document.Map, parameters: new[] {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
-                });
+                }).ToArray();
 
                 var physicalFiles = Common.GetDocumentFiles(documentDirectory.Path);
                 var actualStep = 0;
@@ -118,62 +115,91 @@ namespace InfoFenix.Core.Commands {
                 try {
                     progress.Start(totalSteps, Resource.SaveDocumentDirectoryDocuments_Progress_Start_Title);
 
-                    using (var transaction = _database.Connection.BeginTransaction()) {
-                        foreach (var filePath in physicalFiles) {
+                    var pageCount = (physicalFiles.Length / command.BatchSize) + 1;
+                    for (var page = 0; page < pageCount; page++) {
+                        var chunk = physicalFiles.Skip(page * command.BatchSize).Take(command.BatchSize);
+                        using (var transaction = _database.Connection.BeginTransaction()) {
+                            foreach (var filePath in chunk) {
+                                if (cancellationToken.IsCancellationRequested) {
+                                    progress.Cancel(actualStep, totalSteps);
+
+                                    cancellationToken.ThrowIfCancellationRequested();
+                                }
+
+                                progress.PerformStep(++actualStep, totalSteps, Resource.SaveDocumentDirectoryDocuments_Progress_Step_Message, Path.GetFileName(filePath));
+
+                                var document = documents.SingleOrDefault(_ => string.Equals(_.Path, filePath, StringComparison.CurrentCultureIgnoreCase));
+                                var physicalFileLastWriteTime = File.GetLastWriteTime(filePath);
+
+                                // If database document exists and last write time is equals to the physical file last write time
+                                // Ignores and move next.
+                                if (document != null && document.LastWriteTime == physicalFileLastWriteTime) { continue; }
+
+                                Log.Information("Create temporary document on disk. Original file: {0}", filePath);
+                                sw.Start();
+                                var documentTransform = Transform(filePath);
+                                sw.Stop();
+                                Log.Information("Elapsed time: {0}ms", sw.ElapsedMilliseconds);
+                                sw.Reset();
+
+                                // If database document exists and last write time is NOT equals to the physical file last write time
+                                // Updates the database document.
+                                if (document != null && document.LastWriteTime != physicalFileLastWriteTime) {
+                                    document.Content = documentTransform.Content;
+                                    document.Payload = documentTransform.Payload;
+                                    document.LastWriteTime = physicalFileLastWriteTime;
+                                    document.Index = false;
+                                }
+
+                                // If database document does not exists, create it.
+                                if (document == null) {
+                                    document = new Document {
+                                        DocumentDirectoryID = documentDirectory.DocumentDirectoryID,
+                                        Code = Common.ExtractCodeFromDocumentFilePath(filePath),
+                                        Content = documentTransform.Content,
+                                        Payload = documentTransform.Payload,
+                                        Path = filePath,
+                                        LastWriteTime = physicalFileLastWriteTime,
+                                        Index = false
+                                    };
+                                }
+
+                                Log.Information("Saving file to database. Original file: {0}", filePath);
+                                // Persists the document.
+                                sw.Start();
+                                SaveDocument(documentDirectory.DocumentDirectoryID, document);
+                                sw.Stop();
+                                Log.Information("Elapsed time: {0}ms", sw.ElapsedMilliseconds);
+                                sw.Reset();
+                            }
+
                             if (cancellationToken.IsCancellationRequested) {
                                 progress.Cancel(actualStep, totalSteps);
 
                                 cancellationToken.ThrowIfCancellationRequested();
                             }
-
-                            progress.PerformStep(++actualStep, totalSteps, Resource.SaveDocumentDirectoryDocuments_Progress_Step_Message, Path.GetFileName(filePath));
-
-                            var document = documents.SingleOrDefault(_ => string.Equals(_.Path, filePath, StringComparison.CurrentCultureIgnoreCase));
-                            var physicalFileLastWriteTime = File.GetLastWriteTime(filePath);
-
-                            // If database document exists and last write time is equals to the physical file last write time
-                            // Ignores and move next.
-                            if (document != null && document.LastWriteTime == physicalFileLastWriteTime) { continue; }
-
-                            // If database document exists and last write time is NOT equals to the physical file last write time
-                            // Updates the database document.
-                            if (document != null && document.LastWriteTime != physicalFileLastWriteTime) {
-                                document.Content = ReadFileContent(filePath);
-                                document.Payload = ReadFileAsRtf(filePath);
-                                document.LastWriteTime = physicalFileLastWriteTime;
-                                document.Index = false;
-                            }
-
-                            // If database document does not exists, create it.
-                            if (document == null) {
-                                document = new Document {
-                                    DocumentDirectoryID = documentDirectory.DocumentDirectoryID,
-                                    Code = Common.ExtractCodeFromDocumentFilePath(filePath),
-                                    Content = ReadFileContent(filePath),
-                                    Payload = ReadFileAsRtf(filePath),
-                                    Path = filePath,
-                                    LastWriteTime = physicalFileLastWriteTime,
-                                    Index = false
-                                };
-                            }
-
-                            // Persists the document.
-                            SaveDocument(documentDirectory.DocumentDirectoryID, document);
+                            transaction.Commit();
                         }
-
-                        if (cancellationToken.IsCancellationRequested) {
-                            progress.Cancel(actualStep, totalSteps);
-
-                            cancellationToken.ThrowIfCancellationRequested();
-                        }
-                        transaction.Commit();
                     }
-
                     progress.Complete(actualStep, totalSteps);
                 } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
             }, cancellationToken);
         }
 
         #endregion ICommandHandler<SaveDocumentDirectoryDocumentsCommand> Members
+
+        #region Private Inner Classes
+
+        private class DocumentTransform {
+
+            #region Public Properties
+
+            public string Content { get; set; }
+            public byte[] Payload { get; set; }
+
+            #endregion Public Properties
+        }
+
+        #endregion Private Inner Classes
     }
 }

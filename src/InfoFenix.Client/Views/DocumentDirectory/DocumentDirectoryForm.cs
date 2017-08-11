@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
@@ -149,7 +150,7 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
         private void saveAndCloseButton_Click(object sender, EventArgs e) {
             if (sender is Button button) {
                 if (!ValidateViewModel()) { return; }
-
+                
                 var actions = new List<Action<CancellationToken, IProgress<ProgressInfo>>> {
                     (token, progress) => SaveDocumentDirectory(token, progress)
                 };
@@ -158,7 +159,11 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
                     actions.Add((token, progress) => CleanDocumentDirectory(token, progress));
                     actions.Add((token, progress) => IndexDocumentDirectory(token, progress));
                 }
+
+                var sw = Stopwatch.StartNew();
                 ProgressViewer.Display(_cancellationTokenIssuer, log: Log, actions: actions.ToArray());
+                Log.Information($"SAVING DOCUMENT DIRECTORY \"{ViewModel.Label}\". TOTAL TIME: {sw.Elapsed}");
+                sw.Stop();
 
                 DialogResult = DialogResult.OK;
             }

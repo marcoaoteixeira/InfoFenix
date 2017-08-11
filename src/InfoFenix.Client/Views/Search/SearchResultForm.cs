@@ -69,6 +69,9 @@ namespace InfoFenix.Client.Views.Search {
 
             informationLabel.Text = string.Format(Resource.SearchResultForm_InformationLabel, index + 1, SearchResult.DocumentsFound.Count);
             documentPathLabel.Text = string.Format(Resource.SearchResultForm_DocumentPathLabel, documentIndex.FileName);
+
+            documentViewerRichTextBox.SelectionStart = 0;
+            documentViewerRichTextBox.Focus();
         }
 
         private void HighlightSearchTerms(params string[] terms) {

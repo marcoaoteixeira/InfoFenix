@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
@@ -16,11 +15,7 @@ namespace InfoFenix.Client.Code {
             log = log ?? NullLogger.Instance;
 
             using (var form = new ProgressViewerForm(cancellationTokenIssuer)) {
-                var stopwatch = Stopwatch.StartNew();
                 form.Run(actions);
-                stopwatch.Stop();
-                log.Information($"ProgressViewer running time: {stopwatch.ElapsedMilliseconds} ms ({stopwatch.ElapsedMilliseconds / 1000} sec.)");
-
                 form.ShowDialog();
             }
         }

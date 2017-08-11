@@ -14,4 +14,4 @@ WHERE
 AND (@index IS NULL OR ([documents].[index] = @index))
 ORDER BY
     [documents].[document_id]
-LIMIT @skip, @count
+LIMIT @limit

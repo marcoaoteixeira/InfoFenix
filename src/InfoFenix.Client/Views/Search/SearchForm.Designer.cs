@@ -28,10 +28,10 @@
             this.executeSearchButton = new System.Windows.Forms.Button();
             this.searchByLabel = new System.Windows.Forms.Label();
             this.documentDirectoriesDataGridView = new System.Windows.Forms.DataGridView();
-            this.informationLabel = new System.Windows.Forms.Label();
             this.labelDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.actualTotalDocumentsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.foundTotalDocumentsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.informationLabel = new System.Windows.Forms.Label();
             this.titlePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).BeginInit();
             this.contentPanel.SuspendLayout();
@@ -151,21 +151,12 @@
             this.documentDirectoriesDataGridView.MultiSelect = false;
             this.documentDirectoriesDataGridView.Name = "documentDirectoriesDataGridView";
             this.documentDirectoriesDataGridView.ReadOnly = true;
+            this.documentDirectoriesDataGridView.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.documentDirectoriesDataGridView.RowTemplate.Height = 32;
             this.documentDirectoriesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.documentDirectoriesDataGridView.Size = new System.Drawing.Size(614, 197);
             this.documentDirectoriesDataGridView.TabIndex = 1;
             this.documentDirectoriesDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchResultDataGridView_CellDoubleClick);
-            // 
-            // informationLabel
-            // 
-            this.informationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.informationLabel.Location = new System.Drawing.Point(23, 20);
-            this.informationLabel.Name = "informationLabel";
-            this.informationLabel.Size = new System.Drawing.Size(445, 40);
-            this.informationLabel.TabIndex = 1;
-            this.informationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelDataGridViewTextBoxColumn
             // 
@@ -188,6 +179,17 @@
             this.foundTotalDocumentsDataGridViewTextBoxColumn.HeaderText = "Documentos encontrados";
             this.foundTotalDocumentsDataGridViewTextBoxColumn.Name = "foundTotalDocumentsDataGridViewTextBoxColumn";
             this.foundTotalDocumentsDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // informationLabel
+            // 
+            this.informationLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.informationLabel.Location = new System.Drawing.Point(23, 20);
+            this.informationLabel.Name = "informationLabel";
+            this.informationLabel.Size = new System.Drawing.Size(445, 40);
+            this.informationLabel.TabIndex = 1;
+            this.informationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SearchForm
             // 

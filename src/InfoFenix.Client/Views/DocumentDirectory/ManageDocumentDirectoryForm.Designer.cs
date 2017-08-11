@@ -145,6 +145,8 @@
             this.documentDirectoryDataGridView.MultiSelect = false;
             this.documentDirectoryDataGridView.Name = "documentDirectoryDataGridView";
             this.documentDirectoryDataGridView.ReadOnly = true;
+            this.documentDirectoryDataGridView.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.documentDirectoryDataGridView.RowTemplate.Height = 32;
             this.documentDirectoryDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.documentDirectoryDataGridView.Size = new System.Drawing.Size(764, 200);
             this.documentDirectoryDataGridView.TabIndex = 0;

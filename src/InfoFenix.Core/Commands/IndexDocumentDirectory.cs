@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.CQRS;
@@ -74,12 +75,12 @@ namespace InfoFenix.Core.Commands {
 
         public Task HandleAsync(IndexDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
-                var batchSize = command.BatchSize;
                 var documentDirectory = _database.ExecuteReaderSingle(Resource.GetDocumentDirectorySQL, DocumentDirectory.Map, parameters: new[] {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
                 });
                 var documentCount = (long)_database.ExecuteScalar(Resource.GetDocumentCountByDocumentDirectorySQL, parameters: new[] {
-                    Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
+                    Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32),
+                    Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Index, 0 /* false */, DbType.Int32)
                 });
 
                 var actualStep = 0;
@@ -87,18 +88,21 @@ namespace InfoFenix.Core.Commands {
 
                 try {
                     progress.Start(totalSteps, Resource.IndexDocumentDirectory_Progress_Start_Title);
+                    if (totalSteps == 0) {
+                        progress.Complete(actualStep, totalSteps);
+                        return;
+                    }
 
                     // Gets the Lucene Index
                     var index = _indexProvider.GetOrCreate(documentDirectory.Code);
                     var documentIndexList = new List<IDocumentIndex>();
-                    var pageCount = (documentCount / batchSize) + 1;
+                    var pageCount = Convert.ToInt32((documentCount / command.BatchSize) + 1);
                     for (var page = 0; page < pageCount; page++) {
                         var documents = _database.ExecuteReader(Resource.PaginateDocumentsByDocumentDirectorySQL, Document.Map, parameters: new[] {
                             Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Index, false /* true */, DbType.Int32),
-                            Parameter.CreateInputParameter("skip", page * batchSize, DbType.Int32),
-                            Parameter.CreateInputParameter("count", batchSize, DbType.Int32)
-                        });
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.Index, 0 /* false */, DbType.Int32),
+                            Parameter.CreateInputParameter("limit", command.BatchSize, DbType.Int32)
+                        }).ToArray();
 
                         foreach (var document in documents) {
                             progress.PerformStep(++actualStep, totalSteps, Resource.IndexDocumentDirectory_Progress_Step_Message, document.FileName);
@@ -120,7 +124,6 @@ namespace InfoFenix.Core.Commands {
                         documentIndexList.Clear();
                         MarkAsIndex(documents);
                     }
-
                     progress.Complete(actualStep, totalSteps);
                 } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
             }, cancellationToken);

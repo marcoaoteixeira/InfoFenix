@@ -52,7 +52,7 @@ namespace InfoFenix.Core {
         public void MarkAsComplete(string key) {
             PreventCallAfterDispose();
             if (_cache.TryRemove(key, out CancellationTokenSource source)) {
-                try { source.Dispose(); } catch (Exception ex) { Log.Error(ex, ex.Message); }
+                try { source.Dispose(); } catch (Exception ex) { Log.Error(ex.Message); }
             }
         }
 
@@ -60,7 +60,7 @@ namespace InfoFenix.Core {
             PreventCallAfterDispose();
             if (_cache.TryRemove(key, out CancellationTokenSource source)) {
                 try { source.Cancel(); return true; }
-                catch (Exception ex) { Log.Error(ex, ex.Message); }
+                catch (Exception ex) { Log.Error(ex.Message); }
             }
             return false;
         }

@@ -87,7 +87,7 @@ namespace InfoFenix.Core.Office {
             return Task.Run(() => {
                 var result = string.Empty;
                 try { result = _document.GetText(); }
-                catch (Exception ex) { _log.Error(ex, $"ERROR READING DOCUMENT TEXT: {_path}"); }
+                catch { _log.Error($"ERROR READING DOCUMENT TEXT: {_path}"); }
                 return result;
             }, cancellationToken);
         }
@@ -106,7 +106,7 @@ namespace InfoFenix.Core.Office {
                 }
 
                 OnClose();
-            } catch (Exception ex) { _log.Error(ex, $"ERROR CLOSING DOCUMENT: {_path}"); }
+            } catch { _log.Error($"ERROR CLOSING DOCUMENT: {_path}"); }
         }
 
         public Task<Stream> HighlightTextAsync(CancellationToken cancellationToken = default(CancellationToken), params string[] terms) {

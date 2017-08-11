@@ -76,7 +76,7 @@ namespace InfoFenix.Core.Bootstrap {
                         totalSteps: arguments.TotalSteps
                     );
 
-                    Log.Error(ex, ex.Message);
+                    Log.Error(ex.Message);
 
                     throw new FatalException(Resource.FatalException_Message, ex);
                 }

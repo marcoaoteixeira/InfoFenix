@@ -75,7 +75,6 @@
     <Compile Include="Code\ProgressViewer.cs" />
     <Compile Include="Code\RichTextBoxAppender.cs" />
     <Compile Include="Code\WaitFor.cs" />
-    <Compile Include="Code\WindowWrapper.cs" />
     <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

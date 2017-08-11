@@ -126,8 +126,6 @@
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
-    <Compile Include="Extensions\EventHandlerExtension.cs" />
-    <Compile Include="Extensions\StreamExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\TaskExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />

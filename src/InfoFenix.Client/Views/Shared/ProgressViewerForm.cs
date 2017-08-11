@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using InfoFenix.Core;
-using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.CQRS;
 using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views.Shared {

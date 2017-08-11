@@ -61,33 +61,29 @@ namespace InfoFenix.Client {
         }
 
         private static void ConfigureCompositionRoot() {
-            var appSettings = AppSettingsManager.Get();
             var supportAssemblies = new[] {
                 typeof(EntryPoint).Assembly,
                 typeof(Prevent).Assembly
             };
             var defaultServiceRegistrations = new IServiceRegistration[] {
-                new AppSettingsServiceRegistration(),
                 new ClientServiceRegistration(supportAssemblies),
                 new BootstrapServiceRegistration(supportAssemblies),
                 new DataServiceRegistration(),
-                new CqrsServiceRegistration(supportAssemblies),
+                new CQRSServiceRegistration(supportAssemblies),
                 new PubSubServiceRegistration(),
                 new SearchServiceRegistration(),
                 new LoggingServiceRegistration(),
                 new ServicesServiceRegistration()
             };
             var useRemoteSearchDatabaseServiceRegistrations = new IServiceRegistration[] {
-                new NullIOServiceRegistration(),
                 new NullWordDocumentServiceRegistration()
             };
             var autonomousModeServiceRegistrations = new IServiceRegistration[] {
-                new IOServiceRegistration(),
                 new WordDocumentServiceRegistration()
             };
             _compositionRoot = new CompositionRoot();
             _compositionRoot.Compose(defaultServiceRegistrations);
-            _compositionRoot.Compose(appSettings.UseRemoteSearchDatabase ? useRemoteSearchDatabaseServiceRegistrations : autonomousModeServiceRegistrations);
+            _compositionRoot.Compose(AppSettings.Instance.UseRemoteSearchDatabase ? useRemoteSearchDatabaseServiceRegistrations : autonomousModeServiceRegistrations);
             _compositionRoot.StartUp();
         }
 

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
-using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.CQRS;
 using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Client.Code {

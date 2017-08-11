@@ -5,8 +5,8 @@ using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
-using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.Dto;
+using InfoFenix.Core.CQRS;
+using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.Queries;
 using Resource = InfoFenix.Client.Properties.Resources;
@@ -65,6 +65,7 @@ namespace InfoFenix.Client.Views.Search {
 
             _currentIndexes = _mediator
                 .Query(new ListDocumentDirectoriesQuery())
+                .OrderBy(_ => _.Position)
                 .ToDictionary(_ => _.Code, _ => _.Label);
 
             ViewModel = _mediator.Query(new SearchDocumentIndexQuery {
@@ -85,13 +86,13 @@ namespace InfoFenix.Client.Views.Search {
 
             documentDirectoriesDataGridView.DataSource = ViewModel.Indexes.ToArray();
 
-            informationLabel.Text = (ViewModel.Indexes.SelectMany(_ => _.Documents).Count() == 0)
+            informationLabel.Text = (ViewModel.Indexes.SelectMany(_ => _.DocumentsFound).Count() == 0)
                 ? Resource.SearchForm_EmptyResultSet
                 : string.Empty;
         }
 
         private void ShowSearchResult(IndexDto index) {
-            if (index.Documents.Count == 0) { return; }
+            if (index.DocumentsFound.Count == 0) { return; }
 
             var form = _formManager.Get<SearchResultForm>(mdi: MdiParent, multipleInstance: true);
             form.SearchTerms = ViewModel.QueryTerm.Split(' ');

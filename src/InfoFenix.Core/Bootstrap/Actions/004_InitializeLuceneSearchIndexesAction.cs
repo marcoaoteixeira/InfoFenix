@@ -1,4 +1,4 @@
-﻿using InfoFenix.Core.Cqrs;
+﻿using InfoFenix.Core.CQRS;
 using InfoFenix.Core.Queries;
 using InfoFenix.Core.Search;
 

@@ -27,7 +27,6 @@
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.documentDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpInformationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.firstToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -35,6 +34,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.informationToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -66,15 +66,6 @@
             this.documentDirectoryToolStripMenuItem.Text = "Diretórios de Documentos";
             this.documentDirectoryToolStripMenuItem.Click += new System.EventHandler(this.documentDirectoryToolStripMenuItem_Click);
             // 
-            // configurationToolStripMenuItem
-            // 
-            this.configurationToolStripMenuItem.Checked = true;
-            this.configurationToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
-            this.configurationToolStripMenuItem.Text = "Configurações";
-            this.configurationToolStripMenuItem.Click += new System.EventHandler(this.configurationToolStripMenuItem_Click);
-            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -88,19 +79,19 @@
             // helpInformationToolStripMenuItem
             // 
             this.helpInformationToolStripMenuItem.Name = "helpInformationToolStripMenuItem";
-            this.helpInformationToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.helpInformationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.helpInformationToolStripMenuItem.Text = "Informações";
             this.helpInformationToolStripMenuItem.Click += new System.EventHandler(this.helpInformationToolStripMenuItem_Click);
             // 
             // firstToolStripSeparator
             // 
             this.firstToolStripSeparator.Name = "firstToolStripSeparator";
-            this.firstToolStripSeparator.Size = new System.Drawing.Size(137, 6);
+            this.firstToolStripSeparator.Size = new System.Drawing.Size(149, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "Sobre";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -128,6 +119,15 @@
             this.informationToolStripStatusLabel.Size = new System.Drawing.Size(819, 17);
             this.informationToolStripStatusLabel.Spring = true;
             this.informationToolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // configurationToolStripMenuItem
+            // 
+            this.configurationToolStripMenuItem.Checked = true;
+            this.configurationToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
+            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
+            this.configurationToolStripMenuItem.Text = "Configurações";
+            this.configurationToolStripMenuItem.Click += new System.EventHandler(this.configurationToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -158,7 +158,6 @@
         private System.Windows.Forms.MenuStrip mainMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem documentDirectoryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpInformationToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator firstToolStripSeparator;
@@ -166,6 +165,7 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.StatusStrip mainStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel informationToolStripStatusLabel;
+        private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
     }
 }
 

@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Code.Helpers;
-using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
 using InfoFenix.Core.Commands;
-using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.Dto;
+using InfoFenix.Core.CQRS;
 using InfoFenix.Core.Infrastructure;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.PubSub;
-using InfoFenix.Core.Queries;
 using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views.DocumentDirectory {
@@ -38,7 +33,7 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
             set { _log = value ?? NullLogger.Instance; }
         }
 
-        public DocumentDirectoryDto ViewModel { get; set; }
+        public Core.Entities.DocumentDirectory ViewModel { get; set; }
 
         #endregion Public Properties
 
@@ -61,16 +56,12 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
         #region Private Methods
 
         private void InitializeDefaultState() {
-            ViewModel = ViewModel ?? new DocumentDirectoryDto {
-                Code = Guid.NewGuid().ToString("N"),
-                Watch = true,
-                Index = true
+            ViewModel = ViewModel ?? new Core.Entities.DocumentDirectory {
+                Code = Guid.NewGuid().ToString("N")
             };
-
-            documentDirectoryLabelTextBox.Text = ViewModel.Label;
-            documentDirectoryPathTextBox.Text = ViewModel.Path;
-            watchDocumentDirectoryCheckBox.Checked = ViewModel.Watch;
-            indexDocumentDirectoryCheckBox.Checked = ViewModel.Index;
+            labelTextBox.Text = ViewModel.Label;
+            pathTextBox.Text = ViewModel.Path;
+            positionNumericUpDown.Value = ViewModel.Position;
         }
 
         private bool ValidateViewModel() {
@@ -81,61 +72,45 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
         }
 
         private void SaveDocumentDirectory(CancellationToken cancellationToken, IProgress<ProgressInfo> progress) {
-            var documentDirectory = _mediator
-                .Query(new GetDocumentDirectoryByPathQuery {
-                    Path = ViewModel.Path,
-                    RequireDocuments = true
-                });
+            var command = new SaveDocumentDirectoryCommand {
+                DocumentDirectoryID = ViewModel.DocumentDirectoryID,
+                Code = ViewModel.Code,
+                Label = ViewModel.Label,
+                Path = ViewModel.Path,
+                Position = ViewModel.Position
+            };
 
-            if (documentDirectory != null) {
-                ViewModel.DocumentDirectoryID = documentDirectory.DocumentDirectoryID;
-                ViewModel.Documents = documentDirectory.Documents;
-            }
+            _mediator.CommandAsync(command, cancellationToken, progress).Wait();
 
-            _mediator
-                .CommandAsync(new SaveDocumentDirectoryCommand {
-                    DocumentDirectory = ViewModel
-                }, cancellationToken, progress).Wait();
+            ViewModel.DocumentDirectoryID = command.DocumentDirectoryID;
         }
 
-        private void SaveDocumentCollection(CancellationToken cancellationToken, IProgress<ProgressInfo> progress) {
+        private void SaveDocumentDirectoryDocuments(CancellationToken cancellationToken, IProgress<ProgressInfo> progress) {
             _mediator
-                .CommandAsync(new SaveDocumentCollectionInDocumentDirectoryCommand {
-                    DocumentDirectory = ViewModel,
+                .CommandAsync(new SaveDocumentDirectoryDocumentsCommand {
+                    DocumentDirectoryID = ViewModel.DocumentDirectoryID
                 }, cancellationToken, progress).Wait();
         }
 
         private void CleanDocumentDirectory(CancellationToken cancellationToken, IProgress<ProgressInfo> progress) {
             _mediator
                 .CommandAsync(new CleanDocumentDirectoryCommand {
-                    DocumentDirectory = ViewModel
+                    DocumentDirectoryID = ViewModel.DocumentDirectoryID
                 }, cancellationToken, progress).Wait();
         }
 
         private void IndexDocumentDirectory(CancellationToken cancellationToken, IProgress<ProgressInfo> progress) {
-            if (!ViewModel.Index) { return; }
-
             _mediator
-                .CommandAsync(new IndexDocumentCollectionCommand {
-                    BatchSize = 128,
-                    Documents = ViewModel.Documents.Where(_ => !_.Indexed).Select(DocumentIndexDto.Map).ToList(),
-                    IndexName = ViewModel.Code,
+                .CommandAsync(new IndexDocumentDirectoryCommand {
+                    DocumentDirectoryID = ViewModel.DocumentDirectoryID,
+                    BatchSize = 128
                 }, cancellationToken, progress).Wait();
-        }
-
-        private void WatchDocumentDirectory(CancellationToken cancellationToken, IProgress<ProgressInfo> progress) {
-            ICommand command;
-            if (ViewModel.Watch) { command = new StartWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; }
-            else { command = new StopWatchDocumentDirectoryCommand { DocumentDirectory = ViewModel }; }
-
-            _mediator
-                .CommandAsync(command, cancellationToken, progress).Wait();
         }
 
         private void SelectDocumentDirectoryPath() {
             var path = DialogHelper.OpenFolderBrowserDialog(Resource.DocumentDirectoryForm_SelectDocumentDirectoryPath_Message);
             if (!string.IsNullOrWhiteSpace(path)) {
-                documentDirectoryPathTextBox.Text = path;
+                pathTextBox.Text = path;
             }
         }
 
@@ -147,47 +122,42 @@ namespace InfoFenix.Client.Views.DocumentDirectory {
             InitializeDefaultState();
         }
 
-        private void documentDirectoryLabelTextBox_Leave(object sender, EventArgs e) {
+        private void labelTextBox_Leave(object sender, EventArgs e) {
             if (sender is TextBox textBox) { ViewModel.Label = textBox.Text; }
         }
 
-        private void documentDirectoryLabelTextBox_TextChanged(object sender, EventArgs e) {
+        private void labelTextBox_TextChanged(object sender, EventArgs e) {
             if (sender is TextBox textBox) { ViewModel.Label = textBox.Text; }
         }
 
-        private void documentDirectoryPathTextBox_Leave(object sender, EventArgs e) {
+        private void pathTextBox_Leave(object sender, EventArgs e) {
             if (sender is TextBox textBox) { ViewModel.Path = textBox.Text; }
         }
 
-        private void documentDirectoryPathTextBox_TextChanged(object sender, EventArgs e) {
+        private void pathTextBox_TextChanged(object sender, EventArgs e) {
             if (sender is TextBox textBox) { ViewModel.Path = textBox.Text; }
         }
 
-        private void selectDocumentDirectoryPathButton_Click(object sender, EventArgs e) {
+        private void selectPathButton_Click(object sender, EventArgs e) {
             if (sender is Button button) { SelectDocumentDirectoryPath(); }
         }
 
-        private void indexDocumentDirectoryCheckBox_CheckStateChanged(object sender, EventArgs e) {
-            if (sender is CheckBox checkBox) { ViewModel.Index = checkBox.CheckState == CheckState.Checked; }
-        }
-
-        private void watchDocumentDirectoryCheckBox_CheckStateChanged(object sender, EventArgs e) {
-            if (sender is CheckBox checkBox) { ViewModel.Watch = checkBox.CheckState == CheckState.Checked; }
+        private void positionNumericUpDown_ValueChanged(object sender, EventArgs e) {
+            if (sender is NumericUpDown numericUpDown) { ViewModel.Position = Convert.ToInt32(numericUpDown.Value); }
         }
 
         private void saveAndCloseButton_Click(object sender, EventArgs e) {
             if (sender is Button button) {
                 if (!ValidateViewModel()) { return; }
 
-                var actions = new List<Action<CancellationToken, IProgress<ProgressInfo>>>();
-                actions.Add((token, progress) => SaveDocumentDirectory(token, progress));
-                if (saveUpdateDocumentsCheckBox.Checked) {
-                    actions.Add((token, progress) => SaveDocumentCollection(token, progress));
+                var actions = new List<Action<CancellationToken, IProgress<ProgressInfo>>> {
+                    (token, progress) => SaveDocumentDirectory(token, progress)
+                };
+                if (saveDocumentDirectoryDocumentsCheckBox.Checked) {
+                    actions.Add((token, progress) => SaveDocumentDirectoryDocuments(token, progress));
                     actions.Add((token, progress) => CleanDocumentDirectory(token, progress));
                     actions.Add((token, progress) => IndexDocumentDirectory(token, progress));
                 }
-                actions.Add((token, progress) => WatchDocumentDirectory(token, progress));
-
                 ProgressViewer.Display(_cancellationTokenIssuer, log: Log, actions: actions.ToArray());
 
                 DialogResult = DialogResult.OK;

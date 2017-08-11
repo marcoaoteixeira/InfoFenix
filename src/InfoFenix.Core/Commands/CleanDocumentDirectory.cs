@@ -5,12 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.CQRS;
 using InfoFenix.Core.Data;
-using InfoFenix.Core.Dto;
+using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.Search;
 using Resource = InfoFenix.Core.Resources.Resources;
+using SQL = InfoFenix.Core.Resources.Resources;
 
 namespace InfoFenix.Core.Commands {
 
@@ -18,7 +19,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public DocumentDirectoryDto DocumentDirectory { get; set; }
+        public int DocumentDirectoryID { get; set; }
 
         #endregion Public Properties
     }
@@ -62,10 +63,17 @@ namespace InfoFenix.Core.Commands {
                 var actualStep = 0;
                 var totalSteps = 0;
                 try {
-                    var filesOnDatabase = command.DocumentDirectory.Documents.Select(_ => _.Path).ToArray();
-                    var filesOnDisk = Common.GetDocFiles(command.DocumentDirectory.Path);
+                    var documentDirectory = _database.ExecuteReaderSingle(SQL.GetDocumentDirectorySQL, DocumentDirectory.Map, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
+                    });
+                    var documents = _database.ExecuteReader(SQL.ListDocumentsByDocumentDirectoryNoContentSQL, Document.Map, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
+                    });
+
+                    var filesOnDatabase = documents.Select(_ => _.Path).ToArray();
+                    var filesOnDisk = Common.GetDocumentFiles(documentDirectory.Path);
                     var removeFromDatabase = filesOnDatabase.Except(filesOnDisk).ToArray();
-                    var removeFromIndex = new List<DocumentDto>();
+                    var removeFromIndex = new List<Document>();
 
                     totalSteps = removeFromDatabase.Length + 1;
 
@@ -81,10 +89,10 @@ namespace InfoFenix.Core.Commands {
                                 cancellationToken.ThrowIfCancellationRequested();
                             }
 
-                            var document = command.DocumentDirectory.Documents.SingleOrDefault(_ => _.Path == filePath);
+                            var document = documents.SingleOrDefault(_ => _.Path == filePath);
                             _database.ExecuteNonQuery(Resource.RemoveDocumentSQL, parameters: new[] {
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID, DbType.Int32)
-                        });
+                                Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentID, document.DocumentID, DbType.Int32)
+                            });
 
                             removeFromIndex.Add(document);
                         }
@@ -95,12 +103,12 @@ namespace InfoFenix.Core.Commands {
                             cancellationToken.ThrowIfCancellationRequested();
                         }
                         transaction.Commit();
-
-                        progress.PerformStep(++actualStep, totalSteps, Resource.CleanDocumentDirectory_Progress_Step_Index_Message, command.DocumentDirectory.Label);
-                        _indexProvider
-                            .GetOrCreate(command.DocumentDirectory.Code)
-                            .DeleteDocuments(removeFromIndex.Select(_ => _.DocumentID.ToString()).ToArray());
                     }
+
+                    progress.PerformStep(++actualStep, totalSteps, Resource.CleanDocumentDirectory_Progress_Step_Index_Message, documentDirectory.Label);
+                    _indexProvider
+                        .GetOrCreate(documentDirectory.Code)
+                        .DeleteDocuments(removeFromIndex.Select(_ => _.DocumentID.ToString()).ToArray());
 
                     progress.Complete(actualStep, totalSteps);
                 } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }

@@ -24,8 +24,7 @@ namespace InfoFenix.Client.Code {
                 useRegexp = true;
             }
 
-            if (useRegexp) { HighlightTextByRegexp(source, innerText, innerColor); }
-            else { HighlightTextDefault(source, innerText, innerColor); }
+            if (useRegexp) { HighlightTextByRegexp(source, innerText, innerColor); } else { HighlightTextDefault(source, innerText, innerColor); }
 
             source.SelectionStart = selectionStart;
             source.SelectionLength = 0;
@@ -40,10 +39,17 @@ namespace InfoFenix.Client.Code {
             var index = 0;
             var startIndex = 0;
             while ((index = richTextBox.Text.IndexOf(text, startIndex, StringComparison.InvariantCultureIgnoreCase)) != -1) {
-                richTextBox.Select(index, text.Length);
-                richTextBox.SelectionBackColor = color;
+                try {
+                    richTextBox.Select((index > 0 ? index - 1 : index), text.Length + 2);
+                    startIndex = index + text.Length;
 
-                startIndex = index + text.Length;
+                    if (char.IsLetter(richTextBox.SelectedText[0]) || ((startIndex - text.Length != index) && char.IsLetter(richTextBox.SelectedText[richTextBox.SelectedText.Length - 1]))) {
+                        continue; /* IGNORES IF NOT SINGLE WORD */
+                    }
+
+                    richTextBox.Select(index, text.Length);
+                    richTextBox.SelectionBackColor = color;
+                } catch { /* ON ERROR: IGNORE */ }
             }
         }
 
@@ -63,6 +69,6 @@ namespace InfoFenix.Client.Code {
             }
         }
 
-        #endregion
+        #endregion Private Static Methods
     }
 }

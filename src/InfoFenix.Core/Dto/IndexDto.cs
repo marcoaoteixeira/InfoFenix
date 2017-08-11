@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace InfoFenix.Core.Dto {
+namespace InfoFenix.Core.Entities {
 
     public sealed class IndexDto {
 
@@ -10,9 +10,9 @@ namespace InfoFenix.Core.Dto {
         public string Label { get; set; }
         public int TotalDocuments { get; set; }
 
-        public IList<DocumentIndexDto> Documents { get; set; } = new List<DocumentIndexDto>();
+        public IList<DocumentIndexDto> DocumentsFound { get; set; } = new List<DocumentIndexDto>();
         public int TotalDocumentsFound {
-            get { return Documents.Count; }
+            get { return DocumentsFound.Count; }
         }
 
         #endregion Public Properties

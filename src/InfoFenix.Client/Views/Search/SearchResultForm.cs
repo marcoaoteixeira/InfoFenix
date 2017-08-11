@@ -1,14 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using InfoFenix.Client.Views.Shared;
-using InfoFenix.Core.Dto;
-using InfoFenix.Core.Office;
 using InfoFenix.Client.Code;
-using Resource = InfoFenix.Client.Properties.Resources;
-using InfoFenix.Core.Cqrs;
+using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
+using InfoFenix.Core.CQRS;
+using InfoFenix.Core.Entities;
 using InfoFenix.Core.Queries;
+using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views.Search {
 
@@ -58,17 +57,17 @@ namespace InfoFenix.Client.Views.Search {
         private void ShowDocument(int index) {
             if (SearchResult == null) { return; }
 
-            var documentIndex = SearchResult.Documents[index];
-            var document = _mediator.Query(new GetDocumentQuery { ID = documentIndex.DocumentID });
+            var documentIndex = SearchResult.DocumentsFound[index];
+            var document = _mediator.Query(new GetDocumentQuery {
+                ID = documentIndex.DocumentID,
+                FetchPayload = false
+            });
 
-            documentViewerRichTextBox.Text = documentIndex.Content;
-
-            //File.WriteAllBytes(_tempFilePath, document.Payload);
-            //documentViewerRichTextBox.LoadFile(_tempFilePath);
+            documentViewerRichTextBox.Text = document.Content;
 
             HighlightSearchTerms(SearchTerms);
 
-            informationLabel.Text = string.Format(Resource.SearchResultForm_InformationLabel, index + 1, SearchResult.Documents.Count);
+            informationLabel.Text = string.Format(Resource.SearchResultForm_InformationLabel, index + 1, SearchResult.DocumentsFound.Count);
             documentPathLabel.Text = string.Format(Resource.SearchResultForm_DocumentPathLabel, documentIndex.FileName);
         }
 
@@ -127,7 +126,7 @@ namespace InfoFenix.Client.Views.Search {
             var button = sender as Button;
             if (button == null) { return; }
 
-            if (_position < SearchResult.Documents.Count - 1) {
+            if (_position < SearchResult.DocumentsFound.Count - 1) {
                 _position++;
             }
             ShowDocument(_position);
@@ -139,7 +138,7 @@ namespace InfoFenix.Client.Views.Search {
             var button = sender as Button;
             if (button == null) { return; }
 
-            _position = SearchResult.Documents.Count - 1;
+            _position = SearchResult.DocumentsFound.Count - 1;
             ShowDocument(_position);
         }
 

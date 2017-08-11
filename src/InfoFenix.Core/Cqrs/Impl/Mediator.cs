@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using InfoFenix.Core.IoC;
 
-namespace InfoFenix.Core.Cqrs {
+namespace InfoFenix.Core.CQRS {
 
     public sealed class Mediator : IMediator {
 

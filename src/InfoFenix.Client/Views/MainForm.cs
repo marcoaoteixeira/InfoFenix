@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using InfoFenix.Client.Code;
 using InfoFenix.Client.Views.DocumentDirectory;
@@ -7,123 +6,29 @@ using InfoFenix.Client.Views.Home;
 using InfoFenix.Client.Views.Manage;
 using InfoFenix.Client.Views.Search;
 using InfoFenix.Core;
-using InfoFenix.Core.Commands;
-using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.Dto;
-using InfoFenix.Core.PubSub;
-using InfoFenix.Core.Queries;
 using Resource = InfoFenix.Client.Properties.Resources;
 
 namespace InfoFenix.Client.Views {
 
     public partial class MainForm : Form {
 
-        #region Private Static Read-Only Fields
-
-        private static readonly object SyncLock = new object();
-
-        #endregion Private Static Read-Only Fields
-
         #region Private Read-Only Fields
 
-        private readonly CancellationTokenIssuer _cancellationTokenIssuer;
         private readonly IFormManager _formManager;
-        private readonly IMediator _mediator;
-        private readonly IPublisherSubscriber _publisherSubscriber;
 
         #endregion Private Read-Only Fields
 
-        #region Private Fields
-
-        private ISubscription<DirectoryContentChangeNotification> _directoryContentChangeSubscription;
-        private IProgress<ProgressInfo> _progress;
-
-        private Stack<DirectoryContentChangeNotification> _notifications = new Stack<DirectoryContentChangeNotification>();
-        private System.Timers.Timer _timer = new System.Timers.Timer();
-
-        #endregion Private Fields
-
         #region Public Constructors
 
-        public MainForm(CancellationTokenIssuer cancellationTokenIssuer, IFormManager formManager, IMediator mediator, IPublisherSubscriber publisherSubscriber) {
-            Prevent.ParameterNull(cancellationTokenIssuer, nameof(cancellationTokenIssuer));
+        public MainForm(IFormManager formManager) {
             Prevent.ParameterNull(formManager, nameof(formManager));
-            Prevent.ParameterNull(mediator, nameof(mediator));
-            Prevent.ParameterNull(publisherSubscriber, nameof(publisherSubscriber));
 
-            _cancellationTokenIssuer = cancellationTokenIssuer;
             _formManager = formManager;
-            _mediator = mediator;
-            _publisherSubscriber = publisherSubscriber;
-
-            _progress = new Progress<ProgressInfo>(NotifyProcess);
 
             InitializeComponent();
-            Initialize();
         }
 
         #endregion Public Constructors
-
-        #region Private Methods
-
-        private void Initialize() {
-            SubscribeForNotifications();
-
-            _timer.Enabled = false;
-            _timer.Interval = 1 * 1000 /* 1 sec. */;
-            _timer.Elapsed += TimerElapsedHandler;
-        }
-
-        private void SubscribeForNotifications() {
-            _directoryContentChangeSubscription = _publisherSubscriber.Subscribe<DirectoryContentChangeNotification>(DirectoryContentChangeHandler);
-        }
-
-        private void UnsubscribeFromNotifications() {
-            _publisherSubscriber.Unsubscribe(_directoryContentChangeSubscription);
-        }
-
-        private void DirectoryContentChangeHandler(DirectoryContentChangeNotification message) {
-            if (message.Changes == DirectoryContentChangeNotification.ChangeTypes.Created ||
-                message.Changes == DirectoryContentChangeNotification.ChangeTypes.Changed) {
-                lock (SyncLock) {
-                    _notifications.Push(message);
-                    _timer.Stop();
-                    _timer.Start();
-                }
-            }
-        }
-
-        private void ProcessDocumentDirectoryChange(string watchingPath, string fullPath, IProgress<ProgressInfo> progress) {
-            var document = _mediator.Query(new GetDocumentDirectoryContentChangeQuery {
-                DocumentDirectoryPath = watchingPath,
-                DocumentPath = fullPath
-            });
-
-            _mediator.Command(new SaveDocumentCommand {
-                Document = document
-            }, _progress);
-
-            _mediator.Command(new IndexDocumentCommand {
-                IndexName = document.DocumentDirectory.Code,
-                DocumentIndex = DocumentIndexDto.Map(document)
-            }, _progress);
-        }
-
-        private void NotifyProcess(ProgressInfo info) {
-            switch (info.State) {
-                case ProgressState.PerformStep:
-                    informationToolStripStatusLabel.Text = info.Message;
-                    break;
-
-                case ProgressState.Cancel:
-                case ProgressState.Complete:
-                case ProgressState.Error:
-                    informationToolStripStatusLabel.Text = string.Empty;
-                    break;
-            }
-        }
-
-        #endregion Private Methods
 
         #region Event Handlers
 
@@ -142,8 +47,6 @@ namespace InfoFenix.Client.Views {
                 e.Cancel = true;
                 return;
             }
-
-            UnsubscribeFromNotifications();
         }
 
         private void searchToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -168,16 +71,6 @@ namespace InfoFenix.Client.Views {
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
             Close();
-        }
-
-        private void TimerElapsedHandler(object sender, System.Timers.ElapsedEventArgs e) {
-            lock (SyncLock) {
-                while (_notifications.Count != 0) {
-                    var notification = _notifications.Pop();
-                    ProcessDocumentDirectoryChange(notification.WatchingPath, notification.FullPath, _progress);
-                }
-            }
-            _timer.Enabled = false;
         }
 
         #endregion Event Handlers

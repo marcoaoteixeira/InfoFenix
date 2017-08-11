@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Core.Cqrs {
+﻿namespace InfoFenix.Core.CQRS {
     public interface ICommand {
     }
 }

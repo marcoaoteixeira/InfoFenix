@@ -3,7 +3,6 @@
     [document_directory_id],
     [code],
     [content],
-    [payload],
     [path],
     [last_write_time],
     [index]

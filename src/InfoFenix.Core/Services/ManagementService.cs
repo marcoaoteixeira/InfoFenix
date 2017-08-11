@@ -2,7 +2,6 @@
 using System.IO;
 using System.IO.Compression;
 using InfoFenix.Core.Data;
-using InfoFenix.Core.IO;
 using InfoFenix.Core.Search;
 
 namespace InfoFenix.Core.Services {
@@ -11,7 +10,6 @@ namespace InfoFenix.Core.Services {
 
         #region Private Read-Only Fields
 
-        private readonly IAppSettings _appSettings;
         private readonly IDatabase _database;
         private readonly IIndexProvider _indexProvider;
 
@@ -19,12 +17,10 @@ namespace InfoFenix.Core.Services {
 
         #region Public Constructors
 
-        public ManagementService(IAppSettings appSettings, IDatabase database, IIndexProvider indexProvider) {
-            Prevent.ParameterNull(appSettings, nameof(appSettings));
+        public ManagementService(IDatabase database, IIndexProvider indexProvider) {
             Prevent.ParameterNull(database, nameof(database));
             Prevent.ParameterNull(indexProvider, nameof(indexProvider));
 
-            _appSettings = appSettings;
             _database = database;
             _indexProvider = indexProvider;
         }
@@ -34,7 +30,7 @@ namespace InfoFenix.Core.Services {
         #region IManagementService Members
 
         public void BackupDatabase(string outputPath) {
-            if (_appSettings.UseRemoteSearchDatabase) {
+            if (AppSettings.Instance.UseRemoteSearchDatabase) {
                 throw new InvalidOperationException("Não é possível realizar o backup na máquina cliente.");
             }
 
@@ -45,13 +41,13 @@ namespace InfoFenix.Core.Services {
             var tempDirectory = Path.Combine(Path.GetTempPath(), "InfoFenixBkp");
 
             // Now Create all of the directories
-            foreach (var directory in Directory.GetDirectories(_appSettings.ApplicationDataDirectoryPath, "*", SearchOption.AllDirectories)) {
-                Directory.CreateDirectory(directory.Replace(_appSettings.ApplicationDataDirectoryPath, tempDirectory));
+            foreach (var directory in Directory.GetDirectories(AppSettings.Instance.ApplicationDataDirectoryPath, "*", SearchOption.AllDirectories)) {
+                Directory.CreateDirectory(directory.Replace(AppSettings.Instance.ApplicationDataDirectoryPath, tempDirectory));
             }
 
             // Copy all the files & Replaces any files with the same name
-            foreach (var file in Directory.GetFiles(_appSettings.ApplicationDataDirectoryPath, "*.*", SearchOption.AllDirectories)) {
-                File.Copy(file, file.Replace(_appSettings.ApplicationDataDirectoryPath, tempDirectory), true);
+            foreach (var file in Directory.GetFiles(AppSettings.Instance.ApplicationDataDirectoryPath, "*.*", SearchOption.AllDirectories)) {
+                File.Copy(file, file.Replace(AppSettings.Instance.ApplicationDataDirectoryPath, tempDirectory), true);
             }
 
             var filePath = Path.Combine(outputPath, string.Format("{0:yyyyMMdd_HHmmss}_info_fenix_db.zip", DateTime.Now));
@@ -62,7 +58,7 @@ namespace InfoFenix.Core.Services {
         }
 
         public void RestoreDatabase(string inputPath) {
-            if (_appSettings.UseRemoteSearchDatabase) {
+            if (AppSettings.Instance.UseRemoteSearchDatabase) {
                 throw new InvalidOperationException("Não é possível realizar a restauração a partir da máquina cliente.");
             }
 
@@ -79,9 +75,9 @@ namespace InfoFenix.Core.Services {
             }
 
             // Delete all current files
-            Directory.Delete(_appSettings.ApplicationDataDirectoryPath, recursive: true);
+            Directory.Delete(AppSettings.Instance.ApplicationDataDirectoryPath, recursive: true);
 
-            ZipFile.ExtractToDirectory(inputPath, _appSettings.ApplicationDataDirectoryPath);
+            ZipFile.ExtractToDirectory(inputPath, AppSettings.Instance.ApplicationDataDirectoryPath);
         }
 
         #endregion IManagementService Members

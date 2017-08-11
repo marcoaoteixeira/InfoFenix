@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.Dto;
-using InfoFenix.Core.PubSub;
+using InfoFenix.Core.CQRS;
+using InfoFenix.Core.Entities;
 using InfoFenix.Core.Search;
 
 namespace InfoFenix.Core.Queries {
@@ -114,7 +113,7 @@ namespace InfoFenix.Core.Queries {
                     var searchBuilder = CreateSearchBuilder(index, positiveTerms, negativeTerms);
                     var documents = ExecuteSearch(index, searchBuilder, indexDto.Label);
 
-                    indexDto.Documents = documents.ToList();
+                    indexDto.DocumentsFound = documents.ToList();
                 }
 
                 return searchDto;

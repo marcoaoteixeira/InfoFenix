@@ -1,7 +1,6 @@
-﻿using System.Text;
-using InfoFenix.Core.Search;
+﻿using InfoFenix.Core.Search;
 
-namespace InfoFenix.Core.Dto {
+namespace InfoFenix.Core.Entities {
 
     public sealed class DocumentIndexDto {
 
@@ -10,8 +9,8 @@ namespace InfoFenix.Core.Dto {
         public int DocumentID { get; set; }
         public int DocumentCode { get; set; }
         public string DocumentDirectoryCode { get; set; }
-        public string FileName { get; set; }
         public string Content { get; set; }
+        public string FileName { get; set; }
 
         #endregion Public Properties
 
@@ -21,8 +20,8 @@ namespace InfoFenix.Core.Dto {
             return new DocumentIndex(DocumentID.ToString())
                 .Set(Common.DocumentIndex.FieldNames.DocumentCode, DocumentCode, DocumentIndexOptions.Store)
                 .Set(Common.DocumentIndex.FieldNames.DocumentDirectoryCode, DocumentDirectoryCode, DocumentIndexOptions.Store)
-                .Set(Common.DocumentIndex.FieldNames.FileName, FileName, DocumentIndexOptions.Store)
-                .Set(Common.DocumentIndex.FieldNames.Content, Content ?? string.Empty, DocumentIndexOptions.Analyze | DocumentIndexOptions.Store);
+                .Set(Common.DocumentIndex.FieldNames.Content, Content ?? string.Empty, DocumentIndexOptions.Analyze | DocumentIndexOptions.Store)
+                .Set(Common.DocumentIndex.FieldNames.FileName, FileName, DocumentIndexOptions.Store);
         }
 
         #endregion Public Methods
@@ -34,18 +33,7 @@ namespace InfoFenix.Core.Dto {
                 DocumentID = int.Parse(searchHit.DocumentID),
                 DocumentCode = searchHit.GetInt(Common.DocumentIndex.FieldNames.DocumentCode),
                 DocumentDirectoryCode = searchHit.GetString(Common.DocumentIndex.FieldNames.DocumentDirectoryCode),
-                FileName = searchHit.GetString(Common.DocumentIndex.FieldNames.FileName),
-                Content = searchHit.GetString(Common.DocumentIndex.FieldNames.Content) ?? string.Empty
-            };
-        }
-
-        public static DocumentIndexDto Map(DocumentDto documentDto) {
-            return new DocumentIndexDto {
-                DocumentID = documentDto.DocumentID,
-                DocumentCode = documentDto.Code,
-                DocumentDirectoryCode = documentDto.DocumentDirectory.Code,
-                FileName = documentDto.FileName,
-                Content = documentDto.Content ?? string.Empty
+                FileName = searchHit.GetString(Common.DocumentIndex.FieldNames.FileName)
             };
         }
 

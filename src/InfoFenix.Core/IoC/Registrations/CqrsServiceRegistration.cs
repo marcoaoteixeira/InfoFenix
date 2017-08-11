@@ -1,14 +1,14 @@
 ﻿using System.Reflection;
 using Autofac;
-using InfoFenix.Core.Cqrs;
-using InfoFenix.Core.IoC;
+using InfoFenix.Core.CQRS;
 
 namespace InfoFenix.Core.IoC {
-    public sealed class CqrsServiceRegistration : ServiceRegistrationBase {
+
+    public sealed class CQRSServiceRegistration : ServiceRegistrationBase {
 
         #region Public Constructors
 
-        public CqrsServiceRegistration(params Assembly[] supportAssemblies)
+        public CQRSServiceRegistration(params Assembly[] supportAssemblies)
             : base(supportAssemblies) { }
 
         #endregion Public Constructors

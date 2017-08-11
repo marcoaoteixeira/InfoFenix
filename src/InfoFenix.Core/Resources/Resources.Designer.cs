@@ -116,19 +116,17 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE IF NOT EXISTS [document_directories] (
-        ///    [id]    INTEGER PRIMARY KEY AUTOINCREMENT,
-        ///    [label] TEXT                NOT NULL,
-        ///    [path]  TEXT                NOT NULL,
-        ///    [code]  TEXT                NOT NULL,
-        ///    [watch] INTEGER             NOT NULL,
-        ///    [index] INTEGER             NOT NULL,
+        ///    [document_directory_id] INTEGER PRIMARY KEY AUTOINCREMENT,
+        ///    [code]                  TEXT                NOT NULL,
+        ///    [label]                 TEXT                NOT NULL,
+        ///    [path]                  TEXT                NOT NULL,
+        ///    [position]              INTEGER             NOT NULL,
         ///
         ///    CONSTRAINT [UQ_document_directory_path] UNIQUE ([path])
         ///);
         ///
         ///CREATE TABLE IF NOT EXISTS [documents] (
-        ///    [id]                    INTEGER PRIMARY KEY AUTOINCREMENT,
-        ///    [document_directo [rest of string was truncated]&quot;;.
+        ///    [document_id]           INTEGER PRIMARY KEY  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CreateSchemaSQL {
             get {
@@ -147,64 +145,33 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    [id],
-        ///    [document_directory_id],
-        ///    [path],
-        ///    [last_write_time],
-        ///    [code],
-        ///    [indexed],
-        ///    [payload]
+        ///    COUNT([document_id])
         ///FROM [documents]
         ///WHERE
-        ///    [path] = @path.
+        ///    [document_directory_id] = @document_directory_id.
         /// </summary>
-        internal static string GetDocumentByPathSQL {
+        internal static string GetDocumentCountByDocumentDirectorySQL {
             get {
-                return ResourceManager.GetString("GetDocumentByPathSQL", resourceCulture);
+                return ResourceManager.GetString("GetDocumentCountByDocumentDirectorySQL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    [document_directories].[id],
+        ///    [document_directories].[document_directory_id],
+        ///    [document_directories].[code],
         ///    [document_directories].[label],
         ///    [document_directories].[path],
-        ///    [document_directories].[code],
-        ///    [document_directories].[watch],
-        ///    [document_directories].[index],
+        ///    [document_directories].[position],
         ///    (SELECT
-        ///        COUNT([documents].[id])
+        ///        COUNT([documents].[document_id])
         ///     FROM [documents]
         ///     WHERE
-        ///        [documents].[document_directory_id] = [document_directories].[id]
+        ///        [documents].[document_directory_id] = [document_directories].[document_directory_id]
         ///    ) AS [total_documents]
         ///FROM [document_directories]
         ///WHERE
-        ///    [document_directories].[path] = @path;.
-        /// </summary>
-        internal static string GetDocumentDirectoryByPathSQL {
-            get {
-                return ResourceManager.GetString("GetDocumentDirectoryByPathSQL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SELECT
-        ///    [document_directories].[id],
-        ///    [document_directories].[label],
-        ///    [document_directories].[path],
-        ///    [document_directories].[code],
-        ///    [document_directories].[watch],
-        ///    [document_directories].[index],
-        ///    (SELECT
-        ///        COUNT([documents].[id])
-        ///     FROM [documents]
-        ///     WHERE
-        ///        [documents].[document_directory_id] = [document_directories].[id]
-        ///    ) AS [total_documents]
-        ///FROM [document_directories]
-        ///WHERE
-        ///    [document_directories].[id] = @id;.
+        ///    [document_directories].[document_directory_id] = @ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetDocumentDirectorySQL {
             get {
@@ -214,21 +181,42 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    [id],
+        ///    [document_id],
         ///    [document_directory_id],
+        ///    [code],
+        ///    [content],
+        ///    [payload],
         ///    [path],
         ///    [last_write_time],
-        ///    [code],
-        ///    [indexed],
-        ///    [payload]
+        ///    [index]
         ///FROM [documents]
         ///WHERE
-        ///    (@id IS NULL OR ([id] = @id))
+        ///    (@document_id IS NULL OR ([document_id] = @document_id))
         ///AND (@code IS NULL OR ([code] = @code)).
         /// </summary>
         internal static string GetDocumentSQL {
             get {
                 return ResourceManager.GetString("GetDocumentSQL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    [document_id],
+        ///    [document_directory_id],
+        ///    [code],
+        ///    [content],
+        ///    [path],
+        ///    [last_write_time],
+        ///    [index]
+        ///FROM [documents]
+        ///WHERE
+        ///    (@document_id IS NULL OR ([document_id] = @document_id))
+        ///AND (@code IS NULL OR ([code] = @code)).
+        /// </summary>
+        internal static string GetDocumentSQLWithoutPayloadSQL {
+            get {
+                return ResourceManager.GetString("GetDocumentSQLWithoutPayloadSQL", resourceCulture);
             }
         }
         
@@ -262,38 +250,37 @@ namespace InfoFenix.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Indexar Documentos.
         /// </summary>
-        internal static string IndexDocumentCollection_Progress_Start_Title {
+        internal static string IndexDocumentDirectory_Progress_Start_Title {
             get {
-                return ResourceManager.GetString("IndexDocumentCollection_Progress_Start_Title", resourceCulture);
+                return ResourceManager.GetString("IndexDocumentDirectory_Progress_Start_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Indexando documento: {0}.
         /// </summary>
-        internal static string IndexDocumentCollection_Progress_Step_Message {
+        internal static string IndexDocumentDirectory_Progress_Step_Message {
             get {
-                return ResourceManager.GetString("IndexDocumentCollection_Progress_Step_Message", resourceCulture);
+                return ResourceManager.GetString("IndexDocumentDirectory_Progress_Step_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    [document_directories].[id],
+        ///    [document_directories].[document_directory_id],
+        ///    [document_directories].[code],
         ///    [document_directories].[label],
         ///    [document_directories].[path],
-        ///    [document_directories].[code],
-        ///    [document_directories].[watch],
-        ///    [document_directories].[index],
+        ///    [document_directories].[position],
         ///    (SELECT
-        ///        COUNT([documents].[id])
+        ///        COUNT([documents].[document_id])
         ///     FROM [documents]
         ///     WHERE
-        ///        [documents].[document_directory_id] = [document_directories].[id]
+        ///        [documents].[document_directory_id] = [document_directories].[document_directory_id]
         ///    ) AS [total_documents]
         ///FROM [document_directories]
         ///WHERE
-        ///    (@label IS NULL OR ([document_directories].[label] LIKE &apos;%&apos; + @ [rest of string was truncated]&quot;;.
+        ///    (@code IS NULL OR ([document_directories].[code] L [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ListDocumentDirectoriesSQL {
             get {
@@ -303,21 +290,42 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///    [documents].[id],
+        ///    [documents].[document_id],
         ///    [documents].[document_directory_id],
+        ///    [documents].[code],
         ///    [documents].[path],
         ///    [documents].[last_write_time],
-        ///    [documents].[code],
-        ///    [documents].[indexed],
-        ///    [documents].[payload]
+        ///    [documents].[index]
         ///FROM [documents]
-        ///    INNER JOIN [document_directories] ON [document_directories].[id] = [documents].[document_directory_id]
+        ///    INNER JOIN [document_directories] ON [document_directories].[document_directory_id] = [documents].[document_directory_id]
         ///WHERE
-        ///    [document_directories].[id] = @document_directory_id;.
+        ///    [document_directories].[document_directory_id] = @document_directory_id;.
         /// </summary>
-        internal static string ListDocumentsByDocumentDirectorySQL {
+        internal static string ListDocumentsByDocumentDirectoryNoContentSQL {
             get {
-                return ResourceManager.GetString("ListDocumentsByDocumentDirectorySQL", resourceCulture);
+                return ResourceManager.GetString("ListDocumentsByDocumentDirectoryNoContentSQL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    [documents].[document_id],
+        ///    [documents].[document_directory_id],
+        ///    [documents].[code],
+        ///    [documents].[content],
+        ///    [documents].[payload],
+        ///    [documents].[path],
+        ///    [documents].[last_write_time],
+        ///    [documents].[index]
+        ///FROM [documents]
+        ///    INNER JOIN [document_directories] ON [document_directories].[document_directory_id] = [documents].[document_directory_id]
+        ///WHERE
+        ///    [document_directories].[document_directory_id] = @document_directory_id
+        ///AND (@index IS NULL OR ([documents [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string PaginateDocumentsByDocumentDirectorySQL {
+            get {
+                return ResourceManager.GetString("PaginateDocumentsByDocumentDirectorySQL", resourceCulture);
             }
         }
         
@@ -490,7 +498,7 @@ namespace InfoFenix.Core.Resources {
         ///
         ///DELETE FROM [document_directories]
         ///WHERE
-        ///    [id] = @document_directory_id;.
+        ///    [document_directory_id] = @document_directory_id;.
         /// </summary>
         internal static string RemoveDocumentDirectorySQL {
             get {
@@ -502,7 +510,7 @@ namespace InfoFenix.Core.Resources {
         ///   Looks up a localized string similar to DELETE
         ///FROM [documents]
         ///WHERE
-        ///    [id] = @id;.
+        ///    [document_id] = @document_id;.
         /// </summary>
         internal static string RemoveDocumentSQL {
             get {
@@ -547,24 +555,6 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Salvar Documentos do Diretório de Documentos.
-        /// </summary>
-        internal static string SaveDocumentCollectionInDocumentDirectory_Progress_Start_Title {
-            get {
-                return ResourceManager.GetString("SaveDocumentCollectionInDocumentDirectory_Progress_Start_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Salvando documento: {0}.
-        /// </summary>
-        internal static string SaveDocumentCollectionInDocumentDirectory_Progress_Step_Message {
-            get {
-                return ResourceManager.GetString("SaveDocumentCollectionInDocumentDirectory_Progress_Step_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Salvar Diretório de Documentos.
         /// </summary>
         internal static string SaveDocumentDirectory_Progress_Start_Title {
@@ -583,22 +573,38 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Salvar Documentos do Diretório de Documentos.
+        /// </summary>
+        internal static string SaveDocumentDirectoryDocuments_Progress_Start_Title {
+            get {
+                return ResourceManager.GetString("SaveDocumentDirectoryDocuments_Progress_Start_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salvando documento: {0}.
+        /// </summary>
+        internal static string SaveDocumentDirectoryDocuments_Progress_Step_Message {
+            get {
+                return ResourceManager.GetString("SaveDocumentDirectoryDocuments_Progress_Step_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT OR REPLACE INTO [document_directories] (
-        ///    [id],
+        ///    [document_directory_id],
+        ///    [code],
         ///    [label],
         ///    [path],
-        ///    [code],
-        ///    [watch],
-        ///    [index]
+        ///    [position]
         ///) VALUES (
-        ///    @id,
+        ///    @document_directory_id,
+        ///    @code,
         ///    @label,
         ///    @path,
-        ///    @code,
-        ///    @watch,
-        ///    @index
+        ///    @position
         ///);
-        ///SELECT MAX([id]) FROM [document_directories].
+        ///SELECT MAX([document_directory_id]) FROM [document_directories].
         /// </summary>
         internal static string SaveDocumentDirectorySQL {
             get {
@@ -608,23 +614,25 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to INSERT OR REPLACE INTO [documents] (
-        ///    [id],
+        ///    [document_id],
         ///    [document_directory_id],
+        ///    [code],
+        ///    [content],
+        ///    [payload],
         ///    [path],
         ///    [last_write_time],
-        ///    [code],
-        ///    [indexed],
-        ///    [payload]
+        ///    [index]
         ///) VALUES (
-        ///    @id,
+        ///    @document_id,
         ///    @document_directory_id,
+        ///    @code,
+        ///    @content,
+        ///    @payload,
         ///    @path,
         ///    @last_write_time,
-        ///    @code,
-        ///    @indexed,
-        ///    @payload
+        ///    @index
         ///);
-        ///SELECT MAX([id]) FROM [documents];.
+        ///SELECT MAX([document_id]) FROM [documents];.
         /// </summary>
         internal static string SaveDocumentSQL {
             get {
@@ -661,9 +669,9 @@ namespace InfoFenix.Core.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE [documents] SET
-        ///    [indexed] = 1
+        ///    [index] = 1
         ///WHERE
-        ///    [id] = @id.
+        ///    [document_id] = @document_id;.
         /// </summary>
         internal static string SetDocumentIndexSQL {
             get {

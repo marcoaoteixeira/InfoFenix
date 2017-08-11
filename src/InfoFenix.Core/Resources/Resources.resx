@@ -139,29 +139,20 @@
   <data name="CreateSchemaSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\createschemasql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetDocumentByPathSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\getdocumentbypathsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetDocumentDirectoryByPathSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\documentdirectory\getdocumentdirectorybypathsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="GetDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\getdocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\getdocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="IndexDocumentCollection_Progress_Step_Message" xml:space="preserve">
+  <data name="IndexDocumentDirectory_Progress_Step_Message" xml:space="preserve">
     <value>Indexando documento: {0}</value>
   </data>
-  <data name="IndexDocumentCollection_Progress_Start_Title" xml:space="preserve">
+  <data name="IndexDocumentDirectory_Progress_Start_Title" xml:space="preserve">
     <value>Indexar Documentos</value>
   </data>
   <data name="ListDocumentDirectoriesSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\listdocumentdirectoriessql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ListDocumentsByDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\listdocumentsbydocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="ProgressiveTaskCancelNotification_Message" xml:space="preserve">
     <value>Tarefa cancelada!</value>
@@ -198,9 +189,6 @@
   </data>
   <data name="RemoveDocumentDirectory_Progress_Start_Title" xml:space="preserve">
     <value>Remover Diretório de Documentos</value>
-  </data>
-  <data name="RemoveDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\removedocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="RemoveDocument_Progress_Step_Database_Message" xml:space="preserve">
     <value>Removendo documento da base de dados: {0}</value>
@@ -244,9 +232,6 @@
   <data name="SearchDocumentIndex_Progress_Start_Title" xml:space="preserve">
     <value>Pesquisar Índices</value>
   </data>
-  <data name="SetDocumentIndexSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\document\setdocumentindexsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="StartWatchDocumentDirectory_Progress_Step_Message" xml:space="preserve">
     <value>Observando diretório de documentos: {0}</value>
   </data>
@@ -271,10 +256,10 @@
   <data name="Progress_PerformStep" xml:space="preserve">
     <value>Executando passo {0} da tarefa...</value>
   </data>
-  <data name="SaveDocumentCollectionInDocumentDirectory_Progress_Start_Title" xml:space="preserve">
+  <data name="SaveDocumentDirectoryDocuments_Progress_Start_Title" xml:space="preserve">
     <value>Salvar Documentos do Diretório de Documentos</value>
   </data>
-  <data name="SaveDocumentCollectionInDocumentDirectory_Progress_Step_Message" xml:space="preserve">
+  <data name="SaveDocumentDirectoryDocuments_Progress_Step_Message" xml:space="preserve">
     <value>Salvando documento: {0}</value>
   </data>
   <data name="FatalException_Message" xml:space="preserve">
@@ -288,5 +273,23 @@
   </data>
   <data name="IndexDocument_Progress_Step_Index_Message" xml:space="preserve">
     <value>Indexando documento: {0}</value>
+  </data>
+  <data name="ListDocumentsByDocumentDirectoryNoContentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\listdocumentsbydocumentdirectorynocontentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="PaginateDocumentsByDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\paginatedocumentsbydocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="RemoveDocumentSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\removedocumentsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetDocumentCountByDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\getdocumentcountbydocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetDocumentSQLWithoutPayloadSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\getdocumentsqlwithoutpayloadsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SetDocumentIndexSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\document\setdocumentindexsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

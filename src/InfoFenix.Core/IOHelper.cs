@@ -1,6 +1,7 @@
 ﻿using System.IO;
 
-namespace InfoFenix.Core.IO {
+namespace InfoFenix.Core {
+
     public static class IOHelper {
 
         #region Public Static Methods
@@ -23,10 +24,7 @@ namespace InfoFenix.Core.IO {
 
         private static bool IsWhat(string path, FileAttributes attributes) {
             var result = false;
-            try { result = File.GetAttributes(path).HasFlag(attributes); }
-            catch (PathTooLongException) { /* ERROR: return false */ }
-            catch (FileNotFoundException) { /* ERROR: return false */ }
-            catch (DirectoryNotFoundException) { /* ERROR: return false */ }
+            try { result = File.GetAttributes(path).HasFlag(attributes); } catch (PathTooLongException) { /* ERROR: return false */ } catch (FileNotFoundException) { /* ERROR: return false */ } catch (DirectoryNotFoundException) { /* ERROR: return false */ }
             return result;
         }
 

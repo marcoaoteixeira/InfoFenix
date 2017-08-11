@@ -1,20 +1,17 @@
 ﻿using System.Data.SQLite;
 using System.IO;
 using Autofac;
-using InfoFenix.Core;
 using InfoFenix.Core.Data;
-using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Core.IoC {
+
     public sealed class DataServiceRegistration : ServiceRegistrationBase {
 
         #region Private Methods
 
         private DatabaseSettings GetDatabaseSettings(IComponentContext ctx) {
-            var appSettings = ctx.Resolve<IAppSettings>();
-
             return new DatabaseSettings {
-                ConnectionString = $"Data Source={Path.Combine(appSettings.ApplicationDataDirectoryPath, Common.DatabaseFileName)}; Version=3;",
+                ConnectionString = $"Data Source={Path.Combine(AppSettings.Instance.ApplicationDataDirectoryPath, Common.DatabaseFileName)}; Version=3;",
                 ProviderName = nameof(SQLiteFactory)
             };
         }

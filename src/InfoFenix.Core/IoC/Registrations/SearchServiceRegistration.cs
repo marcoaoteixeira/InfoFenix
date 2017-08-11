@@ -10,10 +10,8 @@ namespace InfoFenix.Core.IoC {
         #region Private Methods
 
         private LuceneSettings GetLuceneSettings(IComponentContext ctx) {
-            var appSettings = ctx.Resolve<IAppSettings>();
-
             return new LuceneSettings {
-                IndexStorageDirectoryPath = Path.Combine(appSettings.ApplicationDataDirectoryPath, Common.IndexStorageDirectoryName)
+                IndexStorageDirectoryPath = Path.Combine(AppSettings.Instance.ApplicationDataDirectoryPath, Common.IndexStorageDirectoryName)
             };
         }
 

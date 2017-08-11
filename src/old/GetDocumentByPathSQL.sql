@@ -1,12 +1,12 @@
 ﻿SELECT
-    [id],
+    [document_id],
     [document_directory_id],
+    [code],
+    [content],
+    [payload],
     [path],
     [last_write_time],
-    [code],
-    [indexed],
-    [content],
-    [payload]
+    [index]
 FROM [documents]
 WHERE
     [path] = @path

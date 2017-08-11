@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core.Cqrs {
+namespace InfoFenix.Core.CQRS {
 
     public static class ProgressExtension {
 

@@ -2,9 +2,9 @@
 using System.Reflection;
 using Autofac;
 using InfoFenix.Core.Bootstrap;
-using InfoFenix.Core.IoC;
 
 namespace InfoFenix.Core.IoC {
+
     public sealed class BootstrapServiceRegistration : ServiceRegistrationBase {
 
         #region Public Constructors
@@ -21,7 +21,7 @@ namespace InfoFenix.Core.IoC {
                 .RegisterType<Bootstrapper>()
                 .As<IBootstrapper>()
                 .SingleInstance();
-            
+
             Builder
                 .RegisterAssemblyTypes(SupportAssemblies)
                 .Where(_ => _.IsAssignableTo<ActionBase>())

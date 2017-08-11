@@ -15,6 +15,6 @@
     @payload,
     @path,
     @last_write_time,
-    @index
+    @must_index
 );
 SELECT MAX([document_id]) FROM [documents];

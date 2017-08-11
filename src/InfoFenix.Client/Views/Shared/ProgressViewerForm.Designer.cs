@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using InfoFenix.Client.Views.Shared;
 using InfoFenix.Core;
-using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.CQRS;
 
 namespace InfoFenix.Client.Views.Shared {
     partial class ProgressViewerForm {

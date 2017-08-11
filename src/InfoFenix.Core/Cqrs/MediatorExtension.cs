@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace InfoFenix.Core.Cqrs {
+namespace InfoFenix.Core.CQRS {
 
     public static class MediatorExtension {
 
@@ -10,7 +10,7 @@ namespace InfoFenix.Core.Cqrs {
         public static void Command(this IMediator source, ICommand command, IProgress<ProgressInfo> progress = null) {
             if (source == null) { return; }
 
-            source.CommandAsync(command, CancellationToken.None, progress).WaitForResult();
+            source.CommandAsync(command, CancellationToken.None, progress).Wait();
         }
 
         public static TResult Query<TResult>(this IMediator source, IQuery<TResult> query) {

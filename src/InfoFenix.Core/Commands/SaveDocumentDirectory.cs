@@ -2,9 +2,8 @@
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.CQRS;
 using InfoFenix.Core.Data;
-using InfoFenix.Core.Dto;
 using InfoFenix.Core.Logging;
 using Resource = InfoFenix.Core.Resources.Resources;
 
@@ -14,7 +13,11 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public DocumentDirectoryDto DocumentDirectory { get; set; }
+        public int DocumentDirectoryID { get; set; }
+        public string Code { get; set; }
+        public string Label { get; set; }
+        public string Path { get; set; }
+        public int Position { get; set; }
 
         #endregion Public Properties
     }
@@ -65,17 +68,16 @@ namespace InfoFenix.Core.Commands {
                             cancellationToken.ThrowIfCancellationRequested();
                         }
 
-                        progress.PerformStep(++actualStep, totalSteps, Resource.SaveDocumentDirectory_Progress_Step_Message, command.DocumentDirectory.Label);
+                        progress.PerformStep(++actualStep, totalSteps, Resource.SaveDocumentDirectory_Progress_Step_Message, command.Label);
 
                         var result = _database.ExecuteScalar(Resource.SaveDocumentDirectorySQL, parameters: new[] {
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID != 0 ? (object)command.DocumentDirectory.DocumentDirectoryID : DBNull.Value, DbType.Int32),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Label, command.DocumentDirectory.Label),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Path, command.DocumentDirectory.Path),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Code, command.DocumentDirectory.Code),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Watch, command.DocumentDirectory.Watch ? 1 : 0, DbType.Int32),
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Index, command.DocumentDirectory.Index ? 1 : 0, DbType.Int32)
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID != 0 ? (object)command.DocumentDirectoryID : DBNull.Value, DbType.Int32),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Code, command.Code),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Label, command.Label),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Path, command.Path),
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.Position, command.Position, DbType.Int32)
                         });
-                        if (command.DocumentDirectory.DocumentDirectoryID <= 0) { command.DocumentDirectory.DocumentDirectoryID = Convert.ToInt32(result); }
+                        if (command.DocumentDirectoryID <= 0) { command.DocumentDirectoryID = Convert.ToInt32(result); }
 
                         if (cancellationToken.IsCancellationRequested) {
                             progress.Cancel(actualStep, totalSteps);

@@ -4,4 +4,4 @@ WHERE
 
 DELETE FROM [document_directories]
 WHERE
-    [id] = @document_directory_id;
+    [document_directory_id] = @document_directory_id;

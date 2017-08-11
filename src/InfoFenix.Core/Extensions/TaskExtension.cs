@@ -14,12 +14,6 @@ namespace InfoFenix.Core {
             return source.Result;
         }
 
-        public static void WaitForResult(this Task source) {
-            if (source == null) { return; }
-
-            source.Wait();
-        }
-
         #endregion Public Static Methods
     }
 }

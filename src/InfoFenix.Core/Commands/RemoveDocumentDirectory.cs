@@ -2,9 +2,9 @@
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using InfoFenix.Core.Cqrs;
+using InfoFenix.Core.CQRS;
 using InfoFenix.Core.Data;
-using InfoFenix.Core.Dto;
+using InfoFenix.Core.Entities;
 using InfoFenix.Core.Logging;
 using InfoFenix.Core.Search;
 using Resource = InfoFenix.Core.Resources.Resources;
@@ -15,7 +15,7 @@ namespace InfoFenix.Core.Commands {
 
         #region Public Properties
 
-        public DocumentDirectoryDto DocumentDirectory { get; set; }
+        public int DocumentDirectoryID { get; set; }
 
         #endregion Public Properties
     }
@@ -62,11 +62,15 @@ namespace InfoFenix.Core.Commands {
                 try {
                     progress.Start(totalSteps, Resource.RemoveDocumentDirectory_Progress_Start_Title);
 
+                    var documentDirectory = _database.ExecuteReaderSingle(Resource.GetDocumentDirectorySQL, DocumentDirectory.Map, parameters: new[] {
+                        Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
+                    });
+
                     using (var transaction = _database.Connection.BeginTransaction()) {
-                        progress.PerformStep(++actualStep, totalSteps, Resource.RemoveDocumentDirectory_Progress_Step_Database_Message, command.DocumentDirectory.Label);
+                        progress.PerformStep(++actualStep, totalSteps, Resource.RemoveDocumentDirectory_Progress_Step_Database_Message, documentDirectory.Label);
 
                         _database.ExecuteScalar(Resource.RemoveDocumentDirectorySQL, parameters: new[] {
-                            Parameter.CreateInputParameter(Common.DatabaseSchema.Documents.DocumentDirectoryID, command.DocumentDirectory.DocumentDirectoryID, DbType.Int32)
+                            Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, documentDirectory.DocumentDirectoryID, DbType.Int32)
                         });
 
                         if (cancellationToken.IsCancellationRequested) {
@@ -75,12 +79,11 @@ namespace InfoFenix.Core.Commands {
                             cancellationToken.ThrowIfCancellationRequested();
                         }
                         transaction.Commit();
-
-                        progress.PerformStep(++actualStep, totalSteps, Resource.RemoveDocumentDirectory_Progress_Step_Index_Message, command.DocumentDirectory.Label);
-
-                        _indexProvider
-                            .Delete(command.DocumentDirectory.Code);
                     }
+
+                    progress.PerformStep(++actualStep, totalSteps, Resource.RemoveDocumentDirectory_Progress_Step_Index_Message, documentDirectory.Label);
+                    _indexProvider
+                        .Delete(documentDirectory.Code);
 
                     progress.Complete(actualStep, totalSteps);
                 } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }

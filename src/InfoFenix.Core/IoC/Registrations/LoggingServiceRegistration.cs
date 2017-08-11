@@ -9,6 +9,7 @@ using InfoFenix.Core.IoC;
 using InfoFenix.Core.Logging;
 
 namespace InfoFenix.Core.IoC {
+
     public sealed class LoggingServiceRegistration : ServiceRegistrationBase {
 
         #region Public Override Methods

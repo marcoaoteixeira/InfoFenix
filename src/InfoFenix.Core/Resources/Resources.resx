@@ -136,9 +136,6 @@
     <value>Removendo documentos do índice "{0}".</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="CreateSchemaSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\createschemasql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="GetDocumentDirectorySQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\documentdirectory\getdocumentdirectorysql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -292,13 +289,16 @@
   <data name="SetDocumentIndexSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\setdocumentindexsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="UPDATE001_Rename_Tables" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\update\update001_rename_tables.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="CreateDatabaseSchemaSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\createdatabaseschemasql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="UPDATE002_Create_Structure" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\update\update002_create_structure.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="GetAppliedMigrationSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\migrations\getappliedmigrationsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="UPDATE003_Drop_Tables" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqls\update\update003_drop_tables.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="ListAppliedMigrationsSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\migrations\listappliedmigrationssql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SaveMigrationSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\migrations\savemigrationsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

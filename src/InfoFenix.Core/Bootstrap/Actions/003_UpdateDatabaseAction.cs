@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Data.SQLite;
-using System.IO;
+using InfoFenix.Core.CQRS;
 using InfoFenix.Core.Logging;
-using Resource = InfoFenix.Core.Resources.Resources;
+using InfoFenix.Core.Migrations;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
     [Order(3)]
     public class UpdateDatabaseAction : ActionBase {
 
-        #region Private Constants
+        #region Private Read-Only Fields
 
-        private const string UPDATE_KEY = "F53F6A9E-A619-4DB9-9B26-1026C5447148";
+        private readonly IMediator _mediator;
 
-        #endregion Private Constants
+        #endregion Private Read-Only Fields
 
         #region Public Properties
 
@@ -29,36 +28,31 @@ namespace InfoFenix.Core.Bootstrap.Actions {
 
         #endregion Public Properties
 
+        #region Public Constructors
+
+        public UpdateDatabaseAction(IMediator mediator) {
+            Prevent.ParameterNull(mediator, nameof(mediator));
+
+            _mediator = mediator;
+        }
+
+        #endregion Public Constructors
+
         #region IAction Members
 
         public override string Name => "Atualizando Banco de Dados";
 
         public override void Execute() {
             if (AppSettings.Instance.UseRemoteSearchDatabase) { return; }
-            if (AppSettings.Instance.DatabaseUpdateKey == UPDATE_KEY) { return; }
 
-            var databaseFilePath = Path.Combine(AppSettings.Instance.ApplicationDataDirectoryPath, Common.DatabaseFileName);
-            using (var connection = new SQLiteConnection($"Data Source={databaseFilePath}; Version=3;", true)) {
-                connection.Open();
-                using (var transaction = connection.BeginTransaction())
-                using (var command = new SQLiteCommand(connection)) {
-                    try {
-                        command.CommandText = Resource.UPDATE001_Rename_Tables;
-                        command.ExecuteNonQuery();
-
-                        command.CommandText = Resource.UPDATE002_Create_Structure;
-                        command.ExecuteNonQuery();
-
-                        command.CommandText = Resource.UPDATE003_Drop_Tables;
-                        command.ExecuteNonQuery();
-
-                        transaction.Commit();
-
-                        AppSettings.Instance.DatabaseUpdateKey = UPDATE_KEY;
-                        AppSettings.Instance.Save();
-                    } catch (Exception ex) { Logger.Error("ERROR ON UPDATE DATABASE: {0}", ex.Message); transaction.Rollback(); throw; }
+            try {
+                var migrations = _mediator.Query(new ListPossibleMigrationsQuery());
+                foreach (var migration in migrations) {
+                    _mediator.Command(new ApplyMigrationCommand {
+                        Version = migration
+                    });
                 }
-            }
+            } catch (Exception ex) { Logger.Error("ERROR ON UPDATE DATABASE: {0}", ex.Message); throw; }
         }
 
         #endregion IAction Members

@@ -6,6 +6,12 @@ namespace InfoFenix.Core {
 
     public static class Common {
 
+        #region Public Constants
+
+        public const string MIGRATION_FOLDER = "InfoFenix.Core.Migrations.Files";
+
+        #endregion Private Constants
+
         #region Public Static Read-Only Fields
 
         public static readonly string ApplicationDirectoryPath = typeof(Common).Assembly.GetDirectoryPath();
@@ -16,6 +22,14 @@ namespace InfoFenix.Core {
         #endregion Public Static Read-Only Fields
 
         #region Public Static Methods
+
+        public static string[] GetManifestResourceNames() {
+            return typeof(Common).Assembly.GetManifestResourceNames();
+        }
+
+        public static Stream GetManifestResourceStream(string name) {
+            return typeof(Common).Assembly.GetManifestResourceStream(name);
+        }
 
         public static string[] GetDocumentFiles(string path) {
             return Directory
@@ -55,6 +69,16 @@ namespace InfoFenix.Core {
         public static class DatabaseSchema {
 
             #region Public Static Inner Classes
+
+            public static class Migrations {
+
+                #region Public Static Read-Only Fields
+
+                public static readonly string Version = "version";
+                public static readonly string Date = "date";
+
+                #endregion Public Static Read-Only Fields
+            }
 
             public static class Documents {
 

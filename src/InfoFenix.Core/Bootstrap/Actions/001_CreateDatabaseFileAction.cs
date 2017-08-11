@@ -21,7 +21,7 @@ namespace InfoFenix.Core.Bootstrap.Actions {
                 using (var connection = new SQLiteConnection($"Data Source={databaseFilePath}; Version=3;", true)) {
                     connection.Open();
                     using (var command = new SQLiteCommand(connection)) {
-                        command.CommandText = Resource.CreateSchemaSQL;
+                        command.CommandText = Resource.CreateDatabaseSchemaSQL;
                         command.ExecuteNonQuery();
                     }
                 }

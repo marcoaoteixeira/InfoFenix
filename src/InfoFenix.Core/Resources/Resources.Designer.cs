@@ -128,9 +128,9 @@ namespace InfoFenix.Core.Resources {
         ///CREATE TABLE IF NOT EXISTS [documents] (
         ///    [document_id]           INTEGER PRIMARY KEY  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string CreateSchemaSQL {
+        internal static string CreateDatabaseSchemaSQL {
             get {
-                return ResourceManager.GetString("CreateSchemaSQL", resourceCulture);
+                return ResourceManager.GetString("CreateDatabaseSchemaSQL", resourceCulture);
             }
         }
         
@@ -140,6 +140,20 @@ namespace InfoFenix.Core.Resources {
         internal static string FatalException_Message {
             get {
                 return ResourceManager.GetString("FatalException_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    [version],
+        ///    [date]
+        ///FROM [migrations]
+        ///WHERE
+        ///    [version] = @version;.
+        /// </summary>
+        internal static string GetAppliedMigrationSQL {
+            get {
+                return ResourceManager.GetString("GetAppliedMigrationSQL", resourceCulture);
             }
         }
         
@@ -262,6 +276,20 @@ namespace InfoFenix.Core.Resources {
         internal static string IndexDocumentDirectory_Progress_Step_Message {
             get {
                 return ResourceManager.GetString("IndexDocumentDirectory_Progress_Step_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    [version],
+        ///    [date]
+        ///FROM [migrations]
+        ///WHERE
+        ///    (@version IS NULL OR ([version] = @version));.
+        /// </summary>
+        internal static string ListAppliedMigrationsSQL {
+            get {
+                return ResourceManager.GetString("ListAppliedMigrationsSQL", resourceCulture);
             }
         }
         
@@ -641,6 +669,21 @@ namespace InfoFenix.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO [migrations] (
+        ///    [version],
+        ///    [date]
+        ///) VALUES (
+        ///    @version,
+        ///    @date
+        ///);.
+        /// </summary>
+        internal static string SaveMigrationSQL {
+            get {
+                return ResourceManager.GetString("SaveMigrationSQL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pesquisar Índices.
         /// </summary>
         internal static string SearchDocumentIndex_Progress_Start_Title {
@@ -712,48 +755,6 @@ namespace InfoFenix.Core.Resources {
         internal static string StopWatchDocumentDirectory_Progress_Step_Message {
             get {
                 return ResourceManager.GetString("StopWatchDocumentDirectory_Progress_Step_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to -- Rename old tables.
-        ///ALTER TABLE [document_directories] RENAME TO [old_document_directories];
-        ///ALTER TABLE [documents] RENAME TO [old_documents];.
-        /// </summary>
-        internal static string UPDATE001_Rename_Tables {
-            get {
-                return ResourceManager.GetString("UPDATE001_Rename_Tables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to -- Create new table for document directories.
-        ///CREATE TABLE IF NOT EXISTS [document_directories] (
-        ///    [document_directory_id] INTEGER PRIMARY KEY AUTOINCREMENT,
-        ///    [code]                  TEXT                NOT NULL,
-        ///    [label]                 TEXT                NOT NULL,
-        ///    [path]                  TEXT                NOT NULL,
-        ///    [position]              INTEGER             NOT NULL,
-        ///
-        ///    CONSTRAINT [UQ_document_directory_path] UNIQUE ([path])
-        ///);
-        ///
-        ///-- Copy data from the old document director [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string UPDATE002_Create_Structure {
-            get {
-                return ResourceManager.GetString("UPDATE002_Create_Structure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to -- Drop old tables.
-        ///DROP TABLE [old_documents];
-        ///DROP TABLE [old_document_directories];.
-        /// </summary>
-        internal static string UPDATE003_Drop_Tables {
-            get {
-                return ResourceManager.GetString("UPDATE003_Drop_Tables", resourceCulture);
             }
         }
     }

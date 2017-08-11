@@ -31,9 +31,6 @@ namespace InfoFenix.Core {
         [JsonProperty(nameof(ApplicationDataDirectoryPath))]
         public string ApplicationDataDirectoryPath { get; set; } = Path.Combine(Common.ApplicationDirectoryPath, "App_Data");
 
-        [JsonProperty(nameof(DatabaseUpdateKey))]
-        public string DatabaseUpdateKey { get; set; }
-
         #endregion Public Properties
 
         #region Public Static Properties
@@ -91,7 +88,6 @@ namespace InfoFenix.Core {
 
                 UseRemoteSearchDatabase = json[nameof(UseRemoteSearchDatabase)].Value<bool>();
                 ApplicationDataDirectoryPath = json[nameof(ApplicationDataDirectoryPath)].Value<string>();
-                DatabaseUpdateKey = json[nameof(DatabaseUpdateKey)].Value<string>();
             }
         }
 

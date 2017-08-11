@@ -4,7 +4,7 @@ using InfoFenix.Core.Search;
 
 namespace InfoFenix.Core.Bootstrap.Actions {
 
-    [Order(4)]
+    [Order(5)]
     public class InitializeLuceneSearchIndexesAction : ActionBase {
 
         #region Private Read-Only Fields

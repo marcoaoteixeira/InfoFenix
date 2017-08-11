@@ -1,6 +1,6 @@
 ﻿namespace InfoFenix.Core.Bootstrap.Actions {
 
-    [Order(3)]
+    [Order(4)]
     public class InitializeServicesAction : ActionBase {
 
         #region IAction Members

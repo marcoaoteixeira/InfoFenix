@@ -54,6 +54,9 @@ namespace InfoFenix.Client {
             Application.ApplicationExit += TearDown;
             Application.ThreadException += Error;
 
+            // Initialize AppSettings file
+            AppSettings.Instance.Save();
+
             ConfigureCompositionRoot();
 
             SplashScreenForm.Splash(() => _compositionRoot.Resolver.Resolve<SplashScreenForm>(), ExecuteBootstrapActions);

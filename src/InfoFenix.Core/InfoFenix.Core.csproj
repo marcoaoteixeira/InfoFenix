@@ -80,10 +80,11 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Bootstrap\ActionBase.cs" />
+    <Compile Include="Bootstrap\Actions\003_UpdateDatabaseAction.cs" />
     <Compile Include="Bootstrap\Actions\000_CreateAppDataDirectoryAction.cs" />
     <Compile Include="Bootstrap\Actions\001_CreateDatabaseFileAction.cs" />
-    <Compile Include="Bootstrap\Actions\004_InitializeLuceneSearchIndexesAction.cs" />
-    <Compile Include="Bootstrap\Actions\003_InitializeServicesAction.cs" />
+    <Compile Include="Bootstrap\Actions\005_InitializeLuceneSearchIndexesAction.cs" />
+    <Compile Include="Bootstrap\Actions\004_InitializeServicesAction.cs" />
     <Compile Include="Bootstrap\Actions\002_CreateIndexStorageDirectoryAction.cs" />
     <Compile Include="Bootstrap\Bootstrapper.cs" />
     <Compile Include="Bootstrap\IAction.cs" />
@@ -237,6 +238,9 @@
     <Content Include="Resources\SQLs\Document\RemoveDocumentSQL.sql" />
     <Content Include="Resources\SQLs\Document\SaveDocumentSQL.sql" />
     <Content Include="Resources\SQLs\Document\SetDocumentIndexSQL.sql" />
+    <Content Include="Resources\SQLs\Update\UPDATE001_Rename_Tables.sql" />
+    <Content Include="Resources\SQLs\Update\UPDATE002_Create_Structure.sql" />
+    <Content Include="Resources\SQLs\Update\UPDATE003_Drop_Tables.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

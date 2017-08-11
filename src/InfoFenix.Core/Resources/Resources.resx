@@ -292,4 +292,13 @@
   <data name="SetDocumentIndexSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqls\document\setdocumentindexsql.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="UPDATE001_Rename_Tables" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\update\update001_rename_tables.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UPDATE002_Create_Structure" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\update\update002_create_structure.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UPDATE003_Drop_Tables" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqls\update\update003_drop_tables.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

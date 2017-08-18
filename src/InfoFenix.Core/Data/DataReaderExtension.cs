@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace InfoFenix.Core.Data {
+namespace InfoFenix.Data {
     /// <summary>
     /// Extension methods for <see cref="IDataReader"/>
     /// </summary>

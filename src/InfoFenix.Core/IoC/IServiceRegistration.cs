@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Core.IoC {
+﻿namespace InfoFenix.IoC {
     public interface IServiceRegistration {
 
         #region Methods

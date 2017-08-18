@@ -2,15 +2,15 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace InfoFenix.Core {
+namespace InfoFenix {
 
     public static class Common {
 
         #region Public Constants
 
-        public const string MIGRATION_FOLDER = "InfoFenix.Core.Migrations.Files";
+        public const string MIGRATION_FOLDER = "InfoFenix.Migrations.Files";
 
-        #endregion Private Constants
+        #endregion Public Constants
 
         #region Public Static Read-Only Fields
 
@@ -42,19 +42,19 @@ namespace InfoFenix.Core {
             var match = Regex.Match(Path.GetFileNameWithoutExtension(filePath), "([0-9]{1,})");
             return match.Captures.Count > 0 ? int.Parse(match.Captures[0].Value) : 0;
         }
-        
+
         #endregion Public Static Methods
 
         #region Public Static Internal Classes
 
         public static class DocumentIndex {
-            
+
             #region Public Static Inner Classes
 
             public static class FieldNames {
 
                 #region Public Static Read-Only Fields
-                
+
                 public static readonly string DocumentCode = nameof(DocumentCode);
                 public static readonly string DocumentDirectoryCode = nameof(DocumentDirectoryCode);
                 public static readonly string Content = nameof(Content);
@@ -70,9 +70,21 @@ namespace InfoFenix.Core {
 
             #region Public Static Inner Classes
 
+            public static class SQLiteMaster {
+
+                #region Public Static Read-Only Fields
+
+                public static readonly string Type = "type";
+                public static readonly string Name = "name";
+
+                #endregion Public Static Read-Only Fields
+            }
+
             public static class Migrations {
 
                 #region Public Static Read-Only Fields
+
+                public static readonly string TableName = "migrations";
 
                 public static readonly string Version = "version";
                 public static readonly string Date = "date";
@@ -105,6 +117,7 @@ namespace InfoFenix.Core {
                 public static readonly string Label = "label";
                 public static readonly string Path = "path";
                 public static readonly string Position = "position";
+                public static readonly string TotalDocuments = "total_documents";
 
                 #endregion Public Static Read-Only Fields
             }

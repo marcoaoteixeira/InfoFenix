@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core {
+namespace InfoFenix {
     public static class Prevent {
 
         #region Public Static Methods

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 
-namespace InfoFenix.Core.Office {
+namespace InfoFenix.Office {
 
     public static class WordDocumentExtension {
 

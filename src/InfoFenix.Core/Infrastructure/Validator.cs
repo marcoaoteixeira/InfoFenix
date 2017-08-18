@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace InfoFenix.Core.Infrastructure {
+namespace InfoFenix.Infrastructure {
     public static class Validator {
 
         #region Public Static Methods

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.IO;
-using InfoFenix.Core.Data;
+using InfoFenix.Data;
 
-namespace InfoFenix.Core.Entities {
+namespace InfoFenix.Entities {
 
     public sealed class Document {
 

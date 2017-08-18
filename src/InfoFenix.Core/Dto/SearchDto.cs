@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace InfoFenix.Core.Entities {
+namespace InfoFenix.Dto {
 
     public sealed class SearchDto {
 

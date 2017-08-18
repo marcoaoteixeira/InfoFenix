@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace InfoFenix.Core {
+namespace InfoFenix {
     public static class AssemblyExtension {
 
         #region Public Static Methods

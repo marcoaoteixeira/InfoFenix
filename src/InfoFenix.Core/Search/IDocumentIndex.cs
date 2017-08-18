@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core.Search {
+namespace InfoFenix.Search {
 
     /// <summary>
     /// Defines methods for a document index.

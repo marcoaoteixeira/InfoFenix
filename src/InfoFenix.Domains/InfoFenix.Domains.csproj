@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A3F9B428-A712-46F4-9CFE-E14EA18B1F7F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InfoFenix.Domains</RootNamespace>
+    <AssemblyName>InfoFenix.Domains</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands\CleanDocumentDirectory.cs" />
+    <Compile Include="Commands\DatabaseCleanUp.cs" />
+    <Compile Include="Commands\IndexDocumentDirectory.cs" />
+    <Compile Include="Commands\RemoveDocumentDirectory.cs" />
+    <Compile Include="Commands\SaveDocumentDirectory.cs" />
+    <Compile Include="Commands\SaveDocumentDirectoryDocuments.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\GetDocument.cs" />
+    <Compile Include="Queries\ListDocumentDirectories.cs" />
+    <Compile Include="Queries\ObjectExists.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InfoFenix.Core\InfoFenix.Core.csproj">
+      <Project>{2ec3195b-9cca-41b5-8797-f1c051456fb6}</Project>
+      <Name>InfoFenix.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Resources\InfoFenix.Resources.csproj">
+      <Project>{0bc53d2a-b8ef-41d7-b631-46d2e27b2756}</Project>
+      <Name>InfoFenix.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Search\InfoFenix.Search.csproj">
+      <Project>{c656a1dd-aaa0-4602-8142-f22223c91ffd}</Project>
+      <Name>InfoFenix.Search</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

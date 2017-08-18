@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace InfoFenix.Core.Office {
+namespace InfoFenix.Office {
 
     public interface IWordApplication {
 

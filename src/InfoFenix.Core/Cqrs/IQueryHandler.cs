@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace InfoFenix.Core.CQRS {
+namespace InfoFenix.CQRS {
 
     public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult> {
 

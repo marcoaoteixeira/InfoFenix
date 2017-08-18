@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace InfoFenix.Core.Exceptions {
+namespace InfoFenix {
 
     [Serializable]
     public class FatalException : Exception {

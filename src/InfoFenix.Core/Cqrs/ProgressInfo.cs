@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Core.CQRS {
+﻿namespace InfoFenix.CQRS {
 
     public enum ProgressState {
         None,

@@ -24,7 +24,7 @@ bld/
 publish
 wwwroot/assets
 resources/votos
-resources/Renato_Sartorelli
+resources/backup
 
 # Visual Studio 2015 cache/options directory
 .vs/

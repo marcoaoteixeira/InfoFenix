@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core.Logging {
+namespace InfoFenix.Logging {
     /// <summary>
     /// <see cref="ILogger"/> extension methods.
     /// </summary>

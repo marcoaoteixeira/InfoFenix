@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Core.Search {
+﻿namespace InfoFenix.Search {
 
     public interface IIndex {
 

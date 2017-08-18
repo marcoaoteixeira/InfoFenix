@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using InfoFenix.Core.Logging;
-using Resource = InfoFenix.Core.Resources.Resources;
+using InfoFenix.Logging;
+using InfoFenix.Resources;
 
-namespace InfoFenix.Core.PubSub {
+namespace InfoFenix.PubSub {
 
     public abstract class NotificationBase {
 
@@ -90,7 +90,7 @@ namespace InfoFenix.Core.PubSub {
         #region Public Constructors
 
         public ProgressiveTaskStartNotification() {
-            Arguments.Message = Resource.ProgressiveTaskStartNotification_Message;
+            Arguments.Message = Strings.ProgressiveTaskStartNotification_Message;
         }
 
         #endregion Public Constructors
@@ -104,7 +104,7 @@ namespace InfoFenix.Core.PubSub {
         #region Public Constructors
 
         public ProgressiveTaskCompleteNotification() {
-            Arguments.Message = Resource.ProgressiveTaskCompleteNotification_Message;
+            Arguments.Message = Strings.ProgressiveTaskCompleteNotification_Message;
         }
 
         #endregion Public Constructors
@@ -115,7 +115,7 @@ namespace InfoFenix.Core.PubSub {
         #region Public Constructors
 
         public ProgressiveTaskCancelNotification() {
-            Arguments.Message = Resource.ProgressiveTaskCancelNotification_Message;
+            Arguments.Message = Strings.ProgressiveTaskCancelNotification_Message;
         }
 
         #endregion Public Constructors
@@ -126,7 +126,7 @@ namespace InfoFenix.Core.PubSub {
         #region Public Constructors
 
         public ProgressiveTaskErrorNotification() {
-            Arguments.Message = Resources.Resources.ProgressiveTaskErrorNotification_Message;
+            Arguments.Message = Strings.ProgressiveTaskErrorNotification_Message;
         }
 
         #endregion Public Constructors

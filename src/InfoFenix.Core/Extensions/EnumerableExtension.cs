@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace InfoFenix.Core {
+namespace InfoFenix {
 
     /// <summary>
     /// Extension methods for <see cref="IEnumerable"/> and <see cref="IEnumerable{T}"/>.

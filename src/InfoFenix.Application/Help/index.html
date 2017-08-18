@@ -1,0 +1,492 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+ <!--<![endif]-->
+<head>
+    <title>Info Fênix - Ajuda</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>-->
+    <link href='css/open-sans.css' rel='stylesheet' type='text/css'>
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/prism.css">
+    <link rel="stylesheet" href="css/elegant-font.css">
+
+    <!-- Theme CSS -->
+    <link id="theme-style" rel="stylesheet" href="css/main.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <style tyle="text/css">
+        .img-sample {
+
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+
+</head>
+
+<body class="body-green">
+    <div class="page-wrapper">
+        <!-- ******Header****** -->
+        <header id="header" class="header">
+            <div class="container">
+                <div class="branding">
+                    <h1 class="logo">
+                        <a href="index.html">
+                            <span aria-hidden="true">
+                                <img src="img/info-fenix_84x95.png" />
+                            </span>
+                            <span class="text-highlight">INFO</span><span class="text-bold">Fênix</span>
+                        </a>
+                    </h1>
+                </div><!--//branding-->
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active">Ajuda e FAQ</li>
+                </ol>
+            </div><!--//container-->
+        </header><!--//header-->
+        <div class="doc-wrapper">
+            <div class="container">
+                <div id="doc-header" class="doc-header text-center">
+                    <h1 class="doc-title"><i class="icon fa fa-paper-plane"></i> Ajuda e FAQ</h1>
+                    <div class="meta"><i class="fa fa-clock-o"></i> Última atualização: 16 de Agosto de 2017</div>
+                </div><!--//doc-header-->
+                <div class="doc-body">
+                    <div class="doc-content">
+                        <div class="content-inner">
+                            <section id="search-section" class="doc-section">
+                                <h2 class="section-title">Pesquisar</h2>
+                                <div id="search-simple" class="section-block">
+                                    <h3 class="block-title">Termos simples</h3>
+                                    <p>
+                                        Você pode realizar uma pesquisa, pelos documentos indexados, utilizando o menu <strong>"Pesquisar"</strong>.
+                                        <img src="img/search_menu_highlight.png" class="img-sample clearfix" />
+                                    </p>
+
+                                    <p>
+                                        Ao clicar no menu, a tela de pesquisa será aberta.
+                                        
+                                        <img src="img/search_form_one_result.png" class="img-sample clearfix" />
+                                        
+                                        Nessa tela, você irá realizar a pesquisa. Para isso, digite no campo <strong>"Pesquisar por:"</strong> o termo pelo qual deseja buscar. Depois, clique no botão <strong>"Pesquisar"</strong>.
+                                    </p>
+
+                                    <p>
+                                        Caso o motor de pesquisa encontre resultados, a quantidade de itens encontrados será exibida na coluna <strong>"Documentos encontrados"</strong>. Para acessar esses documentos, dê um duplo clique na linha do diretório de documentos desejado.
+
+                                        <img src="img/search_form_one_result_ok.png" class="img-sample clearfix" />
+                                    </p>
+
+                                    <p>
+                                        Caso o motor de pesquisa <strong>não</strong> encontre resultados, uma mensagem de alerta será exibido no canto inferior esquerdo da tela. Juntamente, a coluna <strong>"Documentos encontrados"</strong> exibirá o valor 0 (zero).
+
+                                        <img src="img/search_form_one_result_nok.png" class="img-sample clearfix" />
+                                    </p>
+                                </div><!--//section-block-->
+                                <div id="search-wildcard" class="section-block">
+                                    <h3 class="block-title">Utilizando caracter chave (*)</h3>
+                                    <p>
+                                        É possível realizar uma pesquisa por termos aproximados. Para isso, utilize o caracter <strong>"*"</strong> no início, ou no fim, do termo utilizado para a pesquisa.
+
+                                        <img src="img/search_form_one_result_wildcard.png" class="img-sample clearfix" />
+
+                                        Neste exemplo, obteve-se resultados para a pesquisa por <strong>"adv*"</strong>. Esse termo poderia se referir à "advocacia", "advogado", "adversário", etc. Vale lembrar que o caracter <strong>"*"</strong> pode ser utilizando no começo do termo também, como no exemplo <strong>"*der"</strong>, que poderia se referir ao termo "poder", "arder", "ceder", etc.
+                                    </p>
+                                </div><!--//section-block-->
+                                <div id="search-ignore-terms" class="section-block">
+                                    <h3 class="block-title">Ignorando termos</h3>
+                                    <p>
+                                        É possível realizar uma pesquisa e solicitar que certos termos sejam ignorados quando o resultado for retornado. Para tal, basta adicionar o sinal <strong>"-"</strong> antes do termo a ser pesquisado. Por exemplo: <strong>"hotel -reserva"</strong>. Uma pesquisa por esses termos traria documentos que contem a palavra <strong>"hotel"</strong>, porém não contenham a palavra <strong>"reserva"</strong>, no mesmo documento.
+                                    </p>
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            <section id="document-directory-section" class="doc-section">
+                                <h2 class="section-title">Installation</h2>
+                                <div id="step1" class="section-block">
+                                    <h3 class="block-title">Step One</h3>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis.
+                                    </p>
+                                    <div class="code-block">
+                                        <h6>Default code example:</h6>
+                                        <p><code>bower install &lt;package&gt;</code></p>
+                                        <p><code>npm install &lt;package&gt;</code></p>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="step2" class="section-block">
+                                    <h3 class="block-title">Step Two</h3>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h6>Un-ordered list example</h6>
+                                            <ul class="list">
+                                                <li>Lorem ipsum dolor sit amet.</li>
+                                                <li>Aliquam tincidunt mauris.</li>
+                                                <li>
+                                                    Ultricies eget vel aliquam libero.
+                                                    <ul>
+                                                        <li>Turpis pulvinar</li>
+                                                        <li>Feugiat scelerisque</li>
+                                                        <li>Ut tincidunt</li>
+                                                    </ul>
+                                                </li>
+                                                <li>Pellentesque habitant morbi.</li>
+                                                <li>Praesent dapibus, neque id.</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h6>Ordered list example</h6>
+                                            <ol class="list">
+                                                <li>Lorem ipsum dolor sit amet.</li>
+                                                <li>Aliquam tincidunt mauris.</li>
+                                                <li>
+                                                    Ultricies eget vel aliquam libero.
+                                                    <ul>
+                                                        <li>Turpis pulvinar</li>
+                                                        <li>Feugiat scelerisque</li>
+                                                        <li>Ut tincidunt</li>
+                                                    </ul>
+                                                </li>
+                                                <li>Pellentesque habitant morbi.</li>
+                                                <li>Praesent dapibus, neque id.</li>
+                                            </ol>
+                                        </div>
+                                    </div><!--//row-->
+                                </div><!--//section-block-->
+                                <div id="step3" class="section-block">
+                                    <h3 class="block-title">Step Three</h3>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis.
+                                    </p>
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            <section id="configuration-section" class="doc-section">
+                                <h2 class="section-title">Code</h2>
+                                <div class="section-block">
+                                    <p>
+                                        <a href="http://prismjs.com/" target="_blank">PrismJS</a> is used as the syntax highlighter here. You can <a href="http://prismjs.com/download.html" target="_blank">build your own version</a> via their website should you need to.
+                                    </p>
+
+                                </div><!--//section-block-->
+                                <div id="html" class="section-block">
+
+                                    <div class="callout-block callout-success">
+                                        <div class="icon-holder">
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </div><!--//icon-holder-->
+                                        <div class="content">
+                                            <h4 class="callout-title">Useful Tip:</h4>
+                                            <p>You can use this online <a href="https://mothereff.in/html-entities" target="_blank">HTML entity encoder/decoder</a> to generate your code examples.</p>
+                                        </div><!--//content-->
+                                    </div>
+                                    <div class="code-block">
+                                        <h6>HTML Code Example</h6>
+                                        
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="css" class="section-block">
+                                    <div class="code-block">
+                                        <h6>CSS Code Example</h6>
+                                        
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="less" class="section-block">
+                                    <div class="code-block">
+                                        <h6>LESS Code Example</h6>
+                                        
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="javascript" class="section-block">
+                                    <div class="code-block">
+                                        <h6>JavaScript Code Example</h6>
+                                        
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="python" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Python Code Example</h6>
+                                       
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="php" class="section-block">
+                                    <div class="code-block">
+                                        <h6>PHP Code Example</h6>
+                                        
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="handlebars" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Handlebars Code Example</h6>
+                                        
+                                    </div><!--//code-block-->
+                                    <div class="code-block">
+                                        <h6>Git Code Example</h6>
+                                        <pre><code class="language-git">$ git add Documentation.txt</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            <section id="callouts-section" class="doc-section">
+                                <h2 class="section-title">Callouts</h2>
+                                <div class="section-block">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
+                                    </p>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="callout-block callout-info">
+                                        <div class="icon-holder">
+                                            <i class="fa fa-info-circle"></i>
+                                        </div><!--//icon-holder-->
+                                        <div class="content">
+                                            <h4 class="callout-title">Aenean imperdiet</h4>
+                                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium <code>&lt;code&gt;</code> , Nemo enim ipsam voluptatem quia voluptas <a href="#">link example</a> sit aspernatur aut odit aut fugit.</p>
+                                        </div><!--//content-->
+                                    </div><!--//callout-block-->
+
+                                    <div class="callout-block callout-warning">
+                                        <div class="icon-holder">
+                                            <i class="fa fa-bug"></i>
+                                        </div><!--//icon-holder-->
+                                        <div class="content">
+                                            <h4 class="callout-title">Morbi posuere</h4>
+                                            <p>Nunc hendrerit odio quis dignissim efficitur. Proin ut finibus libero. Morbi posuere fringilla felis eget sagittis. Fusce sem orci, cursus in tortor <a href="#">link example</a> tellus vel diam viverra elementum.</p>
+                                        </div><!--//content-->
+                                    </div><!--//callout-block-->
+
+                                    <div class="callout-block callout-success">
+                                        <div class="icon-holder">
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </div><!--//icon-holder-->
+                                        <div class="content">
+                                            <h4 class="callout-title">Lorem ipsum dolor sit amet</h4>
+                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. <a href="#">Link example</a> aenean commodo ligula eget dolor.</p>
+                                        </div><!--//content-->
+                                    </div><!--//callout-block-->
+
+                                    <div class="callout-block callout-danger">
+                                        <div class="icon-holder">
+                                            <i class="fa fa-exclamation-triangle"></i>
+                                        </div><!--//icon-holder-->
+                                        <div class="content">
+                                            <h4 class="callout-title">Interdum et malesuada</h4>
+                                            <p>Morbi eget interdum sapien. Donec sed turpis sed nulla lacinia accumsan vitae ut tellus. Aenean vestibulum <a href="#">Link example</a> maximus ipsum vel dignissim. Morbi ornare elit sit amet massa feugiat, viverra dictum ipsum pellentesque. </p>
+                                        </div><!--//content-->
+                                    </div><!--//callout-block-->
+                                </div>
+                            </section><!--//doc-section-->
+                            <section id="tables-section" class="doc-section">
+                                <h2 class="section-title">Tables</h2>
+                                <div class="section-block">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis.
+                                    </p>
+                                </div>
+                                <div class="section-block">
+                                    <h6>Basic Table</h6>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Username</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Mark</td>
+                                                    <td>Otto</td>
+                                                    <td>@mdo</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Jacob</td>
+                                                    <td>Thornton</td>
+                                                    <td>@fat</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Larry</td>
+                                                    <td>the Bird</td>
+                                                    <td>@twitter</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><!--//table-responsive-->
+                                    <h6>Bordered Table</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Username</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Mark</td>
+                                                    <td>Otto</td>
+                                                    <td>@mdo</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Jacob</td>
+                                                    <td>Thornton</td>
+                                                    <td>@fat</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Larry</td>
+                                                    <td>the Bird</td>
+                                                    <td>@twitter</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><!--//table-responsive-->
+                                    <h6>Striped Table</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Username</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Mark</td>
+                                                    <td>Otto</td>
+                                                    <td>@mdo</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Jacob</td>
+                                                    <td>Thornton</td>
+                                                    <td>@fat</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Larry</td>
+                                                    <td>the Bird</td>
+                                                    <td>@twitter</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><!--//table-responsive-->
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            <section id="buttons-section" class="doc-section">
+                                <h2 class="section-title">Buttons</h2>
+                                <div class="section-block">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec imperdiet turpis. Curabitur aliquet pulvinar ultrices. Etiam at posuere leo. Proin ultrices ex et dapibus feugiat <a href="#">link example</a> aenean purus leo, faucibus at elit vel, aliquet scelerisque dui. Etiam quis elit euismod, imperdiet augue sit amet, imperdiet odio. Aenean sem erat, hendrerit  eu gravida id, dignissim ut ante. Nam consequat porttitor libero euismod congue.
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h6>Basic Buttons</h6>
+                                            <ul class="list list-unstyled">
+                                                <li><a href="#" class="btn btn-primary">Primary Button</a></li>
+                                                <li><a href="#" class="btn btn-green">Green Button</a></li>
+                                                <li><a href="#" class="btn btn-blue">Blue Button</a></li>
+                                                <li><a href="#" class="btn btn-orange">Orange Button</a></li>
+                                                <li><a href="#" class="btn btn-red">Red Button</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h6>CTA Buttons</h6>
+                                            <ul class="list list-unstyled">
+                                                <li><a href="#" class="btn btn-primary btn-cta"><i class="fa fa-download"></i> Download Now</a></li>
+                                                <li><a href="#" class="btn btn-green btn-cta"><i class="fa fa-code-fork"></i> Fork Now</a></li>
+                                                <li><a href="#" class="btn btn-blue btn-cta"><i class="fa fa-play-circle"></i> Find Out Now</a></li>
+                                                <li><a href="#" class="btn btn-orange btn-cta"><i class="fa fa-bug"></i> Report Bugs</a></li>
+                                                <li><a href="#" class="btn btn-red btn-cta"><i class="fa fa-exclamation-circle"></i> Submit Issues</a></li>
+                                            </ul>
+                                        </div>
+                                    </div><!--//row-->
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            
+                        </div><!--//content-inner-->
+                    </div><!--//doc-content-->
+                    <div class="doc-sidebar hidden-xs">
+                        <nav id="doc-nav">
+                            <ul id="doc-menu" class="nav doc-menu" data-spy="affix">
+                                <li><a class="scrollto" href="#search-section">Pesquisar</a>
+                                    <ul class="nav doc-sub-menu">
+                                        <li><a class="scrollto" href="#search-simple">Termos simples</a></li>
+                                        <li><a class="scrollto" href="#search-wildcard">Utilizando caracter chave (*)</a></li>
+                                        <li><a class="scrollto" href="#search-ignore-terms">Ignorando termos</a></li>
+                                    </ul><!--//nav-->
+                                </li>
+                                <li>
+                                    <a class="scrollto" href="#document-directory-section">Diretório de Documentos</a>
+                                    <ul class="nav doc-sub-menu">
+                                        <li><a class="scrollto" href="#document-directory-create">Criando novo diretório</a></li>
+                                        <li><a class="scrollto" href="#document-directory-edit">Editando um diretório</a></li>
+                                        <li><a class="scrollto" href="#document-directory-index">Indexar documentos</a></li>
+                                        <li><a class="scrollto" href="#document-directory-update">Atualizar documentos</a></li>
+                                        <li><a class="scrollto" href="#document-directory-remove">Removendo diretório</a></li>
+                                    </ul><!--//nav-->
+                                </li>
+                                <li>
+                                    <a class="scrollto" href="#configuration-section">Configurações</a>
+                                    <ul class="nav doc-sub-menu">
+                                        <li><a class="scrollto" href="#config-backup-database">Criando backup</a></li>
+                                        <li><a class="scrollto" href="#config-restore-database">Restaurando backup</a></li>
+                                        <li><a class="scrollto" href="#config-cleanup-database">Limpeza</a></li>
+                                        <li><a class="scrollto" href="#config-migrate-database">Migrando</a></li>
+                                    </ul><!--//nav-->
+                                </li>
+                            </ul><!--//doc-menu-->
+                        </nav>
+                    </div><!--//doc-sidebar-->
+                </div><!--//doc-body-->
+            </div><!--//container-->
+        </div><!--//doc-wrapper-->
+
+    </div><!--//page-wrapper-->
+
+    <footer id="footer" class="footer text-center">
+        <div class="container">
+            <!--/* This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. Thank you for your support. :) If you'd like to use the template without the attribution, you can check out other license options via our website: themes.3rdwavemedia.com */-->
+            <small class="copyright">Designed with <i class="fa fa-heart"></i> by <a href="http://themes.3rdwavemedia.com/" targe="_blank">Xiaoying Riley</a> for developers</small>
+
+        </div><!--//container-->
+    </footer><!--//footer-->
+    <!-- Main Javascript -->
+    <script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/prism-min.js"></script>
+    <script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+    <script type="text/javascript" src="js/jquery.matchHeight-min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+
+</body>
+</html>

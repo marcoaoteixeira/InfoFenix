@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace InfoFenix.Core.CQRS {
+namespace InfoFenix.CQRS {
 
     public static class MediatorExtension {
 

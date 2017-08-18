@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfoFenix.Core.IoC {
+namespace InfoFenix.IoC {
     public enum CompositionRootState {
         Blank,
         Composed

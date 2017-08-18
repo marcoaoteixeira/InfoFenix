@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core.PubSub {
+namespace InfoFenix.PubSub {
     public interface ISubscription<TMessage> {
 
         #region Methods

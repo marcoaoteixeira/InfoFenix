@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0BC53D2A-B8EF-41D7-B631-46D2E27B2756}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InfoFenix.Resources</RootNamespace>
+    <AssemblyName>InfoFenix.Resources</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Icons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Icons.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Images.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SQLs.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\info-fenix_113x128.ico" />
+    <Content Include="Images\bottom_24x24.png" />
+    <Content Include="Images\copy-64x64.png" />
+    <Content Include="Images\copy-text_16x16.png" />
+    <Content Include="Images\database-backup_32x32.png" />
+    <Content Include="Images\database-clean-up_32x32.png" />
+    <Content Include="Images\database-restore_32x32.png" />
+    <Content Include="Images\document_directory_128x128.png" />
+    <Content Include="Images\down_24x24.png" />
+    <Content Include="Images\exit-64x64.png" />
+    <Content Include="Images\fast-forward-64x64.png" />
+    <Content Include="Images\fast-rewind-64x64.png" />
+    <Content Include="Images\forward-64x64.png" />
+    <Content Include="Images\help_128x128.png" />
+    <Content Include="Images\hourglass_20x20.png" />
+    <Content Include="Images\hourglass_32x32.gif" />
+    <Content Include="Images\improved-view-enabled_32x32.png" />
+    <Content Include="Images\improved-view_32x32.png" />
+    <Content Include="Images\index_128x128.png" />
+    <Content Include="Images\info-fenix_84x95.png" />
+    <Content Include="Images\rewind-64x64.png" />
+    <Content Include="Images\search_128x128.png" />
+    <Content Include="Images\search_result_128x128.png" />
+    <Content Include="Images\settings_128x128.png" />
+    <Content Include="Images\top_24x24.png" />
+    <Content Include="Images\up_24x24.png" />
+    <Content Include="SQLs\CreateDatabaseSchema.sql" />
+    <Content Include="SQLs\DocumentDirectory\GetDocumentDirectory.sql" />
+    <Content Include="SQLs\DocumentDirectory\ListDocumentDirectories.sql" />
+    <Content Include="SQLs\DocumentDirectory\RemoveDocumentDirectory.sql" />
+    <Content Include="SQLs\DocumentDirectory\SaveDocumentDirectory.sql" />
+    <Content Include="SQLs\Document\GetDocumentCountByDocumentDirectory.sql" />
+    <Content Include="SQLs\Document\GetDocument.sql" />
+    <Content Include="SQLs\Document\GetDocumentSQLWithoutPayload.sql" />
+    <Content Include="SQLs\Document\ListDocumentsByDocumentDirectoryNoContent.sql" />
+    <Content Include="SQLs\Document\PaginateDocumentsByDocumentDirectory.sql" />
+    <Content Include="SQLs\Document\RemoveDocument.sql" />
+    <Content Include="SQLs\Document\SaveDocument.sql" />
+    <Content Include="SQLs\Document\SetDocumentIndex.sql" />
+    <Content Include="SQLs\Infrastructure\ObjectExists.sql" />
+    <Content Include="SQLs\Migrations\CreateMigrationTableSchema.sql" />
+    <Content Include="SQLs\Migrations\GetAppliedMigration.sql" />
+    <Content Include="SQLs\Migrations\ListAppliedMigrations.sql" />
+    <Content Include="SQLs\Migrations\SaveMigration.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SQLs.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SQLs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

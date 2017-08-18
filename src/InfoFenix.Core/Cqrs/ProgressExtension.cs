@@ -1,6 +1,7 @@
 ﻿using System;
+using InfoFenix.Resources;
 
-namespace InfoFenix.Core.CQRS {
+namespace InfoFenix.CQRS {
 
     public static class ProgressExtension {
 
@@ -14,7 +15,7 @@ namespace InfoFenix.Core.CQRS {
                     ? !parameters.IsNullOrEmpty()
                         ? string.Format(title, parameters)
                         : title
-                    : Resources.Resources.Progress_Start,
+                    : Strings.Progress_Start,
                 TotalSteps = totalSteps,
                 State = ProgressState.Start
             });
@@ -28,7 +29,7 @@ namespace InfoFenix.Core.CQRS {
                     ? !parameters.IsNullOrEmpty()
                         ? string.Format(message, parameters)
                         : message
-                    : string.Format(Resources.Resources.Progress_PerformStep, actualStep),
+                    : string.Format(Strings.Progress_PerformStep, actualStep, totalSteps),
                 ActualStep = actualStep,
                 TotalSteps = totalSteps,
                 State = ProgressState.PerformStep
@@ -43,7 +44,7 @@ namespace InfoFenix.Core.CQRS {
                     ? !parameters.IsNullOrEmpty()
                         ? string.Format(message, parameters)
                         : message
-                    : Resources.Resources.Progress_Complete,
+                    : Strings.Progress_Complete,
                 ActualStep = actualStep,
                 TotalSteps = totalSteps,
                 State = ProgressState.Complete
@@ -58,7 +59,7 @@ namespace InfoFenix.Core.CQRS {
                     ? !parameters.IsNullOrEmpty()
                         ? string.Format(message, parameters)
                         : message
-                    : Resources.Resources.Progress_Cancel,
+                    : Strings.Progress_Cancel,
                 ActualStep = actualStep,
                 TotalSteps = totalSteps,
                 State = ProgressState.Cancel
@@ -73,7 +74,7 @@ namespace InfoFenix.Core.CQRS {
                     ? !parameters.IsNullOrEmpty()
                         ? string.Format(message, parameters)
                         : message
-                    : Resources.Resources.Progress_Error,
+                    : Strings.Progress_Error,
                 ActualStep = actualStep,
                 TotalSteps = totalSteps,
                 State = ProgressState.Error

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace InfoFenix.Core {
+namespace InfoFenix {
 
     public static class StringExtension {
 

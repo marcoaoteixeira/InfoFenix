@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace InfoFenix.Core.Data {
+namespace InfoFenix.Data {
     /// <summary>
     /// Defines methods/properties/events to implement a DB factory provider.
     /// </summary>

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace InfoFenix.Core {
+namespace InfoFenix {
 
     public static class TaskExtension {
 

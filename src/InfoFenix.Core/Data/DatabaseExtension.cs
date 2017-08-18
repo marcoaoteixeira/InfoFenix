@@ -2,7 +2,7 @@
 using System.Data;
 using System.Linq;
 
-namespace InfoFenix.Core.Data {
+namespace InfoFenix.Data {
 
     /// <summary>
     /// Extension methods for <see cref="IDatabase"/>

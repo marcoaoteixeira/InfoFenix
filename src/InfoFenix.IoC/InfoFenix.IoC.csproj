@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ED5CF10B-9042-48C5-A605-CBA75D95F0BD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InfoFenix.IoC</RootNamespace>
+    <AssemblyName>InfoFenix.IoC</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.6.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CompositionRoot.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registrations\BootstrapServiceRegistration.cs" />
+    <Compile Include="Registrations\CQRSServiceRegistration.cs" />
+    <Compile Include="Registrations\DataServiceRegistration.cs" />
+    <Compile Include="Registrations\LoggingServiceRegistration.cs" />
+    <Compile Include="Registrations\NullWordDocumentServiceRegistration.cs" />
+    <Compile Include="Registrations\PubSubServiceRegistration.cs" />
+    <Compile Include="Registrations\SearchServiceRegistration.cs" />
+    <Compile Include="Registrations\ServicesServiceRegistration.cs" />
+    <Compile Include="Registrations\WordDocumentServiceRegistration.cs" />
+    <Compile Include="Resolver.cs" />
+    <Compile Include="ServiceRegistrationBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InfoFenix.Bootstrap\InfoFenix.Bootstrap.csproj">
+      <Project>{7859ec6c-6fa4-4c59-a448-b7e4a00193bc}</Project>
+      <Name>InfoFenix.Bootstrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Configuration\InfoFenix.Configuration.csproj">
+      <Project>{733f9249-5de9-4373-9776-3043d66b10fb}</Project>
+      <Name>InfoFenix.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Core\InfoFenix.Core.csproj">
+      <Project>{2ec3195b-9cca-41b5-8797-f1c051456fb6}</Project>
+      <Name>InfoFenix.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.CQRS\InfoFenix.CQRS.csproj">
+      <Project>{5bb89ae2-fdca-4e3d-938a-e4b0318ce7b7}</Project>
+      <Name>InfoFenix.CQRS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Data\InfoFenix.Data.csproj">
+      <Project>{c79a8933-c1fd-4499-8cb4-876b9fd2653a}</Project>
+      <Name>InfoFenix.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Logging\InfoFenix.Logging.csproj">
+      <Project>{7c5d759a-493d-4378-bfe8-2daecc48678d}</Project>
+      <Name>InfoFenix.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Office\InfoFenix.Office.csproj">
+      <Project>{67b60b31-a2c0-405b-acc9-705dbfe02226}</Project>
+      <Name>InfoFenix.Office</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.PubSub\InfoFenix.PubSub.csproj">
+      <Project>{c36de7a9-ae1a-4b0f-a0cd-9589677f329f}</Project>
+      <Name>InfoFenix.PubSub</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Search\InfoFenix.Search.csproj">
+      <Project>{c656a1dd-aaa0-4602-8142-f22223c91ffd}</Project>
+      <Name>InfoFenix.Search</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InfoFenix.Services\InfoFenix.Services.csproj">
+      <Project>{dbf9f989-bfb2-4259-81e2-95314587091e}</Project>
+      <Name>InfoFenix.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Core.Search {
+﻿namespace InfoFenix.Search {
 
     /// <summary>
     /// Defines methods for a search bit class.

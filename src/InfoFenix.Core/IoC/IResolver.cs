@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core.IoC {
+namespace InfoFenix.IoC {
     public interface IResolver {
 
         #region Methods

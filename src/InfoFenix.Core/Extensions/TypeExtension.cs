@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace InfoFenix.Core {
+namespace InfoFenix {
     public static class TypeExtension {
 
         #region Public Static Methods

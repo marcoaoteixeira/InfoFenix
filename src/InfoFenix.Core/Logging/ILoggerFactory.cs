@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core.Logging {
+namespace InfoFenix.Logging {
     /// <summary>
     /// Defines the factory for <see cref="ILogger"/> implementation instances.
     /// </summary>

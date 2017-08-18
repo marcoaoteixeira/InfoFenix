@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace InfoFenix.Core.Entities {
+namespace InfoFenix.Dto {
 
     public sealed class IndexDto {
 
         #region Public Properties
 
+        public int Position { get; set; }
         public string Name { get; set; }
         public string Label { get; set; }
         public int TotalDocuments { get; set; }

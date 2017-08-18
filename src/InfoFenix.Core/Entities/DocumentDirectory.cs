@@ -1,23 +1,29 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using InfoFenix.Core.Data;
+using InfoFenix.Data;
 
-namespace InfoFenix.Core.Entities {
+namespace InfoFenix.Entities {
 
     public sealed class DocumentDirectory {
 
         #region Public Properties
 
         public int DocumentDirectoryID { get; set; }
+
         [Required]
         public string Code { get; set; }
+
         [Required]
         public string Label { get; set; }
+
         [Required]
         public string Path { get; set; }
+
         [Required]
         public int Position { get; set; }
+
+        public int TotalDocuments { get; set; }
 
         #endregion Public Properties
 
@@ -29,7 +35,8 @@ namespace InfoFenix.Core.Entities {
                 Label = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Label),
                 Path = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Path),
                 Code = reader.GetStringOrDefault(Common.DatabaseSchema.DocumentDirectories.Code),
-                Position = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.Position)
+                Position = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.Position),
+                TotalDocuments = reader.GetInt32OrDefault(Common.DatabaseSchema.DocumentDirectories.TotalDocuments)
             };
         }
 

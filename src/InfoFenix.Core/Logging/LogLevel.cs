@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoFenix.Core.Logging {
+namespace InfoFenix.Logging {
     /// <summary>
     /// Log level flags.
     /// </summary>

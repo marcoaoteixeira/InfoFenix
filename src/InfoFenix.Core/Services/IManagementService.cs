@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Core.Services {
+﻿namespace InfoFenix.Services {
 
     public interface IManagementService {
 
@@ -7,6 +7,8 @@
         void BackupDatabase(string outputPath);
 
         void RestoreDatabase(string inputPath);
+
+        void CleanUpDatabase();
 
         #endregion Methods
     }

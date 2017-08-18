@@ -1,4 +1,4 @@
-﻿namespace InfoFenix.Core.Logging {
+﻿namespace InfoFenix.Logging {
     /// <summary>
     /// Extension methods for <see cref="LogLevel"/>
     /// </summary>

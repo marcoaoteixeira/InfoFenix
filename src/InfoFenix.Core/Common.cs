@@ -22,15 +22,7 @@ namespace InfoFenix {
         #endregion Public Static Read-Only Fields
 
         #region Public Static Methods
-
-        public static string[] GetManifestResourceNames() {
-            return typeof(Common).Assembly.GetManifestResourceNames();
-        }
-
-        public static Stream GetManifestResourceStream(string name) {
-            return typeof(Common).Assembly.GetManifestResourceStream(name);
-        }
-
+        
         public static string[] GetDocumentFiles(string path) {
             return Directory
                 .GetFiles(path, "*.doc", SearchOption.AllDirectories)

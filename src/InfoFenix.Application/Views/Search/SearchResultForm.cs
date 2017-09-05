@@ -4,11 +4,10 @@ using System.IO;
 using System.Windows.Forms;
 using InfoFenix.Application.Code;
 using InfoFenix.Application.Views.Shared;
-using InfoFenix;
 using InfoFenix.CQRS;
+using InfoFenix.Domains.Queries;
 using InfoFenix.Dto;
 using InfoFenix.Models;
-using InfoFenix.Domains.Queries;
 using InfoFenix.Resources;
 
 namespace InfoFenix.Application.Views.Search {
@@ -18,19 +17,20 @@ namespace InfoFenix.Application.Views.Search {
         #region Private Read-Only Fields
 
         private readonly string _tempFilePath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-
         private readonly IMediator _mediator;
 
         #endregion Private Read-Only Fields
 
         #region Private Fields
 
-        private Dto.DocumentIndexDto _current;
+        private DocumentIndexDto _current;
         private int _position;
         private bool _useImprovedViewOnDocumentViewer;
 
+        // Default styles for document viewer
         private Font _documentViewerTextFont;
         private Color _documentViewerTextColor;
+        private HorizontalAlignment _documentViewerTextAlignment;
 
         #endregion Private Fields
 
@@ -59,6 +59,7 @@ namespace InfoFenix.Application.Views.Search {
 
             _documentViewerTextColor = documentViewerRichTextBox.ForeColor;
             _documentViewerTextFont = (Font)documentViewerRichTextBox.Font.Clone();
+            _documentViewerTextAlignment = documentViewerRichTextBox.SelectionAlignment;
 
             ShowDocument(0); // Show first document.
         }
@@ -70,8 +71,6 @@ namespace InfoFenix.Application.Views.Search {
             _current = SearchResult.Documents[index];
 
             ShowDocumentInDocumentViewer();
-
-            HighlightSearchTerms(SearchResult.Terms);
 
             informationLabel.Text = string.Format(Strings.SearchResultForm_InformationLabel, index + 1, SearchResult.Documents.Length);
             documentPathLabel.Text = string.Format(Strings.SearchResultForm_DocumentPathLabel, _current.FileName);
@@ -89,8 +88,10 @@ namespace InfoFenix.Application.Views.Search {
                     documentViewerRichTextBox.SafeInvoke(_ => _.LoadFile(_tempFilePath));
                 } else {
                     documentViewerRichTextBox.SafeInvoke(_ => _.Text = _current.Content);
-                    SetDocumentViewStyle(_documentViewerTextFont, _documentViewerTextColor);
+                    SetDocumentViewerStyle(_documentViewerTextFont, _documentViewerTextColor, _documentViewerTextAlignment);
                 }
+                HighlightSearchTerms(SearchResult.Terms);
+                FocusOnDocumentViewerStart();
             }, silent: true);
         }
 
@@ -113,13 +114,22 @@ namespace InfoFenix.Application.Views.Search {
                 , MessageBoxIcon.Information);
         }
 
-        private void SetDocumentViewStyle(Font font, Color color) {
+        private void FocusOnDocumentViewerStart() {
+            documentViewerRichTextBox.SafeInvoke(_ => {
+                _.SelectionStart = 0;
+                _.SelectionLength = 1;
+                _.ScrollToCaret();
+            });
+        }
+
+        private void SetDocumentViewerStyle(Font font, Color color, HorizontalAlignment alignment) {
             documentViewerRichTextBox.SafeInvoke(_ => {
                 _.SelectionStart = 0;
                 _.SelectionLength = _.TextLength;
 
                 _.SelectionFont = font;
                 _.SelectionColor = color;
+                _.SelectionAlignment = alignment;
 
                 _.SelectionStart = 0;
                 _.SelectionLength = 0;

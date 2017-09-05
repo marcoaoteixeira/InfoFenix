@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 using InfoFenix.Application.Code;
 using InfoFenix.Application.Views;
@@ -47,14 +45,10 @@ namespace InfoFenix.Application {
         /// </summary>
         [STAThread]
         private static void Main() {
-            // Try solve problems with spire.doc
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-
             WinFormsApplication.EnableVisualStyles();
             WinFormsApplication.SetCompatibleTextRenderingDefault(false);
-            WinFormsApplication.ApplicationExit += TearDown;
-            WinFormsApplication.ThreadException += Error;
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) => TearDown(e.IsTerminating, e.ExceptionObject as Exception);
+            WinFormsApplication.ApplicationExit += (sender, e) => TearDown(isTerminating: false, ex: null);
 
             // Initialize AppSettings file
             AppSettings.Instance.Save();
@@ -107,19 +101,28 @@ namespace InfoFenix.Application {
             _compositionRoot.Resolver.Resolve<IBootstrapper>().Run();
         }
 
-        private static void Error(object sender, ThreadExceptionEventArgs e) {
-            if (e.Exception != null) {
-                var logger = _compositionRoot.Resolver.Resolve<ILoggerFactory>().CreateLogger(typeof(EntryPoint));
-                logger.Error(e.Exception, e.Exception.Message);
-                MessageBox.Show($"Ocorreu um erro inesperado: {e.Exception.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private static void TearDown(object sender, EventArgs e) {
+        private static void TearDown(bool isTerminating, Exception ex) {
             var logger = _compositionRoot.Resolver.Resolve<ILoggerFactory>().CreateLogger(typeof(EntryPoint));
-            var cancellationTokenIssuer = _compositionRoot.Resolver.Resolve<CancellationTokenIssuer>();
 
-            try { cancellationTokenIssuer.CancelAll(); } catch (Exception ex) { logger.Error(ex, ex.Message); }
+            if (isTerminating) {
+                if (ex != null) { logger.Error(ex, "*** FATAL ERROR!!! TERMINATING APPLICATION!!! ***"); }
+                else { logger.Error("*** FATAL ERROR!!! TERMINATING APPLICATION!!! ***"); }
+
+                MessageBox.Show(
+                    text: ex != null
+                        ? $"Ocorreu um erro irrecuperável ({ex.Message}). O aplicativo será finalizado."
+                        : $"Ocorreu um erro irrecuperável. O aplicativo será finalizado.",
+                    caption: "Erro",
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+            }
+
+            try {
+                _compositionRoot
+                    .Resolver
+                    .Resolve<CancellationTokenIssuer>()
+                    .CancelAll();
+            } catch (Exception e) { logger.Error(e, e.Message); }
 
             _compositionRoot.TearDown();
             _compositionRoot = null;

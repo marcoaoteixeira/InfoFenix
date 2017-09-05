@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MicrosoftDocument = Microsoft.Office.Interop.Word.Document;
 using MicrosoftDocumentSaveFormat = Microsoft.Office.Interop.Word.WdSaveFormat;
+using MicrosoftHeaderFooter = Microsoft.Office.Interop.Word.HeaderFooter;
+using MicrosoftSection = Microsoft.Office.Interop.Word.Section;
 
 namespace InfoFenix.Office {
 
@@ -107,7 +110,19 @@ namespace InfoFenix.Office {
             ThrowIfDisposed();
 
             return Task.Run(() => {
-                return _document.Content.Text;
+                var stringBuilder = new StringBuilder();
+                foreach (MicrosoftSection section in _document.Sections) {
+                    foreach (MicrosoftHeaderFooter header in section.Headers) {
+                        stringBuilder.AppendLine(header.Range.Text);
+                    }
+                }
+                stringBuilder.AppendLine(_document.Content.Text);
+                foreach (MicrosoftSection section in _document.Sections) {
+                    foreach (MicrosoftHeaderFooter footer in section.Footers) {
+                        stringBuilder.AppendLine(footer.Range.Text);
+                    }
+                }
+                return stringBuilder.ToString();
             }, cancellationToken);
         }
 

@@ -33,7 +33,8 @@ namespace InfoFenix.Migrations {
 
         public Task<IEnumerable<string>> HandleAsync(ListPossibleMigrationsQuery query, CancellationToken cancellationToken = default(CancellationToken)) {
             return Task.Run(() => {
-                return Common
+                return typeof(ListPossibleMigrationsQuery)
+                    .Assembly
                     .GetManifestResourceNames()
                     .Where(_ => _.StartsWith(Common.MIGRATION_FOLDER))
                     .Select(_ => Regex.Match(_, @"\d+").Value)

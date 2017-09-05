@@ -76,7 +76,7 @@ namespace InfoFenix.Domains.Commands {
                 }
                 result.Payload = File.ReadAllBytes(TempFilePath);
                 File.Delete(TempFilePath);
-            } catch { Log.Error($"CANNOT SAVE FILE: {filePath}"); }
+            } catch (Exception ex) { Log.Error($"CANNOT SAVE FILE: {filePath}. Error: {ex.Message}"); }
             return result;
         }
 

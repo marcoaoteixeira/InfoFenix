@@ -285,97 +285,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\copy_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\copy-64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\document_directory_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\exit_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\exit-64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\fast-forward_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\fast-forward-64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\fast-rewind_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\fast-rewind-64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\forward_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\forward-64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\goto_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\goto-64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\help_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\index_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\info-fenix_84x95.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\rewind_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\rewind-64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\search_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\search_result_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settings_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\starting_128x128.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\info-fenix_113x128.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\delete-folder_64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\add-folder_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\folder_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\word-document-doc_blue_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\word-document-doc_gray_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\word-document-docx_blue_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\word-document-docx_gray_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\hourglass_20x20.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Help\css\bootstrap.min.css">
@@ -429,17 +339,6 @@
     <Content Include="Help\js\respond.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\improved-view-enabled_32x32.png" />
-    <None Include="Resources\improved-view_32x32.png" />
-    <None Include="Resources\up_24x24.png" />
-    <None Include="Resources\top_24x24.png" />
-    <None Include="Resources\down_24x24.png" />
-    <None Include="Resources\bottom_24x24.png" />
-    <None Include="Resources\database-clean-up_32x32.png" />
-    <None Include="Resources\database-restore_32x32.png" />
-    <None Include="Resources\database-backup_32x32.png" />
-    <None Include="Resources\hourglass_32x32.gif" />
-    <None Include="Resources\copy-text_16x16.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Help\img\" />

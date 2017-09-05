@@ -62,7 +62,8 @@ namespace InfoFenix.Migrations {
                 /* Migration already applied */
                 if (migration != null) { return; }
 
-                var migrationFiles = Common
+                var migrationFiles = typeof(ApplyMigrationCommand)
+                    .Assembly
                     .GetManifestResourceNames()
                     .Where(_ => _.StartsWith(Common.MIGRATION_FOLDER) && _.Contains(command.Version))
                     .OrderBy(_ => _);
@@ -72,7 +73,7 @@ namespace InfoFenix.Migrations {
                     try {
                         var commandText = string.Empty;
                         foreach (var migrationFile in migrationFiles) {
-                            using (var stream = Common.GetManifestResourceStream(migrationFile))
+                            using (var stream = typeof(ApplyMigrationCommand).Assembly.GetManifestResourceStream(migrationFile))
                             using (var streamReader = new StreamReader(stream)) {
                                 commandText = streamReader.ReadToEnd();
                             }
@@ -84,6 +85,7 @@ namespace InfoFenix.Migrations {
                             Parameter.CreateInputParameter(Common.DatabaseSchema.Migrations.Version, command.Version),
                             Parameter.CreateInputParameter(Common.DatabaseSchema.Migrations.Date, DateTime.Now, DbType.DateTime)
                         });
+                        transaction.Commit();
                     } catch (Exception ex) { Log.Error(ex.Message); transaction.Rollback(); }
                 }
             }, cancellationToken);

@@ -39,7 +39,8 @@ namespace InfoFenix.PubSub {
             var messageType = typeof(TMessage);
             var action = new Subscription<TMessage>(handler, this);
             lock (SyncLock) {
-                if (!_subscriptions.TryGetValue(messageType, out IList list)) { _subscriptions.Add(messageType, new List<ISubscription<TMessage>> { action }); } else { _subscriptions[messageType].Add(action); }
+                IList list = null;
+                if (!_subscriptions.TryGetValue(messageType, out list)) { _subscriptions.Add(messageType, new List<ISubscription<TMessage>> { action }); } else { _subscriptions[messageType].Add(action); }
             }
             return action;
         }

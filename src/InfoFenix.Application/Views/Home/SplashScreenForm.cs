@@ -98,7 +98,8 @@ namespace InfoFenix.Application.Views.Home {
         }
 
         private void Continuation(Task continuation, object state) {
-            if (state is Form form) {
+            var form = state as Form;
+            if (form != null) {
                 form.SafeInvoke(_ => _.DialogResult = DialogResult.OK);
             }
         }

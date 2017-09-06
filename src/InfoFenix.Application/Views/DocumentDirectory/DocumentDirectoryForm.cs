@@ -133,31 +133,38 @@ namespace InfoFenix.Application.Views.DocumentDirectory {
         }
 
         private void labelTextBox_Leave(object sender, EventArgs e) {
-            if (sender is TextBox textBox) { ViewModel.Label = textBox.Text; }
+            var textBox = sender as TextBox;
+            if (textBox != null) { ViewModel.Label = textBox.Text; }
         }
 
         private void labelTextBox_TextChanged(object sender, EventArgs e) {
-            if (sender is TextBox textBox) { ViewModel.Label = textBox.Text; }
+            var textBox = sender as TextBox;
+            if (textBox != null) { ViewModel.Label = textBox.Text; }
         }
 
         private void pathTextBox_Leave(object sender, EventArgs e) {
-            if (sender is TextBox textBox) { ViewModel.Path = textBox.Text; }
+            var textBox = sender as TextBox;
+            if (textBox != null) { ViewModel.Path = textBox.Text; }
         }
 
         private void pathTextBox_TextChanged(object sender, EventArgs e) {
-            if (sender is TextBox textBox) { ViewModel.Path = textBox.Text; }
+            var textBox = sender as TextBox;
+            if (textBox != null) { ViewModel.Path = textBox.Text; }
         }
 
         private void selectPathButton_Click(object sender, EventArgs e) {
-            if (sender is Button button) { SelectDocumentDirectoryPath(); }
+            var button = sender as Button;
+            if (button != null) { SelectDocumentDirectoryPath(); }
         }
 
         private void positionNumericUpDown_ValueChanged(object sender, EventArgs e) {
-            if (sender is NumericUpDown numericUpDown) { ViewModel.Position = Convert.ToInt32(numericUpDown.Value); }
+            var numericUpDown = sender as NumericUpDown;
+            if (numericUpDown != null) { ViewModel.Position = Convert.ToInt32(numericUpDown.Value); }
         }
 
         private void saveAndCloseButton_Click(object sender, EventArgs e) {
-            if (sender is Button button) {
+            var button = sender as Button;
+            if (button != null) {
                 if (!ValidateViewModel()) { return; }
 
                 var actions = new List<Action<CancellationToken, IProgress<ProgressInfo>>> {
@@ -169,10 +176,8 @@ namespace InfoFenix.Application.Views.DocumentDirectory {
                     actions.Add((token, progress) => IndexDocumentDirectory(token, progress));
                 }
 
-                var sw = Stopwatch.StartNew();
                 ProgressViewer.Display(_cancellationTokenIssuer, log: Log, actions: actions.ToArray());
-                Log.Information($"SAVING DOCUMENT DIRECTORY \"{ViewModel.Label}\". TOTAL TIME: {sw.Elapsed}");
-                sw.Stop();
+                Log.Information($"SAVING DOCUMENT DIRECTORY \"{ViewModel.Label}\".");
 
                 DialogResult = DialogResult.OK;
             }

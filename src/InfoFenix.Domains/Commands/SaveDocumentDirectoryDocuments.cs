@@ -71,7 +71,8 @@ namespace InfoFenix.Domains.Commands {
                 var document = _wordApplication.Open(filePath);
                 result.Content = document.GetText();
                 document.SaveAs(TempFilePath);
-                if (document is IDisposable disposable) {
+                var disposable = document as IDisposable;
+                if (disposable != null) {
                     disposable.Dispose();
                 }
                 result.Payload = File.ReadAllBytes(TempFilePath);
@@ -98,10 +99,9 @@ namespace InfoFenix.Domains.Commands {
 
         #region ICommandHandler<SaveDocumentDirectoryDocumentsCommand> Members
 
+#pragma warning disable CSE0003 // Use expression-bodied members
         public Task HandleAsync(SaveDocumentDirectoryDocumentsCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
-                var sw = new Stopwatch();
-
                 var documentDirectory = _database.ExecuteReaderSingle(SQLs.GetDocumentDirectory, DocumentDirectory.Map, parameters: new[] {
                     Parameter.CreateInputParameter(Common.DatabaseSchema.DocumentDirectories.DocumentDirectoryID, command.DocumentDirectoryID, DbType.Int32)
                 });
@@ -138,11 +138,7 @@ namespace InfoFenix.Domains.Commands {
                                 if (document != null && document.LastWriteTime == physicalFileLastWriteTime) { continue; }
 
                                 Log.Information("Create temporary document on disk. Original file: {0}", filePath);
-                                sw.Start();
                                 var documentTransform = Transform(filePath);
-                                sw.Stop();
-                                Log.Information("Elapsed time: {0}ms", sw.ElapsedMilliseconds);
-                                sw.Reset();
 
                                 // If database document exists and last write time is NOT equals to the physical file last write time
                                 // Updates the database document.
@@ -168,11 +164,7 @@ namespace InfoFenix.Domains.Commands {
 
                                 Log.Information("Saving file to database. Original file: {0}", filePath);
                                 // Persists the document.
-                                sw.Start();
                                 SaveDocument(documentDirectory.DocumentDirectoryID, document);
-                                sw.Stop();
-                                Log.Information("Elapsed time: {0}ms", sw.ElapsedMilliseconds);
-                                sw.Reset();
                             }
 
                             if (cancellationToken.IsCancellationRequested) {
@@ -187,6 +179,7 @@ namespace InfoFenix.Domains.Commands {
                 } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
             }, cancellationToken);
         }
+#pragma warning restore CSE0003 // Use expression-bodied members
 
         #endregion ICommandHandler<SaveDocumentDirectoryDocumentsCommand> Members
 

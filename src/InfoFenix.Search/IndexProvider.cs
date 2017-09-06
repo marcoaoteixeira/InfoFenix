@@ -52,9 +52,7 @@ namespace InfoFenix.Search {
 
         #region Private Methods
 
-        private IIndex InnerCreate(string indexName) {
-            return new Index(_analyzerProvider.GetAnalyzer(indexName), _settings.IndexStorageDirectoryPath, indexName);
-        }
+        private IIndex InnerCreate(string indexName) => new Index(_analyzerProvider.GetAnalyzer(indexName), _settings.IndexStorageDirectoryPath, indexName);
 
         #endregion Private Methods
 
@@ -64,8 +62,8 @@ namespace InfoFenix.Search {
         public void Delete(string indexName) {
             lock (SyncLock) {
                 if (!Cache.ContainsKey(indexName)) { return; }
-
-                if (Cache[indexName] is IDisposable disposable) {
+                var disposable = Cache[indexName] as IDisposable;
+                if (disposable != null) {
                     disposable.Dispose();
                 }
                 Cache.Remove(indexName);
@@ -75,9 +73,7 @@ namespace InfoFenix.Search {
         }
 
         /// <inheritdoc />
-        public bool Exists(string indexName) {
-            return Cache.ContainsKey(indexName);
-        }
+        public bool Exists(string indexName) => Cache.ContainsKey(indexName);
 
         /// <inheritdoc />
         public IIndex GetOrCreate(string indexName) {
@@ -91,9 +87,7 @@ namespace InfoFenix.Search {
         }
 
         /// <inheritdoc />
-        public IEnumerable<string> List() {
-            return Cache.Keys;
-        }
+        public IEnumerable<string> List() => Cache.Keys;
 
         #endregion IIndexProvider Members
     }

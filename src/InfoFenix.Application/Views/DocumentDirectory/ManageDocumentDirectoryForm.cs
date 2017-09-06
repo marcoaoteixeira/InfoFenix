@@ -131,7 +131,8 @@ namespace InfoFenix.Application.Views.DocumentDirectory {
         private void documentDirectoryDataGridView_MouseClick(object sender, MouseEventArgs e) {
             if (e.Button != MouseButtons.Right) { return; }
 
-            if (sender is DataGridView dataGridView) {
+            var dataGridView = sender as DataGridView;
+            if (dataGridView != null) {
                 var currentMouseOverRow = dataGridView.HitTest(e.X, e.Y).RowIndex;
                 if (currentMouseOverRow > -1) {
                     dataGridView.Rows[currentMouseOverRow].Selected = true;
@@ -141,7 +142,8 @@ namespace InfoFenix.Application.Views.DocumentDirectory {
         }
 
         private void documentDirectoryToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (sender is ToolStripMenuItem menu && documentDirectoryDataGridView.SelectedRows.Count > 0) {
+            var menu = sender as ToolStripMenuItem;
+            if (menu != null && documentDirectoryDataGridView.SelectedRows.Count > 0) {
                 var row = documentDirectoryDataGridView.SelectedRows[0];
                 if (row == null) { return; }
                 var documentDirectory = row.DataBoundItem as Entities.DocumentDirectory;
@@ -175,7 +177,8 @@ namespace InfoFenix.Application.Views.DocumentDirectory {
                 return;
             }
 
-            if (sender is Button button) {
+            var button = sender as Button;
+            if (button != null) {
                 var documentDirectory = documentDirectoryDataGridView.SelectedRows[0].DataBoundItem as Entities.DocumentDirectory;
                 switch (button.Tag.ToString().ToUpperInvariant()) {
                     case CHANGE_POSITION_TOP_TAG:

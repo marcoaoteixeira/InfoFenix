@@ -14,9 +14,7 @@ namespace InfoFenix.PubSub {
         public string Message { get; set; }
         public string Error { get; set; }
 
-        public bool HasError {
-            get { return !string.IsNullOrWhiteSpace(Error); }
-        }
+        public bool HasError => !string.IsNullOrWhiteSpace(Error);
 
         #endregion Public Properties
     }
@@ -61,9 +59,7 @@ namespace InfoFenix.PubSub {
         public int ActualStep { get; set; }
         public int TotalSteps { get; set; }
 
-        public bool HasError {
-            get { return !string.IsNullOrWhiteSpace(Error); }
-        }
+        public bool HasError => !string.IsNullOrWhiteSpace(Error);
 
         #endregion Public Properties
     }
@@ -181,7 +177,8 @@ namespace InfoFenix.PubSub {
             var error = string.Empty;
             var info = (state as ProgressiveTaskContinuationInfo) ?? new ProgressiveTaskContinuationInfo();
 
-            if (continuation.Exception is AggregateException ex) {
+            var ex = continuation.Exception as AggregateException;
+            if (ex != null) {
                 var stringBuilder = new StringBuilder();
                 foreach (var exception in ex.InnerExceptions) {
                     stringBuilder.AppendLine(exception.Message);

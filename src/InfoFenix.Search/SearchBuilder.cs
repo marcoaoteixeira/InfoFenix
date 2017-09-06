@@ -123,13 +123,15 @@ namespace InfoFenix.Search {
             if (Math.Abs(_boost - 0) > EPSILON) { _query.Boost = _boost; }
 
             if (!_notAnalyzed) {
-                if (_query is TermQuery termQuery) {
+                var termQuery = _query as TermQuery;
+                if (termQuery != null) {
                     var term = termQuery.Term;
                     var analyzedText = AnalyzeText(_analyzer, term.Field, term.Text()).FirstOrDefault();
                     _query = new TermQuery(new Term(term.Field, analyzedText));
                 }
 
-                if (_query is TermRangeQuery termRangeQuery) {
+                var termRangeQuery = _query as TermRangeQuery;
+                if (termRangeQuery != null) {
                     var lowerTerm = AnalyzeText(_analyzer, termRangeQuery.Field, termRangeQuery.LowerTerm.Utf8ToString()).FirstOrDefault();
                     var upperTerm = AnalyzeText(_analyzer, termRangeQuery.Field, termRangeQuery.UpperTerm.Utf8ToString()).FirstOrDefault();
 
@@ -138,7 +140,8 @@ namespace InfoFenix.Search {
             }
 
             if (!_exactMatch) {
-                if (_query is TermQuery termQuery) {
+                var termQuery = _query as TermQuery;
+                if (termQuery != null) {
                     var term = termQuery.Term;
                     _query = new PrefixQuery(new Term(term.Field, term.Text()));
                 }
@@ -161,7 +164,7 @@ namespace InfoFenix.Search {
 
             if (_clauses.Count == 0) {
                 if (_filters.Count > 0) {
-                    // only filters applieds => transform to a boolean query
+                    // only filters applied => transform to a boolean query
                     foreach (var clause in _filters) {
                         booleanQuery.Add(clause);
                     }
@@ -210,9 +213,7 @@ namespace InfoFenix.Search {
         }
 
         /// <inheritdoc />
-        public ISearchBuilder WithField(string field, bool value) {
-            return WithField(field, value ? 1 : 0);
-        }
+        public ISearchBuilder WithField(string field, bool value) => WithField(field, value ? 1 : 0);
 
         /// <inheritdoc />
         public ISearchBuilder WithField(string field, DateTime value) {
@@ -357,9 +358,7 @@ namespace InfoFenix.Search {
         }
 
         /// <inheritdoc />
-        public ISearchBuilder SortByBoolean(string name) {
-            return SortByInteger(name);
-        }
+        public ISearchBuilder SortByBoolean(string name) => SortByInteger(name);
 
         /// <inheritdoc />
         public ISearchBuilder SortByString(string name) {

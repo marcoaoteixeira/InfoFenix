@@ -22,17 +22,15 @@ namespace InfoFenix {
         #endregion Public Static Read-Only Fields
 
         #region Public Static Methods
-        
-        public static string[] GetDocumentFiles(string path) {
-            return Directory
-                .GetFiles(path, "*.doc", SearchOption.AllDirectories)
-                .Where(_ => !Path.GetFileName(_).StartsWith("~")) // Ignore tmp files
-                .ToArray();
-        }
 
-        public static int ExtractCodeFromDocumentFilePath(string filePath) {
+        public static string[] GetDocumentFiles(string path) => Directory
+            .GetFiles(path, "*.doc", SearchOption.AllDirectories)
+            .Where(_ => !Path.GetFileName(_).StartsWith("~")) // Ignore tmp files
+            .ToArray();
+
+        public static long ExtractCodeFromDocumentFilePath(string filePath) {
             var match = Regex.Match(Path.GetFileNameWithoutExtension(filePath), "([0-9]{1,})");
-            return match.Captures.Count > 0 ? int.Parse(match.Captures[0].Value) : 0;
+            return match.Captures.Count > 0L ? long.Parse(match.Captures[0].Value) : 0L;
         }
 
         #endregion Public Static Methods

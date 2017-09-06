@@ -51,14 +51,16 @@ namespace InfoFenix.Infrastructure {
 
         public void MarkAsComplete(string key) {
             PreventCallAfterDispose();
-            if (_cache.TryRemove(key, out CancellationTokenSource source)) {
+            CancellationTokenSource source = null;
+            if (_cache.TryRemove(key, out source)) {
                 try { source.Dispose(); } catch (Exception ex) { Log.Error(ex.Message); }
             }
         }
 
         public bool Cancel(string key) {
             PreventCallAfterDispose();
-            if (_cache.TryRemove(key, out CancellationTokenSource source)) {
+            CancellationTokenSource source = null;
+            if (_cache.TryRemove(key, out source)) {
                 try { source.Cancel(); return true; }
                 catch (Exception ex) { Log.Error(ex.Message); }
             }

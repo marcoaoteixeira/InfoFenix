@@ -74,6 +74,7 @@ namespace InfoFenix.Domains.Commands {
 
         #region ICommandHandler<IndexDocumentDirectoryCommand> Members
 
+#pragma warning disable CSE0003 // Use expression-bodied members
         public Task HandleAsync(IndexDocumentDirectoryCommand command, CancellationToken cancellationToken = default(CancellationToken), IProgress<ProgressInfo> progress = null) {
             return Task.Run(() => {
                 var documentDirectory = _database.ExecuteReaderSingle(SQLs.GetDocumentDirectory, DocumentDirectory.Map, parameters: new[] {
@@ -130,6 +131,7 @@ namespace InfoFenix.Domains.Commands {
                 } catch (Exception ex) { progress.Error(actualStep, totalSteps, ex.Message); throw; }
             }, cancellationToken);
         }
+#pragma warning restore CSE0003 // Use expression-bodied members
 
         #endregion ICommandHandler<IndexDocumentDirectoryCommand> Members
     }

@@ -122,14 +122,16 @@ namespace InfoFenix.Application.Views.Search {
         }
 
         private void executeSearchButton_Click(object sender, EventArgs e) {
-            if (!(sender is Button button)) { return; }
+            var button = sender as Button;
+            if (button == null) { return; }
             if (string.IsNullOrWhiteSpace(searchTermTextBox.Text) && searchTermTextBox.Text.Trim().Length < 2) { return; }
 
             DoSearch();
         }
 
         private void searchResultDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
-            if (sender is DataGridView dataGridView) {
+            var dataGridView = sender as DataGridView;
+            if (dataGridView != null) {
                 ShowSearchResult(dataGridView.Rows[e.RowIndex].DataBoundItem as SearchIndexViewModel);
             }
         }
